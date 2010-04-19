@@ -1,0 +1,29 @@
+
+[Anjuta]
+Maximized=1
+Geometry=1280x949+0+25
+
+[File Loader]
+Files=file:///home/jeetu/code/ebp/src/main.c#48%%%file:///home/jeetu/code/ebp/src/ebp.h#40%%%file:///home/jeetu/code/ebp/src/Makefile#1%%%file:///home/jeetu/code/ebp/src/Makefile.am#10%%%file:///home/jeetu/code/ebp/src/Makefile.in#1
+
+[Document Manager]
+bookmarks=<?xml version="1.0" encoding="UTF-8"?>\n<bookmarks/>\n
+
+[Execution]
+Program uri=file:///home/jeetu/code/Moblin/ebp-moblin/src/ebp-moblin
+Run in terminal=2
+Working directories=file:///home/jeetu/code/Moblin/ebp-moblin
+
+[SymbolDB]
+SystemPackages=glib-2.0%%%nbtk-1.2
+
+[Build]
+Configuration list=1:Default:%%%1:Debug:Debug%%%1:Profiling:Profiling%%%1:Optimized:Optimized
+Selected Configuration=Default
+BuildArgs/Default=--enable-maintainer-mode
+BuildArgs/Debug=--enable-maintainer-mode 'CFLAGS=-g -O0' 'CXXFLAGS=-g -O0' 'JFLAGS=-g -O0' 'FFLAGS=-g -O0'
+BuildArgs/Profiling=--enable-maintainer-mode 'CFLAGS=-g -pg' 'CXXFLAGS=-g -pg' 'JFLAGS=-g -pg' 'FFLAGS=-g -pg'
+BuildArgs/Optimized=--enable-maintainer-mode 'CFLAGS=-O2' 'CXXFLAGS=-O2' 'JFLAGS=-O2' 'FFLAGS=-O2'
+
+[Debugger]
+Stop at beginning=2
