@@ -60,7 +60,7 @@ main (int argc, char *argv[])
     clutter_stage_set_user_resizable (CLUTTER_STAGE (stage), TRUE);
   	
     //jeetu - hard coded
-    logo = clutter_texture_new_from_file("/usr/share/ebp/ebrain_logo_1.png",NULL);
+    logo = clutter_texture_new_from_file("./ebrain_logo_1.png",NULL);
     clutter_container_add_actor (CLUTTER_CONTAINER (stage), CLUTTER_ACTOR(logo));
     clutter_actor_show (logo);	  
     

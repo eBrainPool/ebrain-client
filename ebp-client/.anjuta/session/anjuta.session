@@ -4,7 +4,7 @@ Maximized=1
 Geometry=1280x949+0+25
 
 [File Loader]
-Files=file:///home/jeetu/code/ebp/src/main.c#48%%%file:///home/jeetu/code/ebp/src/ebp.h#40%%%file:///home/jeetu/code/ebp/src/Makefile#1%%%file:///home/jeetu/code/ebp/src/Makefile.am#10%%%file:///home/jeetu/code/ebp/src/Makefile.in#1
+Files=file:///home/jeetu/code/ebp/ebp-client/src/main.c#69
 
 [Document Manager]
 bookmarks=<?xml version="1.0" encoding="UTF-8"?>\n<bookmarks/>\n
