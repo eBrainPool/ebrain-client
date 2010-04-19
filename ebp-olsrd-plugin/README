@@ -1,0 +1,27 @@
+---------------------------------------------------------------------
+eBrainPool Plugin for OLSRD
+by eBrain <ebrain@ebrain.in>
+---------------------------------------------------------------------
+
+This library needs olsrd v0.5.6-r7. It hasn't been tested on later versions. Download the source code for v0.5.6-r7 of olsrd and copy the root directory for this plugin under the lib directory of the olsrd source.
+
+Installing
+
+cd [olsrd-src]/lib/ebp-olsrd-plugin
+make
+make install
+
+Configuration
+
+Make changes to the /etc/olsrd.conf to enable this plugin and provide a username. A sample config is shown below.
+
+---------------------------------------------------------------------
+SAMPLE CONFIG
+---------------------------------------------------------------------
+
+adPlugin "olsrd_ebp.so.0.1"
+{
+                PlParam "Username" "Duffer@Desktop"
+}
+
+--------------------------------------------------------------------
