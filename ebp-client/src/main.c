@@ -35,7 +35,7 @@
 #include <arpa/inet.h>
 
 #include <clutter/clutter.h>
-#include <nbtk/nbtk.h>
+#include <mx/mx.h>
 
 #include "ebp.h"
 
@@ -43,11 +43,11 @@ int
 main (int argc, char *argv[])
 { 
     ClutterActor *stage = NULL;
-    NbtkWidget *box = NULL;
-    NbtkWidget *scroll = NULL;
+    MxWidget *box = NULL;
+    MxWidget *scroll = NULL;
     ListenerThreadData *data;
     ClutterActor *logo = NULL;
-    NbtkLabel *label;
+    MxLabel *label;
     char buf[300];
 
     g_thread_init (NULL);
@@ -64,27 +64,28 @@ main (int argc, char *argv[])
     clutter_container_add_actor (CLUTTER_CONTAINER (stage), CLUTTER_ACTOR(logo));
     clutter_actor_show (logo);	  
     
+    //jeetu - data copied in buz == sizeof(buf) == 300; maybe some spare room in buf reqd?
     snprintf(buf,300,"eBrain allows you to run\nsoftware from other\nnearby eBrainers shown\nin the list below.");
-    label = (NbtkLabel *) nbtk_label_new(buf);
+    label = (MxLabel *) mx_label_new_with_text(buf); //jeetu - free memory
     clutter_actor_set_position((ClutterActor *)label,90,10);	
     clutter_container_add_actor (CLUTTER_CONTAINER (stage),
                                    CLUTTER_ACTOR (label));	
   	
-    scroll = (NbtkWidget *) nbtk_scroll_view_new ();
+    scroll = (MxWidget *) mx_scroll_view_new (); //jeetu - free memory
     clutter_actor_set_position (CLUTTER_ACTOR (scroll), SCROLLVIEW_XPOS, SCROLLVIEW_YPOS);
     clutter_container_add_actor (CLUTTER_CONTAINER (stage),
                                CLUTTER_ACTOR (scroll));
     clutter_actor_set_size (CLUTTER_ACTOR (scroll), SCROLLVIEW_WIDTH, SCROLLVIEW_HEIGHT);
 
-    box = nbtk_box_layout_new();	
+    box = (MxWidget *) mx_box_layout_new(); //jeetu - free memory
     clutter_container_add_actor (CLUTTER_CONTAINER (scroll), (ClutterActor*) box); 
-    nbtk_box_layout_set_vertical((NbtkBoxLayout *) box, TRUE);   
+    mx_box_layout_set_orientation((MxBoxLayout *) box, MX_ORIENTATION_VERTICAL);   
 
     clutter_actor_show (stage);  	  
   	
   	// jeetu - assuming for now olsr is running; add code to launch olsr.
   	
-    data = thread_data_new();
+    data = thread_data_new(); //jeetu - free memory
     data->stage = g_object_ref(stage);
     data->box = g_object_ref(box);
     data->newsockfd = -1;
@@ -324,8 +325,8 @@ int show_user_online(ListenerThreadData *data,struct user *UserNode)
 {
     gfloat width,height; 
 
-    UserNode->expander = nbtk_expander_new ();
-    nbtk_expander_set_label (NBTK_EXPANDER (UserNode->expander), UserNode->name);
+    UserNode->expander = (MxWidget *) mx_expander_new ();
+    mx_expander_set_label (MX_EXPANDER (UserNode->expander), UserNode->name);
 
     clutter_container_add_actor (CLUTTER_CONTAINER (data->box),
                                CLUTTER_ACTOR (UserNode->expander));                              
@@ -335,12 +336,12 @@ int show_user_online(ListenerThreadData *data,struct user *UserNode)
     g_signal_connect (UserNode->expander, "expand-complete",
                     G_CALLBACK (expand_complete_cb), UserNode);
 
-    UserNode->scroll = (NbtkWidget *) nbtk_scroll_view_new ();
+    UserNode->scroll = (MxWidget *) mx_scroll_view_new ();
     clutter_container_add_actor (CLUTTER_CONTAINER (UserNode->expander),
                                CLUTTER_ACTOR (UserNode->scroll));
     clutter_actor_set_size (CLUTTER_ACTOR (UserNode->scroll), 220, 240);
 
-    UserNode->grid = nbtk_grid_new ();
+    UserNode->grid = (MxWidget *) mx_grid_new ();
     clutter_container_add_actor (CLUTTER_CONTAINER (UserNode->scroll),
                                CLUTTER_ACTOR (UserNode->grid));
 	return 0;
@@ -379,7 +380,7 @@ static gboolean show_user_offline(gpointer user_data)
 
 // Called when an expander for an online user is clicked and completes expanding.
 static void
-expand_complete_cb (NbtkExpander  *expander,
+expand_complete_cb (MxExpander  *expander,
                     struct user* UserNode)
 {
     gboolean expanded;
@@ -392,7 +393,7 @@ expand_complete_cb (NbtkExpander  *expander,
     char *str1,*token;
     char *saveptr1 = NULL;  
   
-    expanded = nbtk_expander_get_expanded (expander); 
+    expanded = mx_expander_get_expanded (expander); 
     clutter_actor_get_size (CLUTTER_ACTOR(expander), &width, &height);	     
   	            
     if(expanded)
@@ -416,14 +417,14 @@ expand_complete_cb (NbtkExpander  *expander,
       // displays buttons for each app in the remote host    
       for(j = 1, str1 = buffer; ; j++, str1 = NULL) 
          {
-         NbtkWidget *button;
+         MxWidget *button;
          gchar *label;
 
          token = strtok_r(str1, ":", &saveptr1);
          if(token == NULL)
            break;
          label = g_strdup_printf ("%s",token);
-         button = nbtk_button_new_with_label (label);
+         button = (MxWidget *) mx_button_new_with_label (label);
          clutter_container_add_actor (CLUTTER_CONTAINER (UserNode->grid),
                                    CLUTTER_ACTOR (button));
 	     // launchapp() is called if an app button is clicked                                                
@@ -436,7 +437,7 @@ expand_complete_cb (NbtkExpander  *expander,
       }              	
 }
 
-static void send_launchapp_req(NbtkButton *button,struct user* UserNode)
+static void send_launchapp_req(MxButton *button,struct user* UserNode)
 {
     char *ip = NULL;
     struct in_addr in;
@@ -452,7 +453,7 @@ static void send_launchapp_req(NbtkButton *button,struct user* UserNode)
     buf[0] = '\0';
     temp[0] = '\0';	
 	
-    appname = (char *)nbtk_button_get_label(button);
+    appname = (char *)mx_button_get_label(button);
     gCurrentLaunchAppQueue = add_to_launch_queue(appname,UserNode->ip,requestid);
     requestid++;    
 	
@@ -516,9 +517,9 @@ static gboolean process_launchapp_req(gpointer user_data)
 gboolean launch_approve_dialog(char *name,char *appname,uint32_t ip)
 {
     ClutterActor *dialog;
-    NbtkWidget *button_yes;
-    NbtkWidget *button_no;
-    NbtkLabel *msg;
+    MxWidget *button_yes;
+    MxWidget *button_no;
+    MxLabel *msg;
     char buf[300];
     LaunchApprDlgData *data;
 	
@@ -527,17 +528,17 @@ gboolean launch_approve_dialog(char *name,char *appname,uint32_t ip)
     clutter_actor_set_size(dialog,360,100);
     clutter_stage_set_title((ClutterStage *) dialog,"eBrain - Approval Required");
     snprintf(buf,300,"User %s wishes to run an application off your system.\nAllow?",name);
-    msg = (NbtkLabel *) nbtk_label_new(buf);
+    msg = (MxLabel *) mx_label_new_with_text(buf);
     clutter_actor_set_position((ClutterActor *)msg,10,10);	
     clutter_container_add_actor (CLUTTER_CONTAINER (dialog),
                                    CLUTTER_ACTOR (msg));
 	
-    button_yes = nbtk_button_new_with_label ("Yes");
+    button_yes = (MxWidget *) mx_button_new_with_label ("Yes");
     clutter_actor_set_position((ClutterActor *)button_yes,140,50);
     clutter_container_add_actor (CLUTTER_CONTAINER (dialog),
                                    CLUTTER_ACTOR (button_yes));
                                    
-    button_no = nbtk_button_new_with_label ("No");
+    button_no = (MxWidget *) mx_button_new_with_label ("No");
     clutter_actor_set_position((ClutterActor *)button_no,190,50);
     clutter_container_add_actor (CLUTTER_CONTAINER (dialog),
                                    CLUTTER_ACTOR (button_no));
@@ -558,7 +559,7 @@ gboolean launch_approve_dialog(char *name,char *appname,uint32_t ip)
     return FALSE;
 }
 
-static void launchdlg_approved(NbtkButton *button,LaunchApprDlgData* data)
+static void launchdlg_approved(MxButton *button,LaunchApprDlgData* data)
 {
     int comm_socket = 0;
     int ret = 0;
@@ -602,7 +603,7 @@ static gpointer start_server(gpointer user_data)
 }
 
 
-static void launchdlg_rejected(NbtkButton *button,LaunchApprDlgData* data)
+static void launchdlg_rejected(MxButton *button,LaunchApprDlgData* data)
 {
     clutter_actor_destroy((ClutterActor *) data->dialog);
     free(data); 

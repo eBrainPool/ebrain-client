@@ -13,6 +13,23 @@ m4_define([ebp_api_version],
           [ebp_version_major.ebp_version_minor])
 
 AC_INIT(ebp, ebp_version)
+
+
+AC_SUBST(LDFLAGS)
+
+
+AC_SUBST(LIBS)
+
+AC_SUBST(LDFLAGS)
+
+
+AC_SUBST(CFLAGS)
+
+
+AC_SUBST(CXXFLAGS)
+
+AC_SUBST(includedir)
+
 AM_INIT_AUTOMAKE(ebp, ebp_version)
 AC_CONFIG_HEADERS(config.h)
 #AC_CONFIG_SRCDIR(libebp/ebp.cpp)
@@ -29,7 +46,7 @@ PKG_PROG_PKG_CONFIG
 # AC_CHECK_FUNCS([memset])
 
 # all libraries listed are associated with "EBP" tag
-PKG_CHECK_MODULES(EBP,[glib-2.0 nbtk-1.2])
+PKG_CHECK_MODULES(EBP,[mx-1.0 glib-2.0 gthread-2.0])
 
 AC_SUBST(EBP_CFLAGS)
 AC_SUBST(EBP_LIBS)

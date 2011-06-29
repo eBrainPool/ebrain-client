@@ -1,21 +1,24 @@
 
 [Anjuta]
 Maximized=1
-Geometry=1280x949+0+25
+Geometry=1280x725+0+25
+
+[Project Manager]
+Shortcut=E file:///home/jeetu/code/eBrainPool/ebp/ebp-client/src ebp 
 
 [File Loader]
-Files=file:///home/jeetu/code/ebp/ebp-client/src/main.c#69
+Files=file:///home/jeetu/code/eBrainPool/ebp/ebp-client/src/main.c#117%%%file:///home/jeetu/code/eBrainPool/ebp/ebp-client/src/ebp.h#58
 
 [Document Manager]
 bookmarks=<?xml version="1.0" encoding="UTF-8"?>\n<bookmarks/>\n
+
+[SymbolDB]
+SystemPackages=glib-2.0%%%nbtk-1.2
 
 [Execution]
 Program uri=file:///home/jeetu/code/Moblin/ebp-moblin/src/ebp-moblin
 Run in terminal=2
 Working directories=file:///home/jeetu/code/Moblin/ebp-moblin
-
-[SymbolDB]
-SystemPackages=glib-2.0%%%nbtk-1.2
 
 [Build]
 Configuration list=1:Default:%%%1:Debug:Debug%%%1:Profiling:Profiling%%%1:Optimized:Optimized

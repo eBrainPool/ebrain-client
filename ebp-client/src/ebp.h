@@ -46,9 +46,9 @@ struct user
     char version[6];
     uint32_t ip;
     unsigned int noofapps;
-    NbtkWidget *expander; 
-    NbtkWidget *scroll;
-    NbtkWidget *grid;
+    MxWidget *expander; 
+    MxWidget *scroll;
+    MxWidget *grid;
     struct user *prev;
     struct user *next;	
     };
@@ -56,7 +56,7 @@ struct user
 typedef struct
     {
     ClutterActor *stage;
-    NbtkWidget *box;
+    MxWidget *box;
     int sockfd;
     int newsockfd;
     struct sockaddr_in cli_addr;
@@ -104,10 +104,10 @@ struct LaunchAppQueue *gCurrentLaunchAppQueue = NULL;
 int requestid;
 
 static void
-expand_complete_cb (NbtkExpander  *expander,
+expand_complete_cb (MxExpander  *expander,
                     struct user* UserNode);
 
-static void send_launchapp_req(NbtkButton *button,struct user* UserNode);                      
+static void send_launchapp_req(MxButton *button,struct user* UserNode);                      
 int show_user_online(ListenerThreadData* data,struct user *UserNode);
 struct user* add_user(int index, char* version,char* name,uint32_t ip);
 struct user* del_user(struct user* deluser);
@@ -123,8 +123,8 @@ int filter(const struct dirent *dir);
 static gboolean process_launchapp_req (gpointer user_data);
 static gpointer start_server(gpointer user_data);
 gboolean launch_approve_dialog(char *name,char *appname, uint32_t ip);
-static void launchdlg_approved(NbtkButton *button,LaunchApprDlgData* data);
-static void launchdlg_rejected(NbtkButton *button,LaunchApprDlgData* data);
+static void launchdlg_approved(MxButton *button,LaunchApprDlgData* data);
+static void launchdlg_rejected(MxButton *button,LaunchApprDlgData* data);
 struct LaunchAppQueue* add_to_launch_queue(char *appname,int ip,int requestid);
 static gpointer LaunchAppFromHost(gpointer user_data);
 void freeusermem(void);
