@@ -46,7 +46,7 @@ PKG_PROG_PKG_CONFIG
 # AC_CHECK_FUNCS([memset])
 
 # all libraries listed are associated with "EBP" tag
-PKG_CHECK_MODULES(EBP,[mx-1.0 glib-2.0 gthread-2.0])
+PKG_CHECK_MODULES(EBP,[glib-2.0 gthread-2.0 gtk+-3.0])
 
 AC_SUBST(EBP_CFLAGS)
 AC_SUBST(EBP_LIBS)

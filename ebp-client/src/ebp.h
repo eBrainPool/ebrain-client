@@ -1,5 +1,5 @@
 /*
- * ebp-moblin.h
+ * ebp.h
  *
  * Copyright (C) 2010, eBrain.
  *
@@ -22,53 +22,39 @@
  * 02111-1307, USA.
  */
 
-#ifndef _EBP_MOBLIN_H
-#define _EBP_MOBLIN_H
+#ifndef _EBP_H
+#define _EBP_H
 
-#define STAGE_WIDTH 260
-#define STAGE_HEIGHT 380
-#define SCROLLVIEW_XPOS 10
-#define SCROLLVIEW_YPOS 80
-#define SCROLLVIEW_WIDTH 220
-#define SCROLLVIEW_HEIGHT 240
-#define EXPANDER_GAP 10
+enum
+{
+  NAME = 0,
+  USERNODE = 1,
+  NUM_COLS
+};
 
+#define WINDOW_WIDTH 460
+#define WINDOW_HEIGHT 300
 #define CLIENT_COMM_PORT 2010
 
-struct user 
+//typedef struct
+//    {
+//    GtkWidget *treeview;
+//    GtkTreeStore *treestore;
+//    int sockfd;
+//    int newsockfd;
+//    struct sockaddr_in cli_addr;
+//    char buffer[300];
+//    } ConnListenerThreadData;
+
+typedef struct _newconndata
     {
-    unsigned int xpos;
-    unsigned int ypos;
-    gfloat height;
-    gfloat width;
-    int index;
-    char name[20];
-    char version[6];
-    uint32_t ip;
-    unsigned int noofapps;
-    MxWidget *expander; 
-    MxWidget *scroll;
-    MxWidget *grid;
-    struct user *prev;
-    struct user *next;	
-    };
-	
-typedef struct
-    {
-    ClutterActor *stage;
-    MxWidget *box;
-    int sockfd;
     int newsockfd;
     struct sockaddr_in cli_addr;
-    char buffer[300];
-    } ListenerThreadData;
-	
-typedef struct
-    {
-    ListenerThreadData *uidata;
-    struct user* offlineuser;
-    } OfflineUserData;
-	
+    char buffer[310];
+    struct _newconndata *prev;
+    struct _newconndata *next;
+    } NewConnData;
+
 typedef struct
     {
     char *apps;
@@ -76,58 +62,85 @@ typedef struct
     int blocksize;
     } AppsData;
 
-struct LaunchAppQueue
+typedef struct _user 
+    {
+    char name[20];
+    char version[6];
+    uint32_t ip;
+    char *apps_buffer;
+    unsigned int noofapps;
+    struct _user *prev;
+    struct _user *next;	
+    } User;
+
+typedef struct _LaunchAppQueue
     {
     gchar appname[300];
     int ip;
     int reqid;
-    struct LaunchAppQueue *prev;
-    struct LaunchAppQueue *next;
-    };
-	
-typedef struct
+    struct _LaunchAppQueue *prev;
+    struct _LaunchAppQueue *next;
+    } LaunchAppQueue;
+
+typedef struct _LaunchDialogQueue
     {
-    ClutterActor *dialog;
-    char appname[300];
+    char *username;
+    char *appname;
     uint32_t ip;
-    } LaunchApprDlgData;
-	
-struct user *gFirstUserNode = NULL;
-struct user *gCurrentUserNode = NULL;
-struct user *gLastUserNode = NULL;
-static GStaticPrivate thread_data = G_STATIC_PRIVATE_INIT;
-static GStaticPrivate listener_child_data = G_STATIC_PRIVATE_INIT;
+    struct _LaunchDialogQueue *prev;
+    struct _LaunchDialogQueue *next;
+    } LaunchDialogQueue;
+
+GtkWidget *window = NULL;
+GtkWidget *treeview = NULL;
+GtkTreeStore *treestore = NULL;
+int sockfd = 0;
 AppsData appsdata;
-struct LaunchAppQueue *gFirstLaunchAppQueue = NULL;
-struct LaunchAppQueue *gLastLaunchAppQueue = NULL;
-struct LaunchAppQueue *gCurrentLaunchAppQueue = NULL;
+User *gFirstUserNode = NULL;
+User *gLastUserNode = NULL;
+User *gCurrentUserNode = NULL;
+LaunchAppQueue *gFirstLaunchAppQueue = NULL;
+LaunchAppQueue *gLastLaunchAppQueue = NULL;
+LaunchAppQueue *gCurrentLaunchAppQueue = NULL;
+NewConnData *gFirstConn = NULL;
+NewConnData *gLastConn = NULL;
+NewConnData *gCurrentConn = NULL;
+LaunchDialogQueue *gFirstLaunchDialog = NULL;
+LaunchDialogQueue *gLastLaunchDialog = NULL;
+LaunchDialogQueue *gCurrentLaunchDialog = NULL;
 int requestid;
 
-static void
-expand_complete_cb (MxExpander  *expander,
-                    struct user* UserNode);
-
-static void send_launchapp_req(MxButton *button,struct user* UserNode);                      
-int show_user_online(ListenerThreadData* data,struct user *UserNode);
-struct user* add_user(int index, char* version,char* name,uint32_t ip);
-struct user* del_user(struct user* deluser);
-static gpointer listener(gpointer user_data);
-static gpointer listener_child(gpointer user_data);
-static ListenerThreadData *thread_data_new (void);
-static gboolean process_useronline_msg (gpointer user_data);
-static gpointer check_client_status(gpointer user_data);
-int connect_to_client(uint32_t ip,int *comm_socket);
-static gboolean show_user_offline(gpointer user_data);
-char* list_installed_apps(int* count,int* blocksize);
+int init_treeview(GtkWidget *view,GtkTreeStore *treestore);
+gpointer connlistener_thread(gpointer user_data);
+gpointer newconnrequests_thread(gpointer user_data);
+gpointer check_client_status_thread(gpointer user_data);
+char* get_installed_apps(int* count,int* blocksize);
 int filter(const struct dirent *dir);
-static gboolean process_launchapp_req (gpointer user_data);
-static gpointer start_server(gpointer user_data);
-gboolean launch_approve_dialog(char *name,char *appname, uint32_t ip);
-static void launchdlg_approved(MxButton *button,LaunchApprDlgData* data);
-static void launchdlg_rejected(MxButton *button,LaunchApprDlgData* data);
-struct LaunchAppQueue* add_to_launch_queue(char *appname,int ip,int requestid);
-static gpointer LaunchAppFromHost(gpointer user_data);
+int process_useronline_msg(char *buf);
+int connect_to_client(uint32_t ip,int *comm_socket);
+User* add_user(char* version,char* name,uint32_t ip);
+User* del_user(User* deluser);
+NewConnData *add_newconn(int newsockfd,struct sockaddr_in cli_addr);
+LaunchDialogQueue *add_launchdialog_queue(char *username,char *appname,uint32_t ip);
+int show_user_online(User *UserNode);
+gboolean show_user_offline(gpointer user_data);
+int get_remoteuser_apps(User *UserNode);
+void send_launchapp_req(User *UserNode,char *appname);
+LaunchAppQueue* add_to_launch_queue(char *appname,int ip,int reqid);
+void set_launchappqueue_locked(LaunchAppQueue *dest,LaunchAppQueue *src);
+void set_usernode_locked(User *destnode, User* srcnode);
+int process_launchapp_req(char *buf,NewConnData *data);
+gboolean launch_approve_dialog(gpointer data);
+gpointer start_server(gpointer ptr_ip);
+gpointer process_launchreq_accepted(gpointer user_data);
 void freeusermem(void);
 void freeLaunchAppQueue(void);
+void freeLaunchDialogQueue(void);
+void launchdlg_approved(char *appname,uint32_t ip);
+void launch_approve_dialog_response(GtkWidget *dialog,gint response_id, gpointer user_data);
+NewConnData *del_newconn(NewConnData *conndata);
+
+//Signals
+void on_treeview_row_activated(GtkWidget *widget,GtkTreePath *path,GtkTreeViewColumn *column,gpointer user_data);
 
 #endif

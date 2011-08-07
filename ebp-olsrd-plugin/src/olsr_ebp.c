@@ -33,11 +33,12 @@
 #include "defs.h"
 #include "ipcalc.h"
 #include "olsr.h"
-#include "socket_parser.h"
+//#include "socket_parser.h"
 #include "parser.h"
 #include "scheduler.h"
 #include "net_olsr.h"
 
+#include "olsrd_plugin.h"
 #include "olsr_ebp.h"
 #include "olsr_ebp_common.h"
 
@@ -108,7 +109,7 @@ bool olsr_ebpmsg_parser(unsigned char *packet, struct interface *olsr_if, union 
     struct ipaddr_str buf1;
     int comm_connected;
 
-    msg = (struct ebp_olsrmsg *)(ARM_NOWARN_ALIGN)packet;
+    msg = (struct ebp_olsrmsg *)ARM_NOWARN_ALIGN(packet);
     /* Fetch the originator of the messsage */
     memcpy(&originator, &msg->originator, olsr_cnf->ipsize);
     seqno = ntohs(msg->seqno);
@@ -140,6 +141,7 @@ bool olsr_ebpmsg_parser(unsigned char *packet, struct interface *olsr_if, union 
       }
 
     /* Forward the message */
+
     return true;
 }
 

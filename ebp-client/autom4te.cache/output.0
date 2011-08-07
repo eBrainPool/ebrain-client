@@ -12051,12 +12051,12 @@ if test -n "$EBP_CFLAGS"; then
     pkg_cv_EBP_CFLAGS="$EBP_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"mx-1.0 glib-2.0 gthread-2.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "mx-1.0 glib-2.0 gthread-2.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"glib-2.0 gthread-2.0 gtk+-3.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "glib-2.0 gthread-2.0 gtk+-3.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_EBP_CFLAGS=`$PKG_CONFIG --cflags "mx-1.0 glib-2.0 gthread-2.0" 2>/dev/null`
+  pkg_cv_EBP_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 gthread-2.0 gtk+-3.0" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -12067,12 +12067,12 @@ if test -n "$EBP_LIBS"; then
     pkg_cv_EBP_LIBS="$EBP_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"mx-1.0 glib-2.0 gthread-2.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "mx-1.0 glib-2.0 gthread-2.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"glib-2.0 gthread-2.0 gtk+-3.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "glib-2.0 gthread-2.0 gtk+-3.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_EBP_LIBS=`$PKG_CONFIG --libs "mx-1.0 glib-2.0 gthread-2.0" 2>/dev/null`
+  pkg_cv_EBP_LIBS=`$PKG_CONFIG --libs "glib-2.0 gthread-2.0 gtk+-3.0" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -12092,14 +12092,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        EBP_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "mx-1.0 glib-2.0 gthread-2.0" 2>&1`
+	        EBP_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "glib-2.0 gthread-2.0 gtk+-3.0" 2>&1`
         else 
-	        EBP_PKG_ERRORS=`$PKG_CONFIG --print-errors "mx-1.0 glib-2.0 gthread-2.0" 2>&1`
+	        EBP_PKG_ERRORS=`$PKG_CONFIG --print-errors "glib-2.0 gthread-2.0 gtk+-3.0" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$EBP_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (mx-1.0 glib-2.0 gthread-2.0) were not met:
+	as_fn_error $? "Package requirements (glib-2.0 gthread-2.0 gtk+-3.0) were not met:
 
 $EBP_PKG_ERRORS
 

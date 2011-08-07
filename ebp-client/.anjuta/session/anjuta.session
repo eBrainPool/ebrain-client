@@ -7,7 +7,7 @@ Geometry=1280x725+0+25
 Shortcut=E file:///home/jeetu/code/eBrainPool/ebp/ebp-client/src ebp 
 
 [File Loader]
-Files=file:///home/jeetu/code/eBrainPool/ebp/ebp-client/src/main.c#117%%%file:///home/jeetu/code/eBrainPool/ebp/ebp-client/src/ebp.h#58
+Files=file:///home/jeetu/code/eBrainPool/ebp/ebp-client/src/main.c#126%%%file:///home/jeetu/code/eBrainPool/ebp/ebp-client/src/ebp.h#1
 
 [Document Manager]
 bookmarks=<?xml version="1.0" encoding="UTF-8"?>\n<bookmarks/>\n
