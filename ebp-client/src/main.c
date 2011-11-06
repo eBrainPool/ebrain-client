@@ -116,6 +116,7 @@ int main(int argc, char *argv[])
     freeLaunchAppQueue();
     freeLaunchDialogQueue();
     return 0;
+
 }
 
 
