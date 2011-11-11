@@ -967,7 +967,8 @@ m4trace:/usr/share/aclocal/lt~obsolete.m4:96: -1- AC_DEFUN([_LT_PROG_F77])
 m4trace:/usr/share/aclocal/lt~obsolete.m4:97: -1- AC_DEFUN([_LT_PROG_FC])
 m4trace:/usr/share/aclocal/lt~obsolete.m4:98: -1- AC_DEFUN([_LT_PROG_CXX])
 m4trace:/usr/share/aclocal/pkg.m4:27: -1- AC_DEFUN([PKG_PROG_PKG_CONFIG], [m4_pattern_forbid([^_?PKG_[A-Z_]+$])
-m4_pattern_allow([^PKG_CONFIG(_PATH)?$])
+m4_pattern_allow([^PKG_CONFIG(_(PATH|LIBDIR|SYSROOT_DIR|ALLOW_SYSTEM_(CFLAGS|LIBS)))?$])
+m4_pattern_allow([^PKG_CONFIG_(DISABLE_UNINSTALLED|TOP_BUILD_DIR|DEBUG_SPEW)$])
 AC_ARG_VAR([PKG_CONFIG], [path to pkg-config utility])
 AC_ARG_VAR([PKG_CONFIG_PATH], [directories to add to pkg-config's search path])
 AC_ARG_VAR([PKG_CONFIG_LIBDIR], [path overriding pkg-config's built-in search path])
@@ -986,21 +987,21 @@ if test -n "$PKG_CONFIG"; then
 	fi
 fi[]dnl
 ])
-m4trace:/usr/share/aclocal/pkg.m4:59: -1- AC_DEFUN([PKG_CHECK_EXISTS], [AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
+m4trace:/usr/share/aclocal/pkg.m4:60: -1- AC_DEFUN([PKG_CHECK_EXISTS], [AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
 if test -n "$PKG_CONFIG" && \
     AC_RUN_LOG([$PKG_CONFIG --exists --print-errors "$1"]); then
   m4_default([$2], [:])
 m4_ifvaln([$3], [else
   $3])dnl
 fi])
-m4trace:/usr/share/aclocal/pkg.m4:84: -1- AC_DEFUN([_PKG_SHORT_ERRORS_SUPPORTED], [AC_REQUIRE([PKG_PROG_PKG_CONFIG])
+m4trace:/usr/share/aclocal/pkg.m4:86: -1- AC_DEFUN([_PKG_SHORT_ERRORS_SUPPORTED], [AC_REQUIRE([PKG_PROG_PKG_CONFIG])
 if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
         _pkg_short_errors_supported=yes
 else
         _pkg_short_errors_supported=no
 fi[]dnl
 ])
-m4trace:/usr/share/aclocal/pkg.m4:104: -1- AC_DEFUN([PKG_CHECK_MODULES], [AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
+m4trace:/usr/share/aclocal/pkg.m4:106: -1- AC_DEFUN([PKG_CHECK_MODULES], [AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
 AC_ARG_VAR([$1][_CFLAGS], [C compiler flags for $1, overriding pkg-config])dnl
 AC_ARG_VAR([$1][_LIBS], [linker flags for $1, overriding pkg-config])dnl
 
@@ -1018,9 +1019,9 @@ if test $pkg_failed = yes; then
    	AC_MSG_RESULT([no])
         _PKG_SHORT_ERRORS_SUPPORTED
         if test $_pkg_short_errors_supported = yes; then
-	        $1[]_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "$2" 2>&1`
+	        $1[]_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "$2" 2>&1`
         else 
-	        $1[]_PKG_ERRORS=`$PKG_CONFIG --print-errors "$2" 2>&1`
+	        $1[]_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "$2" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$$1[]_PKG_ERRORS" >&AS_MESSAGE_LOG_FD
@@ -1686,11 +1687,11 @@ m4trace:configure.ac:23: -1- m4_pattern_allow([^LDFLAGS$])
 m4trace:configure.ac:26: -1- m4_pattern_allow([^CFLAGS$])
 m4trace:configure.ac:29: -1- m4_pattern_allow([^CXXFLAGS$])
 m4trace:configure.ac:31: -1- m4_pattern_allow([^includedir$])
-m4trace:configure.ac:33: -1- AM_INIT_AUTOMAKE([ebp], [0.1.0])
+m4trace:configure.ac:33: -1- AM_INIT_AUTOMAKE([ebp], [0.2.0])
 m4trace:configure.ac:33: -1- m4_pattern_allow([^AM_[A-Z]+FLAGS$])
 m4trace:configure.ac:33: -1- AM_SET_CURRENT_AUTOMAKE_VERSION
 m4trace:configure.ac:33: -1- AM_AUTOMAKE_VERSION([1.11.1])
-m4trace:configure.ac:33: -1- _AM_AUTOCONF_VERSION([2.67])
+m4trace:configure.ac:33: -1- _AM_AUTOCONF_VERSION([2.68])
 m4trace:configure.ac:33: -1- m4_pattern_allow([^INSTALL_PROGRAM$])
 m4trace:configure.ac:33: -1- m4_pattern_allow([^INSTALL_SCRIPT$])
 m4trace:configure.ac:33: -1- m4_pattern_allow([^INSTALL_DATA$])
@@ -1887,63 +1888,58 @@ m4trace:configure.ac:39: -1- _AM_SUBST_NOTMAKE([am__fastdepCC_TRUE])
 m4trace:configure.ac:39: -1- _AM_SUBST_NOTMAKE([am__fastdepCC_FALSE])
 m4trace:configure.ac:43: -1- PKG_PROG_PKG_CONFIG
 m4trace:configure.ac:43: -1- m4_pattern_forbid([^_?PKG_[A-Z_]+$])
-m4trace:configure.ac:43: -1- m4_pattern_allow([^PKG_CONFIG(_PATH)?$])
+m4trace:configure.ac:43: -1- m4_pattern_allow([^PKG_CONFIG(_(PATH|LIBDIR|SYSROOT_DIR|ALLOW_SYSTEM_(CFLAGS|LIBS)))?$])
+m4trace:configure.ac:43: -1- m4_pattern_allow([^PKG_CONFIG_(DISABLE_UNINSTALLED|TOP_BUILD_DIR|DEBUG_SPEW)$])
 m4trace:configure.ac:43: -1- m4_pattern_allow([^PKG_CONFIG$])
 m4trace:configure.ac:43: -1- m4_pattern_allow([^PKG_CONFIG_PATH$])
 m4trace:configure.ac:43: -1- m4_pattern_allow([^PKG_CONFIG_LIBDIR$])
 m4trace:configure.ac:43: -1- m4_pattern_allow([^PKG_CONFIG$])
-m4trace:configure.ac:49: -1- PKG_CHECK_MODULES([EBP], [glib-2.0 gthread-2.0 gtk+-3.0])
 m4trace:configure.ac:49: -1- m4_pattern_allow([^EBP_CFLAGS$])
-m4trace:configure.ac:49: -1- m4_pattern_allow([^EBP_LIBS$])
-m4trace:configure.ac:49: -1- PKG_CHECK_EXISTS([glib-2.0 gthread-2.0 gtk+-3.0], [pkg_cv_[]EBP_CFLAGS=`$PKG_CONFIG --[]cflags "glib-2.0 gthread-2.0 gtk+-3.0" 2>/dev/null`], [pkg_failed=yes])
-m4trace:configure.ac:49: -1- PKG_CHECK_EXISTS([glib-2.0 gthread-2.0 gtk+-3.0], [pkg_cv_[]EBP_LIBS=`$PKG_CONFIG --[]libs "glib-2.0 gthread-2.0 gtk+-3.0" 2>/dev/null`], [pkg_failed=yes])
-m4trace:configure.ac:49: -1- _PKG_SHORT_ERRORS_SUPPORTED
-m4trace:configure.ac:51: -1- m4_pattern_allow([^EBP_CFLAGS$])
-m4trace:configure.ac:52: -1- m4_pattern_allow([^EBP_LIBS$])
-m4trace:configure.ac:58: -1- m4_pattern_allow([^ALL_LINGUAS$])
-m4trace:configure.ac:59: -1- AM_GLIB_GNU_GETTEXT
-m4trace:configure.ac:59: -1- m4_pattern_allow([^HAVE_LOCALE_H$])
-m4trace:configure.ac:59: -1- _m4_warn([obsolete], [The macro `AC_TRY_LINK' is obsolete.
-You should run autoupdate.], [../../lib/autoconf/general.m4:2675: AC_TRY_LINK is expanded from...
-../../lib/m4sugar/m4sh.m4:598: AS_IF is expanded from...
-../../lib/autoconf/general.m4:2019: AC_CACHE_VAL is expanded from...
-../../lib/autoconf/general.m4:2040: AC_CACHE_CHECK is expanded from...
+m4trace:configure.ac:50: -1- m4_pattern_allow([^EBP_LIBS$])
+m4trace:configure.ac:56: -1- m4_pattern_allow([^ALL_LINGUAS$])
+m4trace:configure.ac:57: -1- AM_GLIB_GNU_GETTEXT
+m4trace:configure.ac:57: -1- m4_pattern_allow([^HAVE_LOCALE_H$])
+m4trace:configure.ac:57: -1- _m4_warn([obsolete], [The macro `AC_TRY_LINK' is obsolete.
+You should run autoupdate.], [../../lib/autoconf/general.m4:2688: AC_TRY_LINK is expanded from...
+../../lib/m4sugar/m4sh.m4:606: AS_IF is expanded from...
+../../lib/autoconf/general.m4:2032: AC_CACHE_VAL is expanded from...
+../../lib/autoconf/general.m4:2053: AC_CACHE_CHECK is expanded from...
 /usr/share/aclocal/glib-gettext.m4:48: GLIB_LC_MESSAGES is expanded from...
 /usr/share/aclocal/glib-gettext.m4:312: GLIB_GNU_GETTEXT is expanded from...
 /usr/share/aclocal/glib-gettext.m4:412: AM_GLIB_GNU_GETTEXT is expanded from...
-configure.ac:59: the top level])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^HAVE_LC_MESSAGES$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^USE_NLS$])
-m4trace:configure.ac:59: -1- _m4_warn([obsolete], [The macro `AC_TRY_LINK' is obsolete.
-You should run autoupdate.], [../../lib/autoconf/general.m4:2675: AC_TRY_LINK is expanded from...
-../../lib/m4sugar/m4sh.m4:598: AS_IF is expanded from...
-../../lib/autoconf/general.m4:2019: AC_CACHE_VAL is expanded from...
-../../lib/autoconf/general.m4:2040: AC_CACHE_CHECK is expanded from...
-../../lib/m4sugar/m4sh.m4:598: AS_IF is expanded from...
+configure.ac:57: the top level])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^HAVE_LC_MESSAGES$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^USE_NLS$])
+m4trace:configure.ac:57: -1- _m4_warn([obsolete], [The macro `AC_TRY_LINK' is obsolete.
+You should run autoupdate.], [../../lib/autoconf/general.m4:2688: AC_TRY_LINK is expanded from...
+../../lib/m4sugar/m4sh.m4:606: AS_IF is expanded from...
+../../lib/autoconf/general.m4:2032: AC_CACHE_VAL is expanded from...
+../../lib/autoconf/general.m4:2053: AC_CACHE_CHECK is expanded from...
+../../lib/m4sugar/m4sh.m4:606: AS_IF is expanded from...
 ../../lib/autoconf/headers.m4:129: _AC_CHECK_HEADER_MONGREL is expanded from...
 ../../lib/autoconf/headers.m4:67: AC_CHECK_HEADER is expanded from...
 /usr/share/aclocal/glib-gettext.m4:102: GLIB_WITH_NLS is expanded from...
 /usr/share/aclocal/glib-gettext.m4:312: GLIB_GNU_GETTEXT is expanded from...
 /usr/share/aclocal/glib-gettext.m4:412: AM_GLIB_GNU_GETTEXT is expanded from...
-configure.ac:59: the top level])
-m4trace:configure.ac:59: -1- _m4_warn([obsolete], [The macro `AC_TRY_LINK' is obsolete.
-You should run autoupdate.], [../../lib/autoconf/general.m4:2675: AC_TRY_LINK is expanded from...
-../../lib/m4sugar/m4sh.m4:598: AS_IF is expanded from...
-../../lib/autoconf/general.m4:2019: AC_CACHE_VAL is expanded from...
-../../lib/autoconf/general.m4:2040: AC_CACHE_CHECK is expanded from...
-../../lib/m4sugar/m4sh.m4:598: AS_IF is expanded from...
+configure.ac:57: the top level])
+m4trace:configure.ac:57: -1- _m4_warn([obsolete], [The macro `AC_TRY_LINK' is obsolete.
+You should run autoupdate.], [../../lib/autoconf/general.m4:2688: AC_TRY_LINK is expanded from...
+../../lib/m4sugar/m4sh.m4:606: AS_IF is expanded from...
+../../lib/autoconf/general.m4:2032: AC_CACHE_VAL is expanded from...
+../../lib/autoconf/general.m4:2053: AC_CACHE_CHECK is expanded from...
+../../lib/m4sugar/m4sh.m4:606: AS_IF is expanded from...
 ../../lib/autoconf/headers.m4:129: _AC_CHECK_HEADER_MONGREL is expanded from...
 ../../lib/autoconf/headers.m4:67: AC_CHECK_HEADER is expanded from...
 /usr/share/aclocal/glib-gettext.m4:102: GLIB_WITH_NLS is expanded from...
 /usr/share/aclocal/glib-gettext.m4:312: GLIB_GNU_GETTEXT is expanded from...
 /usr/share/aclocal/glib-gettext.m4:412: AM_GLIB_GNU_GETTEXT is expanded from...
-configure.ac:59: the top level])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^HAVE_BIND_TEXTDOMAIN_CODESET$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^HAVE_BIND_TEXTDOMAIN_CODESET$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^HAVE_GETTEXT$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^MSGFMT$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^HAVE_DCGETTEXT$])
-m4trace:configure.ac:59: -1- GLIB_RUN_PROG([$MSGFMT -c -o /dev/null], [
+configure.ac:57: the top level])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^HAVE_BIND_TEXTDOMAIN_CODESET$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^HAVE_BIND_TEXTDOMAIN_CODESET$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^HAVE_GETTEXT$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^MSGFMT$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^HAVE_DCGETTEXT$])
+m4trace:configure.ac:57: -1- GLIB_RUN_PROG([$MSGFMT -c -o /dev/null], [
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1954,39 +1950,47 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 ], [MSGFMT_OPTS=-c; AC_MSG_RESULT([yes])], [AC_MSG_RESULT([no])])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^MSGFMT_OPTS$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^GMSGFMT$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^XGETTEXT$])
-m4trace:configure.ac:59: -1- _m4_warn([obsolete], [The macro `AC_TRY_LINK' is obsolete.
-You should run autoupdate.], [../../lib/autoconf/general.m4:2675: AC_TRY_LINK is expanded from...
-../../lib/m4sugar/m4sh.m4:598: AS_IF is expanded from...
+m4trace:configure.ac:57: -1- m4_pattern_allow([^MSGFMT_OPTS$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^GMSGFMT$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^XGETTEXT$])
+m4trace:configure.ac:57: -1- _m4_warn([obsolete], [The macro `AC_TRY_LINK' is obsolete.
+You should run autoupdate.], [../../lib/autoconf/general.m4:2688: AC_TRY_LINK is expanded from...
+../../lib/m4sugar/m4sh.m4:606: AS_IF is expanded from...
 ../../lib/autoconf/headers.m4:129: _AC_CHECK_HEADER_MONGREL is expanded from...
 ../../lib/autoconf/headers.m4:67: AC_CHECK_HEADER is expanded from...
 /usr/share/aclocal/glib-gettext.m4:102: GLIB_WITH_NLS is expanded from...
 /usr/share/aclocal/glib-gettext.m4:312: GLIB_GNU_GETTEXT is expanded from...
 /usr/share/aclocal/glib-gettext.m4:412: AM_GLIB_GNU_GETTEXT is expanded from...
-configure.ac:59: the top level])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^ENABLE_NLS$])
-m4trace:configure.ac:59: -1- _m4_warn([obsolete], [The macro `AC_OUTPUT_COMMANDS' is obsolete.
-You should run autoupdate.], [../../lib/autoconf/status.m4:1027: AC_OUTPUT_COMMANDS is expanded from...
+configure.ac:57: the top level])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^ENABLE_NLS$])
+m4trace:configure.ac:57: -1- _m4_warn([obsolete], [The macro `AC_OUTPUT_COMMANDS' is obsolete.
+You should run autoupdate.], [../../lib/autoconf/status.m4:1028: AC_OUTPUT_COMMANDS is expanded from...
 /usr/share/aclocal/glib-gettext.m4:102: GLIB_WITH_NLS is expanded from...
 /usr/share/aclocal/glib-gettext.m4:312: GLIB_GNU_GETTEXT is expanded from...
 /usr/share/aclocal/glib-gettext.m4:412: AM_GLIB_GNU_GETTEXT is expanded from...
-configure.ac:59: the top level])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^CATALOGS$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^CATOBJEXT$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^DATADIRNAME$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^GMOFILES$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^INSTOBJEXT$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^INTLLIBS$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^PO_IN_DATADIR_TRUE$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^PO_IN_DATADIR_FALSE$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^POFILES$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^POSUB$])
-m4trace:configure.ac:59: -1- m4_pattern_allow([^MKINSTALLDIRS$])
-m4trace:configure.ac:60: -1- m4_pattern_allow([^GETTEXT_PACKAGE$])
-m4trace:configure.ac:64: -1- m4_pattern_allow([^desktopentrydir$])
-m4trace:configure.ac:67: -1- m4_pattern_allow([^icondir$])
+configure.ac:57: the top level])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^CATALOGS$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^CATOBJEXT$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^DATADIRNAME$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^GMOFILES$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^INSTOBJEXT$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^INTLLIBS$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^PO_IN_DATADIR_TRUE$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^PO_IN_DATADIR_FALSE$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^POFILES$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^POSUB$])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^MKINSTALLDIRS$])
+m4trace:configure.ac:58: -1- m4_pattern_allow([^GETTEXT_PACKAGE$])
+m4trace:configure.ac:62: -1- m4_pattern_allow([^desktopentrydir$])
+m4trace:configure.ac:65: -1- m4_pattern_allow([^icondir$])
+m4trace:configure.ac:68: -1- PKG_CHECK_MODULES([GTK_], [gtk+-3.0])
+m4trace:configure.ac:68: -1- m4_pattern_allow([^GTK__CFLAGS$])
+m4trace:configure.ac:68: -1- m4_pattern_allow([^GTK__LIBS$])
+m4trace:configure.ac:68: -1- PKG_CHECK_EXISTS([gtk+-3.0], [pkg_cv_[]GTK__CFLAGS=`$PKG_CONFIG --[]cflags "gtk+-3.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes ], [pkg_failed=yes])
+m4trace:configure.ac:68: -1- PKG_CHECK_EXISTS([gtk+-3.0], [pkg_cv_[]GTK__LIBS=`$PKG_CONFIG --[]libs "gtk+-3.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes ], [pkg_failed=yes])
+m4trace:configure.ac:68: -1- _PKG_SHORT_ERRORS_SUPPORTED
 m4trace:configure.ac:70: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
 You should run autoupdate.], [])
 m4trace:configure.ac:70: -1- m4_pattern_allow([^LIB@&t@OBJS$])

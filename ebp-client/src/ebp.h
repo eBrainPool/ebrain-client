@@ -25,6 +25,20 @@
 #ifndef _EBP_H
 #define _EBP_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <pthread.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
+#include <dirent.h>
+#include <arpa/inet.h>
+#include <errno.h>
+
+#include <gtk/gtk.h>
+
 enum
 {
   NAME = 0,
@@ -36,21 +50,11 @@ enum
 #define WINDOW_HEIGHT 300
 #define CLIENT_COMM_PORT 2010
 
-//typedef struct
-//    {
-//    GtkWidget *treeview;
-//    GtkTreeStore *treestore;
-//    int sockfd;
-//    int newsockfd;
-//    struct sockaddr_in cli_addr;
-//    char buffer[300];
-//    } ConnListenerThreadData;
-
 typedef struct _newconndata
     {
     int newsockfd;
-    struct sockaddr_in cli_addr;
     char buffer[310];
+    uint32_t ip;
     struct _newconndata *prev;
     struct _newconndata *next;
     } NewConnData;
@@ -76,7 +80,7 @@ typedef struct _user
 typedef struct _LaunchAppQueue
     {
     gchar appname[300];
-    int ip;
+    uint32_t ip;
     int reqid;
     struct _LaunchAppQueue *prev;
     struct _LaunchAppQueue *next;
@@ -84,30 +88,30 @@ typedef struct _LaunchAppQueue
 
 typedef struct _LaunchDialogQueue
     {
-    char *username;
-    char *appname;
+    char username[100];
+    char appname[100];
     uint32_t ip;
     struct _LaunchDialogQueue *prev;
     struct _LaunchDialogQueue *next;
     } LaunchDialogQueue;
 
-GtkWidget *window = NULL;
-GtkWidget *treeview = NULL;
-GtkTreeStore *treestore = NULL;
-int sockfd = 0;
+GtkWidget *window;
+GtkWidget *treeview;
+GtkTreeStore *treestore;
+int sockfd;
 AppsData appsdata;
-User *gFirstUserNode = NULL;
-User *gLastUserNode = NULL;
-User *gCurrentUserNode = NULL;
-LaunchAppQueue *gFirstLaunchAppQueue = NULL;
-LaunchAppQueue *gLastLaunchAppQueue = NULL;
-LaunchAppQueue *gCurrentLaunchAppQueue = NULL;
-NewConnData *gFirstConn = NULL;
-NewConnData *gLastConn = NULL;
-NewConnData *gCurrentConn = NULL;
-LaunchDialogQueue *gFirstLaunchDialog = NULL;
-LaunchDialogQueue *gLastLaunchDialog = NULL;
-LaunchDialogQueue *gCurrentLaunchDialog = NULL;
+User *gFirstUserNode;
+User *gLastUserNode;
+User *gCurrentUserNode;
+LaunchAppQueue *gFirstLaunchAppQueue;
+LaunchAppQueue *gLastLaunchAppQueue;
+LaunchAppQueue *gCurrentLaunchAppQueue;
+NewConnData *gFirstConn;
+NewConnData *gLastConn;
+NewConnData *gCurrentConn;
+LaunchDialogQueue *gFirstLaunchDialog;
+LaunchDialogQueue *gLastLaunchDialog;
+LaunchDialogQueue *gCurrentLaunchDialog;
 int requestid;
 
 int init_treeview(GtkWidget *view,GtkTreeStore *treestore);
@@ -120,19 +124,18 @@ int process_useronline_msg(char *buf);
 int connect_to_client(uint32_t ip,int *comm_socket);
 User* add_user(char* version,char* name,uint32_t ip);
 User* del_user(User* deluser);
-NewConnData *add_newconn(int newsockfd,struct sockaddr_in cli_addr);
+NewConnData *add_newconn(int newsockfd,uint32_t ip);
 LaunchDialogQueue *add_launchdialog_queue(char *username,char *appname,uint32_t ip);
 int show_user_online(User *UserNode);
 gboolean show_user_offline(gpointer user_data);
 int get_remoteuser_apps(User *UserNode);
 void send_launchapp_req(User *UserNode,char *appname);
-LaunchAppQueue* add_to_launch_queue(char *appname,int ip,int reqid);
+LaunchAppQueue* add_to_launch_queue(char *appname,uint32_t ip,int reqid);
 void set_launchappqueue_locked(LaunchAppQueue *dest,LaunchAppQueue *src);
-void set_usernode_locked(User *destnode, User* srcnode);
 int process_launchapp_req(char *buf,NewConnData *data);
 gboolean launch_approve_dialog(gpointer data);
 gpointer start_server(gpointer ptr_ip);
-gpointer process_launchreq_accepted(gpointer user_data);
+int process_launchreq_accepted(NewConnData *data);
 void freeusermem(void);
 void freeLaunchAppQueue(void);
 void freeLaunchDialogQueue(void);

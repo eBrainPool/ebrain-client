@@ -4,7 +4,7 @@ AC_PREREQ(2.61)
 # odd micro numbers indicate in-progress development
 # even micro numbers indicate released versions
 m4_define(ebp_version_major, 0)
-m4_define(ebp_version_minor, 1)
+m4_define(ebp_version_minor, 2)
 m4_define(ebp_version_micro, 0)
 
 m4_define([ebp_version],
@@ -46,9 +46,7 @@ PKG_PROG_PKG_CONFIG
 # AC_CHECK_FUNCS([memset])
 
 # all libraries listed are associated with "EBP" tag
-PKG_CHECK_MODULES(EBP,[glib-2.0 gthread-2.0 gtk+-3.0])
-
-AC_SUBST(EBP_CFLAGS)
+[]AC_SUBST(EBP_CFLAGS)
 AC_SUBST(EBP_LIBS)
 
 
@@ -67,6 +65,8 @@ icondir=${datadir}/icons/hicolor/32x32/apps
 AC_SUBST(icondir)
 
 # Output files
+PKG_CHECK_MODULES(GTK_,gtk+-3.0)
+
 AC_OUTPUT([Makefile
 src/Makefile
 src/ebp.desktop

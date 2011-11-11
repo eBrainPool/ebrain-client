@@ -1,6 +1,11 @@
 
+AM_CPPFLAGS = $(GTK__CFLAGS) 
+
 bin_PROGRAMS = ebp
-ebp_SOURCES = main.c
+ebp_SOURCES = main.c \
+	utils.c
+
+ebp_LDADD = $(GTK__LIBS)
 
 desktopentry_DATA = ebp.desktop
 icon_DATA = ebp32.png

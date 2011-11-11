@@ -50,9 +50,10 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(desktopentrydir)" \
 	"$(DESTDIR)$(icondir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_ebp_OBJECTS = main.$(OBJEXT)
+am_ebp_OBJECTS = main.$(OBJEXT) utils.$(OBJEXT)
 ebp_OBJECTS = $(am_ebp_OBJECTS)
-ebp_LDADD = $(LDADD)
+am__DEPENDENCIES_1 =
+ebp_DEPENDENCIES = $(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -127,6 +128,8 @@ FGREP = @FGREP@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
 GREP = @GREP@
+GTK__CFLAGS = @GTK__CFLAGS@
+GTK__LIBS = @GTK__LIBS@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -231,7 +234,11 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-ebp_SOURCES = main.c
+AM_CPPFLAGS = $(GTK__CFLAGS) 
+ebp_SOURCES = main.c \
+	utils.c
+
+ebp_LDADD = $(GTK__LIBS)
 desktopentry_DATA = ebp.desktop
 icon_DATA = ebp32.png
 
@@ -338,6 +345,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utils.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
