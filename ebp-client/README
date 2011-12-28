@@ -1,6 +1,9 @@
-eBrainPool v0.1
+eBrainPool v0.3
 Copyright (C) 2010, eBrain.
 
+This release now uses Avahi for discovery instead of using a custom olsr plugin to augment the messages passed by olsr with custom eBrainPool messages used for discovery. The ebp-olsr-plugin has consequently been removed from master. 
+
+Since the ebrainpool service is not yet registered with IANA the ebrainpool.services file found in the root of this tree could be added into /etc/avahi/services (or similar path). Note though that this should be considered only temporary. The long term solution is to register the ebrainpool service type with IANA which will be done once the service parameters (such as which TXT variables are needed) are better defined.
 
 -----------------------------------------------------------------------------
  Build
