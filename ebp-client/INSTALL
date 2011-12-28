@@ -1,12 +1,1 @@
-
-Building:
-  $ ./autogen.sh  [--enable-gtk-doc] [--prefix=/usr]
-  $ make
-
-Installing:
-  $ sudo make install
-
-Running:
-  $ ebp
-
-
+/usr/share/automake-1.11/INSTALL

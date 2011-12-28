@@ -36,8 +36,11 @@
 #include <dirent.h>
 #include <arpa/inet.h>
 #include <errno.h>
+#include <ifaddrs.h>
+#include <netdb.h>
 
 #include <gtk/gtk.h>
+
 
 enum
 {
@@ -113,6 +116,7 @@ LaunchDialogQueue *gFirstLaunchDialog;
 LaunchDialogQueue *gLastLaunchDialog;
 LaunchDialogQueue *gCurrentLaunchDialog;
 int requestid;
+struct ifaddrs *ifaddr;
 
 int init_treeview(GtkWidget *view,GtkTreeStore *treestore);
 gpointer connlistener_thread(gpointer user_data);
@@ -122,7 +126,7 @@ char* get_installed_apps(int* count,int* blocksize);
 int filter(const struct dirent *dir);
 int process_useronline_msg(char *buf);
 int connect_to_client(uint32_t ip,int *comm_socket);
-User* add_user(char* version,char* name,uint32_t ip);
+User* add_user(const char* version,const char* name,uint32_t ip);
 User* del_user(User* deluser);
 NewConnData *add_newconn(int newsockfd,uint32_t ip);
 LaunchDialogQueue *add_launchdialog_queue(char *username,char *appname,uint32_t ip);
@@ -142,6 +146,8 @@ void freeLaunchDialogQueue(void);
 void launchdlg_approved(char *appname,uint32_t ip);
 void launch_approve_dialog_response(GtkWidget *dialog,gint response_id, gpointer user_data);
 NewConnData *del_newconn(NewConnData *conndata);
+int getlocaladdrs();
+int process_useronline_avahi_msg(const char *ip, const char *username, const char *version);
 
 //Signals
 void on_treeview_row_activated(GtkWidget *widget,GtkTreePath *path,GtkTreeViewColumn *column,gpointer user_data);

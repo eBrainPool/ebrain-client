@@ -1,29 +1,27 @@
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * main.c contains main().  
- * The starting point of the application
- *
- * Copyright (C) 2010, eBrain.
- *
- * Author: Jatin Golani
+ * main.c
+ * Copyright (C) Jatin Golani 2011 <ebrain@ebrain.in>
  * 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ebp is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Library General Public License for more details.
+ * ebp is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 
- * 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <config.h>
+#include <glib/gi18n.h>
+
 #include "ebp.h"
+#include "avahi-discovery.h"
 
 G_LOCK_DEFINE(treeview);
 G_LOCK_DEFINE(treestore);
@@ -78,6 +76,11 @@ int main(int argc, char *argv[])
 
     // allocate a memory block and retrieve list of apps installed on the system 
     appsdata.apps = get_installed_apps(&appsdata.count,&appsdata.blocksize); //jeetu - can pass pointer to Appsdata instead
+
+    // get addresses of interfaces on the local system (localhost)
+    getlocaladdrs(&ifaddr);
+
+    avahi_setup();
 
     // jeetu - assuming for now olsr is running; add code to check for or launch olsr.
    
@@ -145,7 +148,7 @@ gpointer connlistener_thread(gpointer user_data)
     fd_set rfds;
     fd_set afds;
     int nfds = 0;
-    int reuse=0;
+    int reuse=0,ret=0;
     int i = 0;    
     NewConnData *newconndata = NULL;
       
@@ -161,7 +164,7 @@ gpointer connlistener_thread(gpointer user_data)
     
     /* Enable address reuse */
     reuse = 1;
-    setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
+    ret = setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
     
     if(bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) 
       perror("connlistener_thread: ERROR on binding");      
@@ -228,11 +231,11 @@ gpointer newconnrequests_thread(gpointer user_data)
       {     
       strncpy(str,buffer,256);
       token = strtok_r(str,":",&saveptr1);
-      if(strcmp(token,"eBrainOnline") == 0)
+/*      if(strcmp(token,"eBrainOnline") == 0)
         {
         process_useronline_msg(buffer);
         }
-
+*/
       // sends a list of applications installed on this host  
       if(strcmp(token,"GetApps") == 0)
         {
@@ -374,6 +377,37 @@ int process_useronline_msg(char *buf)
 
     return 0;
 }
+
+
+
+int process_useronline_avahi_msg(const char *ip_str, const char *username, const char *version)
+{
+    int ret = 0;
+    int comm_socket = 0;
+    uint32_t ip = 0;
+    struct in_addr in;
+    
+    inet_aton(ip_str,&in);
+    printf("\nprocess_useronline_avahi_msg: in.s_addr = %d\n",in.s_addr);
+
+    //check to see if remote client is reachable.
+    //This takes care of a bug wherein user keeps flickering
+    //in the local client when remote client is unreachable but remote olsr is up. 	  
+    ret = connect_to_client(ip,&comm_socket);
+    if(ret != -1)
+      {
+      G_LOCK(user);
+      gCurrentUserNode = add_user(version,username,in.s_addr);
+      G_UNLOCK(user);
+      if(gCurrentUserNode != NULL)
+        {
+        show_user_online(gCurrentUserNode);
+        }
+      }
+
+    return 0;
+}
+
 
 
 int show_user_online(User *UserNode)
@@ -684,6 +718,3 @@ int process_launchreq_accepted(NewConnData *data)
 
     return 0;   
 }
-
-
-

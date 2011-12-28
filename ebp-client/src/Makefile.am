@@ -1,29 +1,28 @@
+## Process this file with automake to produce Makefile.in
 
-AM_CPPFLAGS = $(GTK__CFLAGS) 
+## Created by Anjuta
+
+
+
+AM_CPPFLAGS = \
+	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
+	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
+	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
+	$(EBP_CFLAGS)
+
+AM_CFLAGS =\
+	 -Wall\
+	 -g
 
 bin_PROGRAMS = ebp
-ebp_SOURCES = main.c \
+
+ebp_SOURCES = \
+	main.c \
+	avahi-discovery.c \
 	utils.c
 
-ebp_LDADD = $(GTK__LIBS)
+ebp_LDFLAGS = \
+	-Wl,--export-dynamic
 
-desktopentry_DATA = ebp.desktop
-icon_DATA = ebp32.png
-
-#see gcc man page for description: http://www.google.com/search?q=man+gcc
-AM_CFLAGS = @EBP_CFLAGS@ -Wall -Werror -g3 -O0 -ggdb              \
-	-DPKGDATADIR="\"$(pkgdatadir)\""
-AM_LDFLAGS = @EBP_LIBS@ 
-
-
-#Example for copying directory to project data directory on "make install"
-#install-data-hook:
-#	$(MKDIR_P) ${pkgdatadir}
-#	cp -R <dir>/* ${pkgdatadir}
-
-EXTRA_DIST = ebp.conf
-
-CLEANFILES = *~ ebp.desktop
-
-INCLUDES = 
+ebp_LDADD = $(EBP_LIBS)
 
