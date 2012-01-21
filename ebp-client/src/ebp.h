@@ -118,6 +118,9 @@ LaunchDialogQueue *gCurrentLaunchDialog;
 int requestid;
 struct ifaddrs *ifaddr;
 
+//config file values
+gchar *config_entry_username;
+
 int init_treeview(GtkWidget *view,GtkTreeStore *treestore);
 gpointer connlistener_thread(gpointer user_data);
 gpointer newconnrequests_thread(gpointer user_data);

@@ -44,7 +44,7 @@ int avahi_setup(void)
       return 0;
       }
 
-    avahi_name = avahi_strdup("Jeetu@laptop");
+    avahi_name = avahi_strdup(config_entry_username);
 
     /* Allocate a new client */
     client = avahi_client_new(avahi_threaded_poll_get(threaded_poll), 0, client_callback, NULL, &error);

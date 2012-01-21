@@ -3,7 +3,7 @@
  * main.c
  * Copyright (C) Jatin Golani 2011 <ebrain@ebrain.in>
  * 
-ebp is free software: you can redistribute it and/or modify it
+ * ebp is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -73,6 +73,10 @@ int main(int argc, char *argv[])
     gtk_container_add(GTK_CONTAINER(window), vbox);    
 
     gtk_widget_show_all(window);
+
+    // Reads in values from the config file
+    if(readconfigfile() == 0)
+      return 0;
 
     // allocate a memory block and retrieve list of apps installed on the system 
     appsdata.apps = get_installed_apps(&appsdata.count,&appsdata.blocksize); //jeetu - can pass pointer to Appsdata instead

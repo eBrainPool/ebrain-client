@@ -459,3 +459,33 @@ int getlocaladdrs()
 
 
 
+int readconfigfile()
+{
+    GKeyFile     *key_file;
+    GError       *error;
+    const char *configfile = "./ebp.conf";  //jeetu - for now looking for the config file in the same dir as the exec; should be /etc
+ 
+    key_file = g_key_file_new (); 
+    error = NULL;
+    
+    if(!g_key_file_load_from_file (key_file,  configfile, 0, &error))
+      {
+      fprintf (stderr,"\nFailed to load config file: %s\n",  error->message);
+      g_error_free (error);
+      return 0;
+      }
+
+    error = NULL;
+    config_entry_username = g_key_file_get_value (key_file, "General", "Username", &error);
+    if(config_entry_username == NULL)
+      {
+      fprintf(stderr,"\nHmm. What are you trying to pull on me?\nError reading config file. %s.\n",error->message);
+      g_error_free(error);
+      return 0;
+      }
+
+    return 1;
+}
+
+
+
