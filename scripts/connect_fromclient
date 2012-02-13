@@ -1,0 +1,16 @@
+#!/bin/sh
+
+remote_ip=$1
+remote_path=/tmp/ebp
+local_path=/tmp/ebp
+
+
+#first let us create the local dir for remote mounting
+mkdir $local_path 2> /dev/null
+
+#allow access from remote IP to X
+#echo $remote_ip
+xhost $remote_ip
+
+#Client just ssh's in
+ssh $remote_ip -X -F ~/.ebp/ssh_config -i ~/.ebp/clientkeys  $2

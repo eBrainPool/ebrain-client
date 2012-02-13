@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/sbin/sshd -e -D -d -f ~/.ebp/sshd_config 
