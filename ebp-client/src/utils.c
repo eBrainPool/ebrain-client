@@ -276,10 +276,16 @@ char* get_installed_apps(int* count,int* blocksize)
 {	
     int n = 0;
     int i = 0;
-    char *chr;
     struct dirent **namelist = NULL;
     int size = 0;
     char *buf;
+    char file[256];
+    file[0] = '\0';
+    
+    gchar *retval;
+    GKeyFile *key_file;
+    key_file = g_key_file_new (); 
+    GError   *error;
     
     // memory should get freed in main() with free(appsdata.apps)
     buf = malloc(1);
@@ -291,22 +297,39 @@ char* get_installed_apps(int* count,int* blocksize)
     else 
       {
       while(i < n)
-           {
-           chr = strrchr(namelist[i]->d_name,'.');
-           *chr = '\0';
-      	   size = size + strlen(namelist[i]->d_name) + 8;
-      	   buf = realloc(buf,size);
-           strncat(buf,namelist[i]->d_name,strlen(namelist[i]->d_name)); 
-      	   strncat(buf,":",1);
-      	   free(namelist[i]);
-	   i++;
-           }
+        {
+        size = size + strlen(namelist[i]->d_name) + 8;
+        buf = realloc(buf,size);
+    
+        error = NULL;
+        strcpy(file,"/usr/share/applications/");
+        strncat(file, namelist[i]->d_name, strlen(namelist[i]->d_name)); 
+        if(!g_key_file_load_from_file (key_file,  file, 0, &error))
+          {
+          printf("Failed to load \"%s\": %s\n",  namelist[i]->d_name, error->message);
+          }
+        else
+          {
+          retval =  g_key_file_get_locale_string(key_file, "Desktop Entry", "Exec", NULL, &error);
+          // we are not handling arguments, split at first whitespace
+          // TODO: policy for handling args, across remote
+          // code to implement the same, separate *.desktop & *-file.desktop
+          retval = strtok(retval, " ");
+          if(retval!= NULL) 
+            {
+            strncat(buf, retval, strlen(retval));
+            strncat(buf,":",1);
+            }
+          }           
+      	free(namelist[i]);
+      	i++;
+        }
       free(namelist);
       }	
-	  
+
+    g_key_file_free(key_file);	  
     *blocksize = strlen(buf);
     *count = n;
-
     return(buf);
 }
 
