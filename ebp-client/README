@@ -1,28 +1,130 @@
 eBrainPool v0.3
 Copyright (C) 2010, eBrain.
 
-This release now uses Avahi for discovery instead of using a custom olsr plugin to augment the messages passed by olsr with custom eBrainPool messages used for discovery. The ebp-olsr-plugin has consequently been removed from master. 
+The current master code uses the following packages as specified on my Debian Testing machine.
 
-Since the ebrainpool service is not yet registered with IANA the ebrainpool.services file found in the root of this tree could be added into /etc/avahi/services (or similar path). Note though that this should be considered only temporary. The long term solution is to register the ebrainpool service type with IANA which will be done once the service parameters (such as which TXT variables are needed) are better defined.
+avahi-daemon 0.6.30
+libavahi-client 0.6.30
+libgtk-3.0 3.2.3
+libgtk-3-dev 3.2.3
+openssh-server 1:5.9p1
+openssh-client 1:5.9p1
 
------------------------------------------------------------------------------
- Build
------------------------------------------------------------------------------
-$ ./autogen.sh
-$ make
+Changes
+------------
 
------------------------------------------------------------------------------
- Build with documentation generated (usually for libraries)
------------------------------------------------------------------------------
-$ ./autogen.sh --enable-gtk-doc
-$ make
+The code currently relies on Avahi for service discovery. The earlier code base used custom Olsr messages
+through our Olsr extending plugin and was therefore tied up with the Olsr routing protocol. A bad design
+as pointed to by many in the community (thanks guys).As such there is no Olsr plugin. You can use this
+code on any network which supports mDNS/Avahi. Most local networks and mesh networks should do. You
+should also be able to use different mesh network routing protocols to create ad-hoc networks.
 
-( If built with the --enable-gtk-doc flag above you can view the index.html
-  file in your web browser. )
-$ firefox ./docs/reference/index.html
+Building the code
+---------------------
 
------------------------------------------------------------------------------
- Install
------------------------------------------------------------------------------
-$ sudo make install
+1. Preparation:
+
+Understand your rights, This code released under a GNU GPL license http://www.gnu.org/licenses/gpl.html
+
+make a .ebp directory in your home folder
+
+Quick overview, you will download code and these scripts in the next step (#2)
+
+configs:
+-> ssh_config
+-> sshd_config
+
+scripts:
+connect_fromclient
+start_srv
+
+Use the files under the scripts subdirectory in the master and copy the files into your .ebp directory
+Amongst other settings we are using X over SSH forwarding enabled here. Custom ssh config files are used here
+so as not to bungle up your system wide standard ssh settings.
+
+2. Source download (you need a GIT client)
+
+Public Access:
+Download the code!!
+
+    git clone git://ebrain.in/ebrainpool.git
+
+You will see two source directories
+
+" ebp-client "
+this is the main eBrain client application
+
+" scripts "
+this holds the  custom scripts to place in your ~/.ebp directory.
+
+3. Generate your SSH keys
+
+It's best to refer to the official OpenSSH documents on
+
+The system uses pubic key cryptography with a combination of settings in ssh to allow access to the machines b/w each other. Currently you need to manually install your public keys onto the machine you plan to access. The security model currently is very loose and for now please use this only in a controlled test environment, its how we use it. The future roadmaps include things like fixing this as one of the first things... any help here, is always appreciated.
+
+We are gonna create the following files
+( used in .ebp/ssh_config )
+clientkeys : DSA privatekey
+
+( used in .ebp/sshd_config )
+ssh_host_dsa_key
+ssh_host_rsa_key
+
+**HOWTO**
+
+cd ~/.ebp
+ssh-keygen -t dsa -f clientkeys
+ssh-keygen -t dsa -f ssh_host_dsa_key
+
+**select NO PASSPHRASE when asked
+
+--one more thing, copy the .ebp/clientkeys.pub into .ebp/authorized_keys
+
+cat .ebp/clientkeys.pub > .ebp/authorized_keys
+
+Again....
+These keys are very important, copy the public keys across to the machine you want to grant access too. Again, please remember to do all of this in a trial test environment which you have full control over. This could potentially create a massive security hole and open your machine to anyone having the private/public key set. You have been warned :)
+
+4. Build client
+
+cd ebp-client
+./autogen.sh
+make
+
+if all goes well, there will be an ebp binary in src/ directory
+
+5. the ebrainpool.services file
+
+Since the ebrainpool service is not yet registered with IANA the ebrainpool.services file found in the ebp-client directory should be placed into /etc/avahi/services (or similar path depending on your distribution). Note though that this should be considered only temporary. The long term solution is to register the ebrainpool service type with IANA which will be done once the service parameters (TXT variables,etc) are better defined.
+
+6. Configure ebp.conf
+
+You can specific your username in the ebp.conf file also found in the ebp-client directory of master.
+*You should place this in the same path as is the executable.
+
+7. start client
+
+If all is well, you should see the other machine (with the username you filled in in the ebp.conf) show up. You will also be able to see a list of applications exported from that machine. Click any to start one. A message will popup on the remote machine asking for user confirmation, once the remote user accepts it, the application will start remotely and show up on your screen for you to use.
+
+NOTES
+
+1. Ad-Hoc Wireless
+
+We run our tests on ad-hoc wireless. If you need help setting this up, here is some good documentation http://wiki.debian.org/WiFi/AdHoc
+
+2. Mesh Networks
+
+You can use eBrainPool on standard local networks or on mesh networks (ad-hoc or otherwise). The original code has been developed and tested using the Olsr (www.olsr.org) mesh routing protocol. However it should be possible to use any other protocol as well. Since we're very very excited by mesh, it would give us a big thrill to hear your experiences with different mesh routing protocols :)
+
+What we ask
+
+1. Use, test, comment, play, code with this. Submit your patches back to, we are in the process of setting up our dev systems to accommodate anyone interested.
+
+Your help will be appreciated in any form, be it an idea, a comment, a suggestion too. So please feel free to contact us with your ideas and suggestions.
+
+Our Mailing list
+Join the Mailing List via the Web Interface or simply send an email to "talk-subscribe@ebrain.in"
+
+Or contact us directly, email us on ebrain@ebrain.in
 
