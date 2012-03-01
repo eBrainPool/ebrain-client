@@ -201,6 +201,8 @@ gpointer connlistener_thread(gpointer user_data)
     return NULL;  	 
 }
 
+//TODO: Make sure that all of threads created are killed at program exit
+
 // newconnrequests_thread()
 //
 // thread launched by the connlistener thread that processes:
@@ -646,24 +648,49 @@ void launchdlg_approved(char *appname,uint32_t ip)
 }
 
 
-
+//TODO: Make sure that all of threads created are killed at program exit
 gpointer start_server(gpointer ptr_ip)
 {
-    char temp[256];
-    char str_ip[21];
-    struct in_addr in;
-    int ip = 0;
+    int piped_in = 0, piped_out = 0, piped_err = 0;
+    char onechar;
+    char *args[] = { 
+                        "/usr/sbin/sshd",
+                        "-e","-D","-d",
+                        "-o", "Port 20101",
+                        "-o", "HostKey /home/jeetu/.ebp/ssh_host_rsa_key",
+                        "-o", "HostKey /home/jeetu/.ebp/ssh_host_dsa_key",
+                        "-o", "UsePrivilegeSeparation yes",
+                        "-o", "KeyRegenerationInterval 3600",
+                        "-o", "ServerKeyBits 768",
+                        "-o", "SyslogFacility AUTH",
+                        "-o", "LoginGraceTime 600",
+                        "-o", "PermitRootLogin no",
+                        "-o", "StrictModes yes",
+                        "-o", "RSAAuthentication yes",
+                        "-o", "PubkeyAuthentication yes",
+                        "-o", "AuthorizedKeysFile /home/jeetu/.ebp/authorized_keys",
+                        "-o", "RhostsRSAAuthentication no",
+                        "-o", "HostbasedAuthentication no",
+                        "-o", "IgnoreUserKnownHosts yes",
+                        "-o", "PermitEmptyPasswords no",
+                        "-o", "ChallengeResponseAuthentication no",
+                        "-o", "PasswordAuthentication no",
+                        "-o", "X11Forwarding yes",
+                        "-o", "X11DisplayOffset 10",
+                        "-o", "PrintMotd no",
+                        "-o", "PrintLastLog yes",
+                        "-o", "TCPKeepAlive yes",
+                        "-o", "UsePAM no",
+                        "-o", "PermitTunnel yes",
+                        NULL 
+                   };
 
-    ip = *(int *)ptr_ip;
 
-    in.s_addr = ip;
-    strncpy(str_ip,inet_ntoa(in),20);
-
-    temp[0] = '\0';	
-
-    strncat(temp,"~/.ebp/start_srv ",18); //jeetu - hardcoded 
-    strncat(temp,str_ip,20);
-    system(temp); 
+    pipe_to_program("/usr/sbin/sshd",args,&piped_in,&piped_out,&piped_err);
+    while(read(piped_err,&onechar,1) > 0)
+         {
+         printf("%c",onechar);
+         }
 
     return NULL;
 }
@@ -672,21 +699,45 @@ gpointer start_server(gpointer ptr_ip)
 int process_launchreq_accepted(NewConnData *data)
 {
     char temp[350];
-    char appname[257];
     char ip[21];
-    int j = 0;
-    char *str1 = NULL,*token = NULL;
+    int j = 0,i = 0;
     char *saveptr1 = NULL;
     struct in_addr in;
     LaunchAppQueue *queue;
     char buf[300];
+    int piped_in = 0, piped_out = 0, piped_err = 0;
+    char onechar;
+
+    char *str1 = NULL,*token = NULL;
+    char *args1[] = {
+                   "/usr/bin/ssh",
+                   "-v", "-X",
+                   "-o", "Host *",
+                   "-o", "RSAAuthentication no",
+                   "-o", "PasswordAuthentication no",
+                   "-o", "IdentityFile ~/.ebp/clientkeys",
+                   "-o", "Port 20101",
+                   "-o", "Ciphers arcfour256,arcfour128",
+                   "-o", "StrictHostKeyChecking no",
+                   "-o", "UserKnownHostsFile ~/.ebp/known_hosts",
+                   "-o", "Compression yes",
+                   "-o", "CompressionLevel 7",
+                   "-o", "SendEnv LANG LC_*",
+                   "-o", "HashKnownHosts no",
+                   "-o", "GSSAPIAuthentication no",
+                   "-o", "GSSAPIDelegateCredentials no",
+                   "",
+                   "",
+                   NULL 
+                   };
+    char args2[2][257];
 		  
-    appname[0] = '\0';
     temp[0] = '\0';
     ip[0] = '\0';
  
     in.s_addr = data->ip;  
     strncpy(ip,inet_ntoa(in),20);		
+    sprintf(args2[0],"jeetu@%s",ip);
 
     strcpy(buf,data->buffer);
     for(j = 1, str1 = buf; ; j++, str1 = NULL)  
@@ -696,29 +747,38 @@ int process_launchreq_accepted(NewConnData *data)
          break;        
        printf("%d: %s\n", j, token); 
        if(j == 2) // second argument
-         strcpy(appname,token);
+         strcpy(args2[1],token);
        }	
 
+    // include arguments for user@host to connect to and the appname    
+    j = 0; 
+    while(args1[j] != NULL)
+         {
+         // substitute the empty strings ("") in args with the correct values
+         if(strcmp(args1[j],"") == 0)
+           {
+           args1[j] = malloc(strlen(args2[i]));
+           strncpy(args1[j],args2[i],strlen(args2[i]));
+           i++;
+           }
+         printf("args1[j] = %s\n",args1[j]);
+         j++;
+         }
+
+    
     //check to see if the request was indeed sent
     queue = gFirstLaunchAppQueue;
     while(queue != NULL)
          {
-//         if(queue->ip != data->cli_addr.sin_addr.s_addr)
-//           printf("\nprocess_launchreq_accepted: queue->ip != data->cli_addr.sin_addr.s_addr \n");
-//         if(strncmp(queue->appname,appname,20) == 0 && queue->ip == data->cli_addr.sin_addr.s_addr)
-//           {
-           temp[0] = '\0';
+//       if(queue->ip != data->cli_addr.sin_addr.s_addr)
+//         printf("\nprocess_launchreq_accepted: queue->ip != data->cli_addr.sin_addr.s_addr \n");
+//       if(strncmp(queue->appname,appname,20) == 0 && queue->ip == data->cli_addr.sin_addr.s_addr)
+//         {
            sleep(3);
-           printf("\nprocess_launchreq_accepted: running ~/.ebp/connect_fromclient\n");
-           strncat(temp,"~/.ebp/connect_fromclient ",27);
-           strncat(temp,ip,20);
-           strncat(temp," ",1);
-           strncat(temp,appname,50);
-           printf("\nprocess_launchreq_accepted: temp = %s\n",temp);
-           system(temp); 
-//           }
-         queue = queue->next;	  	     
-         }  	  
+           pipe_to_program("/usr/bin/ssh",args1,&piped_in,&piped_out,&piped_err);
+//         }
+         queue = queue->next;
+         }
 
     return 0;   
 }

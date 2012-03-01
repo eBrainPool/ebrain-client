@@ -512,3 +512,77 @@ int readconfigfile()
 
 
 
+
+void pipe_to_program(char *path, char **args, int *in, int *out, int *err)
+{
+	int c_in = 0, c_out = 0, c_err = 0;
+	int pin[2], pout[2], perr[2];
+
+	if ((pipe(pin) == -1) || (pipe(pout) == -1) || (pipe(perr) == -1))
+		//fatal("pipe: %s", strerror(errno));
+	   {
+	   fprintf(stderr,"fork: %s\n", strerror(errno));
+	   _exit(1);
+	   }
+	*in = pin[0];
+	*out = pout[1];
+	*err = perr[0];
+	c_in = pout[0];
+	c_out = pin[1];
+	c_err = perr[1];
+
+	if ((childpid = fork()) == -1)
+		//fatal("fork: %s", strerror(errno));
+           {
+	   fprintf(stderr,"fork: %s\n", strerror(errno));
+	   _exit(1);
+           }
+
+	else if (childpid == 0) {
+		if ((dup2(c_in, STDIN_FILENO) == -1) ||
+		    (dup2(c_out, STDOUT_FILENO) == -1) ||
+		    (dup2(c_err, STDERR_FILENO) == -1)) {
+			fprintf(stderr, "dup2: %s\n", strerror(errno));
+			_exit(1);
+		}
+		close(*in);
+		close(*out);
+		close(*err);
+		close(c_in);
+		close(c_out);
+		close(c_err);
+
+		/*
+		 * The underlying ssh is in the same process group, so we must
+		 * ignore SIGINT if we want to gracefully abort commands,
+		 * otherwise the signal will make it to the ssh process and
+		 * kill it too.  Contrawise, since sftp sends SIGTERMs to the
+		 * underlying ssh, it must *not* ignore that signal.
+		 */
+		signal(SIGINT, SIG_IGN);
+		signal(SIGTERM, SIG_DFL);
+		execvp(path, args);
+		fprintf(stderr, "exec: %s: %s\n", path, strerror(errno));
+		_exit(1);
+	}
+
+	signal(SIGTERM, killchild);
+	signal(SIGINT, killchild);
+	signal(SIGHUP, killchild);
+	close(c_in);
+	close(c_out);
+	close(c_err);
+}
+
+
+/* ARGSUSED */
+void killchild(int signo)
+{
+	if (childpid > 1) {
+		kill(childpid, SIGTERM);
+		waitpid(childpid, NULL, 0);
+	}
+
+	_exit(1);
+}
+
