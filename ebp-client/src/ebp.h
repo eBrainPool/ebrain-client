@@ -121,6 +121,8 @@ struct ifaddrs *ifaddr;
 //config file values
 gchar *config_entry_username;
 
+int childpid;
+
 int init_treeview(GtkWidget *view,GtkTreeStore *treestore);
 gpointer connlistener_thread(gpointer user_data);
 gpointer newconnrequests_thread(gpointer user_data);
@@ -151,6 +153,8 @@ void launch_approve_dialog_response(GtkWidget *dialog,gint response_id, gpointer
 NewConnData *del_newconn(NewConnData *conndata);
 int getlocaladdrs();
 int process_useronline_avahi_msg(const char *ip, const char *username, const char *version);
+void pipe_to_program(char *path, char **args, int *in, int *out,int *err);
+void killchild(int signo);
 
 //Signals
 void on_treeview_row_activated(GtkWidget *widget,GtkTreePath *path,GtkTreeViewColumn *column,gpointer user_data);

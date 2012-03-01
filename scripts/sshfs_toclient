@@ -1,8 +1,0 @@
-#!/bin/sh
-
-remote_ip=$1
-localmount=/tmp/ebp
-remotemount=/tmp/ebp
-
-xhost $remote_ip
-sshfs $remote_ip: $localmount -F ~/.ebp/client/ssh_config  -p 2010
