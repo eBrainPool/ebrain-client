@@ -26,7 +26,7 @@
 
 #include "ebp.h"
 
-User* add_user(const char* version,const char* name,uint32_t ip)
+User* add_user(const char* version,const char* name,const char *ssh_login_user,uint32_t ip)
 {
     User* temp = NULL;
     User* current_node = NULL;
@@ -67,6 +67,7 @@ User* add_user(const char* version,const char* name,uint32_t ip)
       }
 
     strncpy(current_node->name,name,20); //jeetu - hardcoded size
+    strncpy(current_node->ssh_login_user,ssh_login_user,256);
     strncpy(current_node->version,version,6);
     current_node->ip = ip;
 
@@ -482,7 +483,7 @@ int getlocaladdrs()
 
 
 
-int readconfigfile()
+int readconfigfile(void)
 {
     GKeyFile     *key_file;
     GError       *error;

@@ -74,6 +74,10 @@ int main(int argc, char *argv[])
 
     gtk_widget_show_all(window);
 
+    // get the user running this process sent to remote users for ssh connects back to this user
+    ssh_login_userdetails = getpwuid(getuid());
+    printf("\nssh_login_userdetails->pw_name = %s\n",ssh_login_userdetails->pw_name);
+
     // Reads in values from the config file
     if(readconfigfile() == 0)
       return 0;
@@ -152,7 +156,7 @@ gpointer connlistener_thread(gpointer user_data)
     fd_set rfds;
     fd_set afds;
     int nfds = 0;
-    int reuse=0,ret=0;
+    int reuse=0;
     int i = 0;    
     NewConnData *newconndata = NULL;
       
@@ -168,7 +172,7 @@ gpointer connlistener_thread(gpointer user_data)
     
     /* Enable address reuse */
     reuse = 1;
-    ret = setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
+    setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
     
     if(bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) 
       perror("connlistener_thread: ERROR on binding");      
@@ -182,7 +186,7 @@ gpointer connlistener_thread(gpointer user_data)
          newsockfd = 0;
          FD_ZERO(&afds);
          FD_SET(sockfd, &afds);
-	 memcpy(&rfds, &afds, sizeof(rfds));
+	     memcpy(&rfds, &afds, sizeof(rfds));
          if(select(nfds, &rfds, (fd_set *)0, (fd_set *)0, (struct timeval *)0) < 0)
             perror("connlistener_thread: ERROR on select");
 
@@ -245,9 +249,9 @@ gpointer newconnrequests_thread(gpointer user_data)
       // sends a list of applications installed on this host  
       if(strcmp(token,"GetApps") == 0)
         {
-	//jeetu - for now sending the complete block of application name
-	//without letting the other end know the actual datasize of data
-	//to expect. 
+	    //jeetu - for now sending the complete block of application name
+	    //without letting the other end know the actual datasize of data
+	    //to expect. 
         n = send(data->newsockfd,appsdata.apps,appsdata.blocksize,MSG_NOSIGNAL);
         if(n < 0) 
           perror("newconnrequests_thread: ERROR writing to socket");
@@ -373,7 +377,7 @@ int process_useronline_msg(char *buf)
     if(ret != -1)
       {
       G_LOCK(user);
-      gCurrentUserNode = add_user(version,username,ip);
+      gCurrentUserNode = add_user(version,username,"",ip);
       G_UNLOCK(user);
       if(gCurrentUserNode != NULL)
         {
@@ -386,7 +390,7 @@ int process_useronline_msg(char *buf)
 
 
 
-int process_useronline_avahi_msg(const char *ip_str, const char *username, const char *version)
+int process_useronline_avahi_msg(const char *ip_str, const char *username, const char *ssh_login_user,const char *version)
 {
     int ret = 0;
     int comm_socket = 0;
@@ -403,7 +407,7 @@ int process_useronline_avahi_msg(const char *ip_str, const char *username, const
     if(ret != -1)
       {
       G_LOCK(user);
-      gCurrentUserNode = add_user(version,username,in.s_addr);
+      gCurrentUserNode = add_user(version,username,ssh_login_user,in.s_addr);
       G_UNLOCK(user);
       if(gCurrentUserNode != NULL)
         {
@@ -687,6 +691,12 @@ gpointer start_server(gpointer ptr_ip)
 
 
     pipe_to_program("/usr/sbin/sshd",args,&piped_in,&piped_out,&piped_err);
+    
+    // TODO:
+    // for now reading from the piped stderr of the child one char at a time
+    // eventually need to put in mechanism to determine and deal with 
+    // success/failure of the child program
+
     while(read(piped_err,&onechar,1) > 0)
          {
          printf("%c",onechar);
@@ -698,7 +708,6 @@ gpointer start_server(gpointer ptr_ip)
 
 int process_launchreq_accepted(NewConnData *data)
 {
-    char temp[350];
     char ip[21];
     int j = 0,i = 0;
     char *saveptr1 = NULL;
@@ -707,6 +716,8 @@ int process_launchreq_accepted(NewConnData *data)
     char buf[300];
     int piped_in = 0, piped_out = 0, piped_err = 0;
     char onechar;
+    User *userlist;
+    char ssh_login_user[257];
 
     char *str1 = NULL,*token = NULL;
     char *args1[] = {
@@ -730,14 +741,31 @@ int process_launchreq_accepted(NewConnData *data)
                    "",
                    NULL 
                    };
-    char args2[2][257];
+    char args2[2][300];
 		  
-    temp[0] = '\0';
     ip[0] = '\0';
- 
+    args2[0][0] = '\0';
+
     in.s_addr = data->ip;  
     strncpy(ip,inet_ntoa(in),20);		
-    sprintf(args2[0],"jeetu@%s",ip);
+
+    userlist = gFirstUserNode;
+    while(userlist != NULL)
+         {
+         if(userlist->ip == data->ip)
+           {
+           printf("\nprocess_launchreq_accepted: userlist->name = %s userlist->ssh_login_user = %s\n",userlist->name,userlist->ssh_login_user);
+           sprintf(args2[0],"%s@%s",userlist->ssh_login_user,ip);
+           break;
+           }
+         userlist = userlist->next;
+         }    
+    
+    if(args2[0][0] == '\0')
+      {
+      printf("\nprocess_launchreq_accepted: something went wrong args2[0][0] == '\0'\n");
+      return 0;
+      } 
 
     strcpy(buf,data->buffer);
     for(j = 1, str1 = buf; ; j++, str1 = NULL)  
@@ -754,11 +782,10 @@ int process_launchreq_accepted(NewConnData *data)
     j = 0; 
     while(args1[j] != NULL)
          {
-         // substitute the empty strings ("") in args with the correct values
+         // substitute the empty placeholder strings ("") in args1 with the correct values
          if(strcmp(args1[j],"") == 0)
            {
-           args1[j] = malloc(strlen(args2[i]));
-           strncpy(args1[j],args2[i],strlen(args2[i]));
+           args1[j] = args2[i];
            i++;
            }
          printf("args1[j] = %s\n",args1[j]);
@@ -776,6 +803,15 @@ int process_launchreq_accepted(NewConnData *data)
 //         {
            sleep(3);
            pipe_to_program("/usr/bin/ssh",args1,&piped_in,&piped_out,&piped_err);
+
+           // TODO:
+           // for now reading from the piped stderr of the child one char at a time
+           // eventually need to put in mechanism to determine and deal with 
+           // success/failure of the child program. 
+           while(read(piped_err,&onechar,1) > 0)
+                {
+                printf("%c",onechar);
+                }
 //         }
          queue = queue->next;
          }

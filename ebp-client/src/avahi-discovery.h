@@ -47,7 +47,7 @@ void client_callback(AvahiClient *c, AvahiClientState state, AVAHI_GCC_UNUSED vo
 int create_services(AvahiClient *c);
 void entry_group_callback(AvahiEntryGroup *g, AvahiEntryGroupState state, AVAHI_GCC_UNUSED void *userdata);
 void avahi_cleanup(void);
-int avahi_resolver_found(const char *address, const char *name);
+int avahi_resolver_found(const char *address, const char *name, const char *txt);
 
 void browse_callback(
     AvahiServiceBrowser *b,

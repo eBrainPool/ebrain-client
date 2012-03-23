@@ -128,7 +128,7 @@ void client_callback(AvahiClient *c, AvahiClientState state, AVAHI_GCC_UNUSED vo
 int create_services(AvahiClient *c) 
 {
 
-    char *n, r[128];
+    char *n, ssh_login_username[270];
     int ret;
     assert(c);
 
@@ -152,8 +152,8 @@ int create_services(AvahiClient *c)
       {
       fprintf(stderr, "Adding service '%s'\n", avahi_name);
 
-      /* Create some random TXT data */
-      snprintf(r, sizeof(r), "random=%i", rand());
+      /* The ssh login name that is used the ssh client to connect back to the remote host */
+      snprintf(ssh_login_username, sizeof(ssh_login_username)+11, "ssh_login=%s", ssh_login_userdetails->pw_name);
 
       /* We will now add two services and one subtype to the entry
        * group. The two services have the same name, but differ in
@@ -164,7 +164,7 @@ int create_services(AvahiClient *c)
 
       /* Currently broadcasting only over IPv4 (INET) */
 
-      if((ret = avahi_entry_group_add_service(group, AVAHI_IF_UNSPEC, AVAHI_PROTO_INET, 0, avahi_name, "_presence._tcp", NULL, NULL, 651, "test=blah", r, NULL)) < 0)      
+      if((ret = avahi_entry_group_add_service(group, AVAHI_IF_UNSPEC, AVAHI_PROTO_INET, 0, avahi_name, "_presence._tcp", NULL, NULL, 651, ssh_login_username, NULL)) < 0)      
         {
         if(ret == AVAHI_ERR_COLLISION)
           {
@@ -179,7 +179,7 @@ int create_services(AvahiClient *c)
           avahi_entry_group_reset(group);
 
           create_services(c);
-          return;
+          return 0;
           }
 
         fprintf(stderr, "Failed to add _presence._tcp service: %s\n", avahi_strerror(ret));
@@ -314,7 +314,7 @@ void resolve_callback(
     AvahiLookupResultFlags flags,
     AVAHI_GCC_UNUSED void* userdata) 
 {
-    char a[AVAHI_ADDRESS_STR_MAX], *t;
+    char a[AVAHI_ADDRESS_STR_MAX], *strtxt;
 
     assert(r);
 
@@ -331,9 +331,10 @@ void resolve_callback(
               fprintf(stderr, "Service '%s' of type '%s' in domain '%s':\n", name, type, domain);
 
               avahi_address_snprint(a, sizeof(a), address);
-              t = avahi_string_list_to_string(txt);
+              strtxt = avahi_string_list_to_string(txt);
+              printf("\nresolve_callback: strtxt = %s\n",strtxt);
 
-              avahi_resolver_found(a,name);
+              avahi_resolver_found(a,name,strtxt);
 /*              fprintf(stderr,
                       "\t%s:%u (%s)\n"
                       "\tTXT=%s\n"
@@ -352,7 +353,7 @@ void resolve_callback(
                       !!(flags & AVAHI_LOOKUP_RESULT_MULTICAST),
                       !!(flags & AVAHI_LOOKUP_RESULT_CACHED));
 */
-              avahi_free(t);
+              avahi_free(strtxt);
           }
 
     avahi_service_resolver_free(r);
@@ -362,13 +363,16 @@ void resolve_callback(
 
 
 
-int avahi_resolver_found(const char *address, const char *name)
+int avahi_resolver_found(const char *address, const char *name,const char *txt)
 {
 
     struct ifaddrs *ifa;
     int family, s;
     char host[NI_MAXHOST];
     int localaddr_check = -1;
+    char *ssh_login_user = NULL;
+    char str1[257];
+    char *saveptr1 = NULL;
 
     printf("\navahi_resolver_found: address = %s\n",address);
 
@@ -413,8 +417,10 @@ int avahi_resolver_found(const char *address, const char *name)
 
     if(localaddr_check == -1)
       {
-      printf("\nUnique address found %s\n",address);
-      process_useronline_avahi_msg(address,name,"v0.2");
+      sscanf(txt,"\"ssh_login=%s",&str1);
+      ssh_login_user = strtok_r(str1, "\"", &saveptr1);
+      printf("\nUnique address found %s str1= %s ssh_login_user = %s\n",address,str1,ssh_login_user);
+      process_useronline_avahi_msg(address,name,ssh_login_user,"v0.3");
       }
 
     return 1;

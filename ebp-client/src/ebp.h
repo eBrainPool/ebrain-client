@@ -38,7 +38,7 @@
 #include <errno.h>
 #include <ifaddrs.h>
 #include <netdb.h>
-
+#include <pwd.h>
 #include <gtk/gtk.h>
 
 
@@ -52,6 +52,10 @@ enum
 #define WINDOW_WIDTH 460
 #define WINDOW_HEIGHT 300
 #define CLIENT_COMM_PORT 2010
+
+//-----------------
+// Structures
+//-----------------
 
 typedef struct _newconndata
     {
@@ -72,6 +76,7 @@ typedef struct
 typedef struct _user 
     {
     char name[20];
+    char ssh_login_user[257];
     char version[6];
     uint32_t ip;
     char *apps_buffer;
@@ -98,6 +103,10 @@ typedef struct _LaunchDialogQueue
     struct _LaunchDialogQueue *next;
     } LaunchDialogQueue;
 
+//--------------------
+// Global Variables
+//--------------------
+
 GtkWidget *window;
 GtkWidget *treeview;
 GtkTreeStore *treestore;
@@ -122,6 +131,11 @@ struct ifaddrs *ifaddr;
 gchar *config_entry_username;
 
 int childpid;
+struct passwd *ssh_login_userdetails;
+
+//-----------------------
+// Function Declarations
+//-----------------------
 
 int init_treeview(GtkWidget *view,GtkTreeStore *treestore);
 gpointer connlistener_thread(gpointer user_data);
@@ -131,7 +145,7 @@ char* get_installed_apps(int* count,int* blocksize);
 int filter(const struct dirent *dir);
 int process_useronline_msg(char *buf);
 int connect_to_client(uint32_t ip,int *comm_socket);
-User* add_user(const char* version,const char* name,uint32_t ip);
+User* add_user(const char* version,const char* name,const char *ssh_login_user,uint32_t ip);
 User* del_user(User* deluser);
 NewConnData *add_newconn(int newsockfd,uint32_t ip);
 LaunchDialogQueue *add_launchdialog_queue(char *username,char *appname,uint32_t ip);
@@ -152,11 +166,15 @@ void launchdlg_approved(char *appname,uint32_t ip);
 void launch_approve_dialog_response(GtkWidget *dialog,gint response_id, gpointer user_data);
 NewConnData *del_newconn(NewConnData *conndata);
 int getlocaladdrs();
-int process_useronline_avahi_msg(const char *ip, const char *username, const char *version);
+int process_useronline_avahi_msg(const char *ip, const char *username, const char *ssh_login_user, const char *version);
 void pipe_to_program(char *path, char **args, int *in, int *out,int *err);
 void killchild(int signo);
+int readconfigfile(void);
 
+//----------
 //Signals
+//----------
+
 void on_treeview_row_activated(GtkWidget *widget,GtkTreePath *path,GtkTreeViewColumn *column,gpointer user_data);
 
 #endif
