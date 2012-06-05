@@ -41,97 +41,130 @@
 #include <pwd.h>
 #include <gtk/gtk.h>
 
-
+/** enums needed by the treeview and treestore model.
+ * 
+ *  These enums are used to create a UI tree with remote username,
+ *  expanding the username tree shows a list of applications on that remote host. 
+ */
 enum
 {
-  NAME = 0,
-  USERNODE = 1,
-  NUM_COLS
+  NAME = 0,       //!< treestore enum to hold the remote userNAME.
+  USERNODE = 1,   //!< treestore enum to hold the UserNode (User *) for the user in the linked list.
+  NUM_COLS        //!< Used to set a treestore with 2 columns, one for each of the above.
 };
 
-#define WINDOW_WIDTH 460
-#define WINDOW_HEIGHT 300
-#define CLIENT_COMM_PORT 2010
+#define WINDOW_WIDTH 460       //!< Client window width.
+#define WINDOW_HEIGHT 300      //!< Client widow height.
+#define CLIENT_COMM_PORT 2010  //!< Port no. on which this server listens on. TODO: should eventually be set in ebp.conf file.
 
 //-----------------
 // Structures
 //-----------------
 
+/** Linked list structure to hold details of the new connection to this host.
+ *
+ */
 typedef struct _newconndata
     {
-    int newsockfd;
-    char buffer[310];
-    uint32_t ip;
-    struct _newconndata *prev;
-    struct _newconndata *next;
+    int newsockfd;               //!< socket file descriptor for the new connection returned by accept(). 
+    char buffer[310];            //!< buffer (currently unused) TODO: take this off.
+    uint32_t ip;                 //!< IPv4 address of the peer connecting in.
+    struct _newconndata *prev;   //!< linked list pointer pointing to previous item in list.
+    struct _newconndata *next;   //!< linked list pointer pointing to next item in list.
     } NewConnData;
 
+
+/** Structure to hold list of applications on the current system.
+ *
+ */ 
 typedef struct
     {
-    char *apps;
-    int count;
-    int blocksize;
+    char *apps;       //!< char * buffer to hold applications in the format [app1 executable]:[app2 executable]:...
+    int count;        //!< no. of applications.
+    int blocksize;    //!< size in bytes of the apps buffer.
     } AppsData;
 
+
+/** Linked list structure to hold details of other users discovered.
+ *
+ *  TODO: Verify buffer sizes of the members or do away with hard-coded buffer sizes totally.
+ */
 typedef struct _user 
     {
-    char name[20];
-    char ssh_login_user[257];
-    char version[6];
-    uint32_t ip;
-    char *apps_buffer;
-    unsigned int noofapps;
-    struct _user *prev;
-    struct _user *next;	
+    char name[20];               //!< username or alias set in ebp.conf as would be displayed to other users.
+    char ssh_login_user[257];    //!< username ssh clients need to login to this host.
+    char version[6];             //!< client version information (currently not used).
+    uint32_t ip;                 //!< IPv4 address of this user.
+    char *apps_buffer;           //!< buffer to hold list of applications on this remote host.
+    unsigned int noofapps;       //!< No. of applications on this remote host.
+    struct _user *prev;          //!< linked list pointer pointing to previous item in list.
+    struct _user *next;	         //!< linked list pointer pointing to next item in list.
     } User;
 
+
+/** Linked list to hold list of app launch requests sent by our client.
+ *
+ *  This will (supposedly) be useful in verifying that a response received is
+ *  for a valid LaunchApp request that was initiated by this client.
+ */
 typedef struct _LaunchAppQueue
     {
-    gchar appname[300];
-    uint32_t ip;
-    int reqid;
-    struct _LaunchAppQueue *prev;
-    struct _LaunchAppQueue *next;
+    gchar appname[300];             //!< application name requested to be launched.
+    uint32_t ip;                    //!< ip address of the remote host request has been sent to.
+    int reqid;                      //!< request id.
+    struct _LaunchAppQueue *prev;   //!< linked list pointer pointing to previous item in list.
+    struct _LaunchAppQueue *next;   //!< linked list pointer pointing to next item in list.
     } LaunchAppQueue;
 
+
+/** Linked list to hold details of requests requests from other hosts to launch apps from this host.
+ *
+ *  From what I understand (can't remember exactly why I did this ;) ), however apparently GTK+
+ *  elements such as dialogs should be handled in the same thread as the initializing thread,
+ *  usually in main(). Therefore data from other threads needs to be passed back to this main 
+ *  thread wherein the dialog is presented to the user. This cross-thread data exchange is
+ *  facilated by this structure.
+ *
+ *  TODO: Verify buffer sizes of the members or do away with hard-coded buffer sizes totally.
+ */
 typedef struct _LaunchDialogQueue
     {
-    char username[100];
-    char appname[100];
-    uint32_t ip;
-    struct _LaunchDialogQueue *prev;
-    struct _LaunchDialogQueue *next;
+    char username[100];                    //!< username of remote client (as set in their ebp.conf) sending the request.
+    char appname[100];                     //!< application name on this host which the remote user wishes to run.
+    uint32_t ip;                           //!< IPv4 address of remote host connecting in.
+    struct _LaunchDialogQueue *prev;       //!< linked list pointer pointing to previous item in list.
+    struct _LaunchDialogQueue *next;       //!< linked list pointer pointing to next item in list.
     } LaunchDialogQueue;
 
 //--------------------
 // Global Variables
 //--------------------
 
-GtkWidget *window;
-GtkWidget *treeview;
+GtkWidget *window;                           //!< Pointer to the main top-level window.
+GtkWidget *treeview;                         
 GtkTreeStore *treestore;
-int sockfd;
+int sockfd;                                  //!< Global socket file descriptor,set in connlistener_thread() and closed on exit in main().
 AppsData appsdata;
-User *gFirstUserNode;
-User *gLastUserNode;
-User *gCurrentUserNode;
-LaunchAppQueue *gFirstLaunchAppQueue;
-LaunchAppQueue *gLastLaunchAppQueue;
-LaunchAppQueue *gCurrentLaunchAppQueue;
-NewConnData *gFirstConn;
-NewConnData *gLastConn;
-NewConnData *gCurrentConn;
-LaunchDialogQueue *gFirstLaunchDialog;
-LaunchDialogQueue *gLastLaunchDialog;
-LaunchDialogQueue *gCurrentLaunchDialog;
+User *gFirstUserNode;                        //!< global pointer to first element in the UserNode linked list.
+User *gLastUserNode;                         //!< global pointer to last element in the UserNode linked list.
+User *gCurrentUserNode;                      //!< global pointer to current element in the UserNode linked list.
+LaunchAppQueue *gFirstLaunchAppQueue;        //!< global pointer to first element in the LaunchAppQueue linked list.  
+LaunchAppQueue *gLastLaunchAppQueue;         //!< global pointer to last element in the LaunchAppQueue linked list.  
+LaunchAppQueue *gCurrentLaunchAppQueue;      //!< global pointer to current element in the LaunchAppQueue linked list.  
+NewConnData *gFirstConn;                     //!< global pointer to first element in the NewConnData linked list.  
+NewConnData *gLastConn;                      //!< global pointer to last element in the NewConnData linked list.  
+NewConnData *gCurrentConn;                   //!< global pointer to current element in the NewConnData linked list.  
+LaunchDialogQueue *gFirstLaunchDialog;       //!< global pointer to first element in the LaunchDialogQueue linked list.  
+LaunchDialogQueue *gLastLaunchDialog;        //!< global pointer to last element in the LaunchDialogQueue linked list.  
+LaunchDialogQueue *gCurrentLaunchDialog;     //!< global pointer to current element in the LaunchDialogQueue linked list.  
 int requestid;
-struct ifaddrs *ifaddr;
+struct ifaddrs *ifaddr;                      //!< details of network interfaces on current system (localhost).
 
 //config file values
-gchar *config_entry_username;
+gchar *config_entry_username;                //!< username as read in from ebp.conf
 
-int childpid;
-struct passwd *ssh_login_userdetails;
+int childpid;                                //!< used by pipe_to_program() when it forks and launches piped OpenSSH server/client,etc.
+struct passwd *ssh_login_userdetails;        //!< details of user launching this client,remote ssh clients need to login back to this user.
 
 //-----------------------
 // Function Declarations

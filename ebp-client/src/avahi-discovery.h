@@ -35,11 +35,11 @@
 #include <avahi-client/lookup.h>
 
 /* Avahi variables */
-AvahiClient *client;
-AvahiThreadedPoll *threaded_poll;
-char *avahi_name;
-AvahiEntryGroup *group;
-AvahiServiceBrowser *sb;
+AvahiClient *client;                  //!< global pointer to this client reqistered with Avahi.
+AvahiThreadedPoll *threaded_poll;     //!< Avahi main loop object.
+char *avahi_name;                     //!< Avahi service name for this host constructed from the username read in from ebp.conf. 
+AvahiEntryGroup *group;               //!< Avahi entry group object.
+AvahiServiceBrowser *sb;              //!< Avahi service browser object.
 
 /* Avahi Functions */
 int avahi_setup(void);

@@ -1,0 +1,893 @@
+\hypertarget{ebp_8h}{\section{src/ebp.h \-File \-Reference}
+\label{ebp_8h}\index{src/ebp.\-h@{src/ebp.\-h}}
+}
+{\ttfamily \#include $<$stdio.\-h$>$}\*
+{\ttfamily \#include $<$stdlib.\-h$>$}\*
+{\ttfamily \#include $<$string.\-h$>$}\*
+{\ttfamily \#include $<$pthread.\-h$>$}\*
+{\ttfamily \#include $<$sys/types.\-h$>$}\*
+{\ttfamily \#include $<$sys/socket.\-h$>$}\*
+{\ttfamily \#include $<$netinet/in.\-h$>$}\*
+{\ttfamily \#include $<$unistd.\-h$>$}\*
+{\ttfamily \#include $<$dirent.\-h$>$}\*
+{\ttfamily \#include $<$arpa/inet.\-h$>$}\*
+{\ttfamily \#include $<$errno.\-h$>$}\*
+{\ttfamily \#include $<$ifaddrs.\-h$>$}\*
+{\ttfamily \#include $<$netdb.\-h$>$}\*
+{\ttfamily \#include $<$pwd.\-h$>$}\*
+{\ttfamily \#include $<$gtk/gtk.\-h$>$}\*
+\subsection*{\-Data \-Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct__newconndata}{\-\_\-newconndata}
+\begin{DoxyCompactList}\small\item\em \-Linked list structure to hold details of the new connection to this host. \end{DoxyCompactList}\item 
+struct \hyperlink{struct_apps_data}{\-Apps\-Data}
+\begin{DoxyCompactList}\small\item\em \-Structure to hold list of applications on the current system. \end{DoxyCompactList}\item 
+struct \hyperlink{struct__user}{\-\_\-user}
+\begin{DoxyCompactList}\small\item\em \-Linked list structure to hold details of other users discovered. \end{DoxyCompactList}\item 
+struct \hyperlink{struct___launch_app_queue}{\-\_\-\-Launch\-App\-Queue}
+\begin{DoxyCompactList}\small\item\em \-Linked list to hold list of app launch requests sent by our client. \end{DoxyCompactList}\item 
+struct \hyperlink{struct___launch_dialog_queue}{\-\_\-\-Launch\-Dialog\-Queue}
+\begin{DoxyCompactList}\small\item\em \-Linked list to hold details of requests requests from other hosts to launch apps from this host. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{\-Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{ebp_8h_a498d9f026138406895e9a34b504ac6a6}{\-W\-I\-N\-D\-O\-W\-\_\-\-W\-I\-D\-T\-H}~460
+\begin{DoxyCompactList}\small\item\em \-Client window width. \end{DoxyCompactList}\item 
+\#define \hyperlink{ebp_8h_a5473cf64fa979b48335079c99532e243}{\-W\-I\-N\-D\-O\-W\-\_\-\-H\-E\-I\-G\-H\-T}~300
+\begin{DoxyCompactList}\small\item\em \-Client widow height. \end{DoxyCompactList}\item 
+\#define \hyperlink{ebp_8h_a5f792a424c218ec6c483a2e7d1c473a1}{\-C\-L\-I\-E\-N\-T\-\_\-\-C\-O\-M\-M\-\_\-\-P\-O\-R\-T}~2010
+\begin{DoxyCompactList}\small\item\em \-Port no. on which this server listens on. \-T\-O\-D\-O\-: should eventually be set in ebp.\-conf file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{\-Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{struct__newconndata}{\-\_\-newconndata} \hyperlink{ebp_8h_a1e4fc751dec671593f53a28e8fa9d833}{\-New\-Conn\-Data}
+\begin{DoxyCompactList}\small\item\em \-Linked list structure to hold details of the new connection to this host. \end{DoxyCompactList}\item 
+typedef struct \hyperlink{struct__user}{\-\_\-user} \hyperlink{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\-User}
+\begin{DoxyCompactList}\small\item\em \-Linked list structure to hold details of other users discovered. \end{DoxyCompactList}\item 
+typedef struct \hyperlink{struct___launch_app_queue}{\-\_\-\-Launch\-App\-Queue} \hyperlink{ebp_8h_aab5a31ed044f4c36f0b27150216c1a7e}{\-Launch\-App\-Queue}
+\begin{DoxyCompactList}\small\item\em \-Linked list to hold list of app launch requests sent by our client. \end{DoxyCompactList}\item 
+typedef struct \hyperlink{struct___launch_dialog_queue}{\-\_\-\-Launch\-Dialog\-Queue} \hyperlink{ebp_8h_af96435dbd78faaf59443f2d693b8cac0}{\-Launch\-Dialog\-Queue}
+\begin{DoxyCompactList}\small\item\em \-Linked list to hold details of requests requests from other hosts to launch apps from this host. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{\-Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \hyperlink{ebp_8h_a06fc87d81c62e9abb8790b6e5713c55ba67bc2ced260a8e43805d2480a785d312}{\-N\-A\-M\-E} =  0, 
+\hyperlink{ebp_8h_a06fc87d81c62e9abb8790b6e5713c55baf064a855464e39054b2faf1c91b14871}{\-U\-S\-E\-R\-N\-O\-D\-E} =  1, 
+\hyperlink{ebp_8h_a06fc87d81c62e9abb8790b6e5713c55ba8843686a2923021b5ded06faeaaf66f1}{\-N\-U\-M\-\_\-\-C\-O\-L\-S}
+ \}
+\begin{DoxyCompactList}\small\item\em enums needed by the treeview and treestore model. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{\-Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{ebp_8h_aa7eb61b9f00496920b294495c0e45151}{init\-\_\-treeview} (\-Gtk\-Widget $\ast$view, \-Gtk\-Tree\-Store $\ast$\hyperlink{ebp_8h_a3b27749ff8174c046155fecaef4aec25}{treestore})
+\begin{DoxyCompactList}\small\item\em \-Initialize \-G\-T\-K treeview control to display users and their apps. \end{DoxyCompactList}\item 
+gpointer \hyperlink{ebp_8h_a98e5889b5a138ff189f2210bf572427d}{connlistener\-\_\-thread} (gpointer user\-\_\-data)
+\begin{DoxyCompactList}\small\item\em main message processing thread spawned by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()} \end{DoxyCompactList}\item 
+gpointer \hyperlink{ebp_8h_ada195c5562f1821af9a92ebd4f98a6e9}{newconnrequests\-\_\-thread} (gpointer user\-\_\-data)
+\begin{DoxyCompactList}\small\item\em thread launched by \hyperlink{ebp_8h_a98e5889b5a138ff189f2210bf572427d}{connlistener\-\_\-thread()} to process notification / requests. \end{DoxyCompactList}\item 
+gpointer \hyperlink{ebp_8h_a05026b760b45f0ee89181c4899205806}{check\-\_\-client\-\_\-status\-\_\-thread} (gpointer user\-\_\-data)
+\begin{DoxyCompactList}\small\item\em thread spawned by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()} to constantly check if a user can be reached and should be shown as \-Online. \end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{ebp_8h_a06d20fe02389d2d8d5b8fadde7834b19}{get\-\_\-installed\-\_\-apps} (int $\ast$count, int $\ast$blocksize)
+\begin{DoxyCompactList}\small\item\em \-Gets a list of applications installed on the host system that can be shared. \end{DoxyCompactList}\item 
+int \hyperlink{ebp_8h_ae1a56fea0adb7e0326aeb68c9652eeaf}{filter} (const struct dirent $\ast$dir)
+\begin{DoxyCompactList}\small\item\em \-Used by scandir() to filter out and return .desktop files. \end{DoxyCompactList}\item 
+int \hyperlink{ebp_8h_afb0f9ea6a43e7837b9a391e81f35cf35}{process\-\_\-useronline\-\_\-msg} (char $\ast$buf)
+\begin{DoxyCompactList}\small\item\em processes the e\-Brain\-Online olsr plugin notification. \end{DoxyCompactList}\item 
+int \hyperlink{ebp_8h_af11cae71a25ad7a0e5f84e69a1af860e}{connect\-\_\-to\-\_\-client} (uint32\-\_\-t ip, int $\ast$comm\-\_\-socket)
+\begin{DoxyCompactList}\small\item\em \-Establishes a connection to the client specified by ip. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\-User} $\ast$ \hyperlink{ebp_8h_ad4697fc5464e104e20d83d7a5cc6f2ec}{add\-\_\-user} (const char $\ast$version, const char $\ast$name, const char $\ast$ssh\-\_\-login\-\_\-user, uint32\-\_\-t ip)
+\begin{DoxyCompactList}\small\item\em \-Add a new user to the \-User (struct \hyperlink{struct__user}{\-\_\-user}) linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\-User} $\ast$ \hyperlink{ebp_8h_a184a680c26e967b434454922b0e27f1c}{del\-\_\-user} (\hyperlink{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\-User} $\ast$deluser)
+\begin{DoxyCompactList}\small\item\em \-Delete a user from the \-User (struct \hyperlink{struct__user}{\-\_\-user}) linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_a1e4fc751dec671593f53a28e8fa9d833}{\-New\-Conn\-Data} $\ast$ \hyperlink{ebp_8h_ae1f8c2e3864700021be5c13737d04e58}{add\-\_\-newconn} (int newsockfd, uint32\-\_\-t ip)
+\begin{DoxyCompactList}\small\item\em \-Adds a new connection to the client into the \-New\-Conn\-Data (struct \hyperlink{struct__newconndata}{\-\_\-newconndata}) linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_af96435dbd78faaf59443f2d693b8cac0}{\-Launch\-Dialog\-Queue} $\ast$ \hyperlink{ebp_8h_abab79fe0c6b16efcead6529a9aeff103}{add\-\_\-launchdialog\-\_\-queue} (char $\ast$username, char $\ast$appname, uint32\-\_\-t ip)
+\begin{DoxyCompactList}\small\item\em \-Adds details of \-Launch\-App request to the \-Launch\-Dialog\-Queue (struct \-\_\-launchdialogqueue) linked list. \end{DoxyCompactList}\item 
+int \hyperlink{ebp_8h_afdb04a65b83045cc6109899989bc7c3a}{show\-\_\-user\-\_\-online} (\hyperlink{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\-User} $\ast$\-User\-Node)
+\begin{DoxyCompactList}\small\item\em \-Displays a new user and the applications shared. \end{DoxyCompactList}\item 
+gboolean \hyperlink{ebp_8h_a6b502ce7f9e1bd8a7d2d7554fa9f7955}{show\-\_\-user\-\_\-offline} (gpointer user\-\_\-data)
+\begin{DoxyCompactList}\small\item\em \-Shows user as offline by deleting from the treeview. \end{DoxyCompactList}\item 
+int \hyperlink{ebp_8h_a231245c107b2a7b8c4a43f49b81061f1}{get\-\_\-remoteuser\-\_\-apps} (\hyperlink{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\-User} $\ast$\-User\-Node)
+\begin{DoxyCompactList}\small\item\em \-Sends request to remote client to send out the list of applications installed on the host. \end{DoxyCompactList}\item 
+void \hyperlink{ebp_8h_a3dd443f3ee1bcdf8301e1ed723ba25ef}{send\-\_\-launchapp\-\_\-req} (\hyperlink{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\-User} $\ast$\-User\-Node, char $\ast$appname)
+\begin{DoxyCompactList}\small\item\em \-Sends request to remote user to launch application. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_aab5a31ed044f4c36f0b27150216c1a7e}{\-Launch\-App\-Queue} $\ast$ \hyperlink{ebp_8h_a88fcb30db0a6139419227f644a351ef2}{add\-\_\-to\-\_\-launch\-\_\-queue} (char $\ast$appname, uint32\-\_\-t ip, int reqid)
+\begin{DoxyCompactList}\small\item\em \-Adds sent launch application (\-Launch\-App) requests to \-Launch\-App\-Queue (struct \-\_\-launchappqueue) \end{DoxyCompactList}\item 
+void \hyperlink{ebp_8h_a1dfbfdf187d7101f856a4e0a646b8ff7}{set\-\_\-launchappqueue\-\_\-locked} (\hyperlink{ebp_8h_aab5a31ed044f4c36f0b27150216c1a7e}{\-Launch\-App\-Queue} $\ast$dest, \hyperlink{ebp_8h_aab5a31ed044f4c36f0b27150216c1a7e}{\-Launch\-App\-Queue} $\ast$src)
+\item 
+int \hyperlink{ebp_8h_adf2291983ac5bd4e98ef90a6ab77625b}{process\-\_\-launchapp\-\_\-req} (char $\ast$buf, \hyperlink{ebp_8h_a1e4fc751dec671593f53a28e8fa9d833}{\-New\-Conn\-Data} $\ast$data)
+\begin{DoxyCompactList}\small\item\em \-Processes a received \-Launch\-App request from a remote client. \end{DoxyCompactList}\item 
+gboolean \hyperlink{ebp_8h_a6ccdc10719eba20d890b23bd9954c7e8}{launch\-\_\-approve\-\_\-dialog} (gpointer data)
+\begin{DoxyCompactList}\small\item\em \-Shows dialog box seeking approval for request from a user to launch application. \end{DoxyCompactList}\item 
+gpointer \hyperlink{ebp_8h_a247bc40691d7f25e3d09fecb1eca69ef}{start\-\_\-server} (gpointer ptr\-\_\-ip)
+\begin{DoxyCompactList}\small\item\em \-Thread to start a new instance of the \-Open\-S\-S\-H server. \end{DoxyCompactList}\item 
+int \hyperlink{ebp_8h_aff5b0edee93abba2bcba5eece3360b04}{process\-\_\-launchreq\-\_\-accepted} (\hyperlink{ebp_8h_a1e4fc751dec671593f53a28e8fa9d833}{\-New\-Conn\-Data} $\ast$data)
+\begin{DoxyCompactList}\small\item\em \-Processes the \-Launch\-App\-Req\-Accepted message. \end{DoxyCompactList}\item 
+void \hyperlink{ebp_8h_a3c0bd0d12ed4baca38c7da5235d3a19b}{freeusermem} (void)
+\begin{DoxyCompactList}\small\item\em \-Frees memory allocated for the \-User (struct \hyperlink{struct__user}{\-\_\-user}) linked list. \end{DoxyCompactList}\item 
+void \hyperlink{ebp_8h_af9f662243402dde9b1c6e63da93abd91}{free\-Launch\-App\-Queue} (void)
+\begin{DoxyCompactList}\small\item\em \-Frees memory allocated for the \-Launch\-App\-Queue (struct \hyperlink{struct___launch_app_queue}{\-\_\-\-Launch\-App\-Queue}) linked list. \end{DoxyCompactList}\item 
+void \hyperlink{ebp_8h_a340410969fdca9c8d0b5f5a0c7b059f6}{free\-Launch\-Dialog\-Queue} (void)
+\begin{DoxyCompactList}\small\item\em \-Frees memory allocated for the \-Launch\-Dialog\-Queue (struct \hyperlink{struct___launch_dialog_queue}{\-\_\-\-Launch\-Dialog\-Queue}) linked list. \end{DoxyCompactList}\item 
+void \hyperlink{ebp_8h_a889577c7640c3776ad0649ca65d82b5a}{launchdlg\-\_\-approved} (char $\ast$appname, uint32\-\_\-t ip)
+\begin{DoxyCompactList}\small\item\em \-Handles the condition when user has approved request to launch an application. \end{DoxyCompactList}\item 
+void \hyperlink{ebp_8h_af3d9949857132e8d54396923c6ef3d13}{launch\-\_\-approve\-\_\-dialog\-\_\-response} (\-Gtk\-Widget $\ast$dialog, gint response\-\_\-id, gpointer user\-\_\-data)
+\begin{DoxyCompactList}\small\item\em \-Processes response (\-Yes/\-No) from dialog box seeking approval to launch application. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_a1e4fc751dec671593f53a28e8fa9d833}{\-New\-Conn\-Data} $\ast$ \hyperlink{ebp_8h_a7479c653381fb48e00c923b49d39d08a}{del\-\_\-newconn} (\hyperlink{ebp_8h_a1e4fc751dec671593f53a28e8fa9d833}{\-New\-Conn\-Data} $\ast$conndata)
+\begin{DoxyCompactList}\small\item\em \-Deletes a connection from the \-New\-Conn\-Data (struct \hyperlink{struct__newconndata}{\-\_\-newconndata}) linked list. \end{DoxyCompactList}\item 
+int \hyperlink{ebp_8h_a660c22858bee36de55c4a31f3fe399b3}{getlocaladdrs} ()
+\begin{DoxyCompactList}\small\item\em \-Retrieves details of the network interfaces on the local system. \end{DoxyCompactList}\item 
+int \hyperlink{ebp_8h_a812ffc38f58a183a17919869300072fa}{process\-\_\-useronline\-\_\-avahi\-\_\-msg} (const char $\ast$ip, const char $\ast$username, const char $\ast$ssh\-\_\-login\-\_\-user, const char $\ast$version)
+\begin{DoxyCompactList}\small\item\em \-Shows a new client discovered by \-Avahi as online. \end{DoxyCompactList}\item 
+void \hyperlink{ebp_8h_a59c9b03249680e3795ac58914e3c977a}{pipe\-\_\-to\-\_\-program} (char $\ast$path, char $\ast$$\ast$args, int $\ast$in, int $\ast$out, int $\ast$err)
+\begin{DoxyCompactList}\small\item\em \-Pipes \-S\-T\-D\-I\-N,\-S\-T\-D\-O\-U\-T and \-S\-T\-D\-E\-R\-R and launches program. \end{DoxyCompactList}\item 
+void \hyperlink{ebp_8h_a5e1fa74fe28f225341d3140b717085bb}{killchild} (int signo)
+\begin{DoxyCompactList}\small\item\em \-Signal handler called in response to \-S\-I\-G\-T\-E\-R\-M,\-S\-I\-G\-I\-N\-T and \-S\-I\-G\-H\-U\-P signals. \end{DoxyCompactList}\item 
+int \hyperlink{ebp_8h_a29a55294f0f9f2771bba49ea5c326c58}{readconfigfile} (void)
+\begin{DoxyCompactList}\small\item\em \-Reads the ebp.\-conf file and retrieves config parameters specified. \end{DoxyCompactList}\item 
+void \hyperlink{ebp_8h_ae23df7382182a81cf7b2cd7211ba4b80}{on\-\_\-treeview\-\_\-row\-\_\-activated} (\-Gtk\-Widget $\ast$widget, \-Gtk\-Tree\-Path $\ast$path, \-Gtk\-Tree\-View\-Column $\ast$column, gpointer user\-\_\-data)
+\begin{DoxyCompactList}\small\item\em \-Process the \char`\"{}row-\/activated\char`\"{} \-G\-T\-K treeview signal. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{\-Variables}
+\begin{DoxyCompactItemize}
+\item 
+\-Gtk\-Widget $\ast$ \hyperlink{ebp_8h_a3d346c08cf2d67c388caabffb412b293}{window}
+\begin{DoxyCompactList}\small\item\em \-Pointer to the main top-\/level window. \end{DoxyCompactList}\item 
+\-Gtk\-Widget $\ast$ \hyperlink{ebp_8h_a329dcf03184340d07e4fc4d29fa85f44}{treeview}
+\item 
+\-Gtk\-Tree\-Store $\ast$ \hyperlink{ebp_8h_a3b27749ff8174c046155fecaef4aec25}{treestore}
+\item 
+int \hyperlink{ebp_8h_ad2c8fb3df3a737e0685e902870a611d2}{sockfd}
+\begin{DoxyCompactList}\small\item\em \-Global socket file descriptor,set in \hyperlink{ebp_8h_a98e5889b5a138ff189f2210bf572427d}{connlistener\-\_\-thread()} and closed on exit in \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()}. \end{DoxyCompactList}\item 
+\hyperlink{struct_apps_data}{\-Apps\-Data} \hyperlink{ebp_8h_ad8fe7e381ba07ddf4d0cdb736cfe5135}{appsdata}
+\item 
+\hyperlink{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\-User} $\ast$ \hyperlink{ebp_8h_ad3161f3990d04b15d454c6a4286f8ec7}{g\-First\-User\-Node}
+\begin{DoxyCompactList}\small\item\em global pointer to first element in the \-User\-Node linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\-User} $\ast$ \hyperlink{ebp_8h_ab4114937203a165cb0576697d13f5d47}{g\-Last\-User\-Node}
+\begin{DoxyCompactList}\small\item\em global pointer to last element in the \-User\-Node linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\-User} $\ast$ \hyperlink{ebp_8h_a238e26813fe935b4bc277027dd919e28}{g\-Current\-User\-Node}
+\begin{DoxyCompactList}\small\item\em global pointer to current element in the \-User\-Node linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_aab5a31ed044f4c36f0b27150216c1a7e}{\-Launch\-App\-Queue} $\ast$ \hyperlink{ebp_8h_a5571f07afd8b623fdcfdfbbc30f54d58}{g\-First\-Launch\-App\-Queue}
+\begin{DoxyCompactList}\small\item\em global pointer to first element in the \-Launch\-App\-Queue linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_aab5a31ed044f4c36f0b27150216c1a7e}{\-Launch\-App\-Queue} $\ast$ \hyperlink{ebp_8h_ad8a751cb497a0077377baeda903baf60}{g\-Last\-Launch\-App\-Queue}
+\begin{DoxyCompactList}\small\item\em global pointer to last element in the \-Launch\-App\-Queue linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_aab5a31ed044f4c36f0b27150216c1a7e}{\-Launch\-App\-Queue} $\ast$ \hyperlink{ebp_8h_abcc908f232d8b5b89d6bae44e59d0e72}{g\-Current\-Launch\-App\-Queue}
+\begin{DoxyCompactList}\small\item\em global pointer to current element in the \-Launch\-App\-Queue linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_a1e4fc751dec671593f53a28e8fa9d833}{\-New\-Conn\-Data} $\ast$ \hyperlink{ebp_8h_a38b454fe0651a44ca228cf177605c58f}{g\-First\-Conn}
+\begin{DoxyCompactList}\small\item\em global pointer to first element in the \-New\-Conn\-Data linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_a1e4fc751dec671593f53a28e8fa9d833}{\-New\-Conn\-Data} $\ast$ \hyperlink{ebp_8h_a980ed0248e9ee9aa237a7b96c07ae587}{g\-Last\-Conn}
+\begin{DoxyCompactList}\small\item\em global pointer to last element in the \-New\-Conn\-Data linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_a1e4fc751dec671593f53a28e8fa9d833}{\-New\-Conn\-Data} $\ast$ \hyperlink{ebp_8h_a351558798e211564ef2dba55b420354b}{g\-Current\-Conn}
+\begin{DoxyCompactList}\small\item\em global pointer to current element in the \-New\-Conn\-Data linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_af96435dbd78faaf59443f2d693b8cac0}{\-Launch\-Dialog\-Queue} $\ast$ \hyperlink{ebp_8h_ac566e3ca4026329332a9e4dbcadfbbf7}{g\-First\-Launch\-Dialog}
+\begin{DoxyCompactList}\small\item\em global pointer to first element in the \-Launch\-Dialog\-Queue linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_af96435dbd78faaf59443f2d693b8cac0}{\-Launch\-Dialog\-Queue} $\ast$ \hyperlink{ebp_8h_acad4bc93249072a49d96166f30e9fbc5}{g\-Last\-Launch\-Dialog}
+\begin{DoxyCompactList}\small\item\em global pointer to last element in the \-Launch\-Dialog\-Queue linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_af96435dbd78faaf59443f2d693b8cac0}{\-Launch\-Dialog\-Queue} $\ast$ \hyperlink{ebp_8h_a22f30bef0745dd38bd6c3164d348b44d}{g\-Current\-Launch\-Dialog}
+\begin{DoxyCompactList}\small\item\em global pointer to current element in the \-Launch\-Dialog\-Queue linked list. \end{DoxyCompactList}\item 
+int \hyperlink{ebp_8h_a043e5d5370b0154426dce3631417d3a4}{requestid}
+\item 
+struct ifaddrs $\ast$ \hyperlink{ebp_8h_a5bbba81e018d499f26b9a1a8570429db}{ifaddr}
+\begin{DoxyCompactList}\small\item\em details of network interfaces on current system (localhost). \end{DoxyCompactList}\item 
+gchar $\ast$ \hyperlink{ebp_8h_ad3925a9348c164db98f5f0a0770c996e}{config\-\_\-entry\-\_\-username}
+\begin{DoxyCompactList}\small\item\em username as read in from ebp.\-conf \end{DoxyCompactList}\item 
+int \hyperlink{ebp_8h_aa28aeb8980366ea762c29c8dbe0baa38}{childpid}
+\begin{DoxyCompactList}\small\item\em used by \hyperlink{ebp_8h_a59c9b03249680e3795ac58914e3c977a}{pipe\-\_\-to\-\_\-program()} when it forks and launches piped \-Open\-S\-S\-H server/client,etc. \end{DoxyCompactList}\item 
+struct passwd $\ast$ \hyperlink{ebp_8h_a2f48dce7b34e2e526f1a25ca5e5538da}{ssh\-\_\-login\-\_\-userdetails}
+\begin{DoxyCompactList}\small\item\em details of user launching this client,remote ssh clients need to login back to this user. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{\-Define \-Documentation}
+\hypertarget{ebp_8h_a5f792a424c218ec6c483a2e7d1c473a1}{\index{ebp.\-h@{ebp.\-h}!\-C\-L\-I\-E\-N\-T\-\_\-\-C\-O\-M\-M\-\_\-\-P\-O\-R\-T@{\-C\-L\-I\-E\-N\-T\-\_\-\-C\-O\-M\-M\-\_\-\-P\-O\-R\-T}}
+\index{\-C\-L\-I\-E\-N\-T\-\_\-\-C\-O\-M\-M\-\_\-\-P\-O\-R\-T@{\-C\-L\-I\-E\-N\-T\-\_\-\-C\-O\-M\-M\-\_\-\-P\-O\-R\-T}!ebp.h@{ebp.\-h}}
+\subsubsection[{\-C\-L\-I\-E\-N\-T\-\_\-\-C\-O\-M\-M\-\_\-\-P\-O\-R\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define {\bf \-C\-L\-I\-E\-N\-T\-\_\-\-C\-O\-M\-M\-\_\-\-P\-O\-R\-T}~2010}}\label{ebp_8h_a5f792a424c218ec6c483a2e7d1c473a1}
+
+
+\-Port no. on which this server listens on. \-T\-O\-D\-O\-: should eventually be set in ebp.\-conf file. 
+
+\hypertarget{ebp_8h_a5473cf64fa979b48335079c99532e243}{\index{ebp.\-h@{ebp.\-h}!\-W\-I\-N\-D\-O\-W\-\_\-\-H\-E\-I\-G\-H\-T@{\-W\-I\-N\-D\-O\-W\-\_\-\-H\-E\-I\-G\-H\-T}}
+\index{\-W\-I\-N\-D\-O\-W\-\_\-\-H\-E\-I\-G\-H\-T@{\-W\-I\-N\-D\-O\-W\-\_\-\-H\-E\-I\-G\-H\-T}!ebp.h@{ebp.\-h}}
+\subsubsection[{\-W\-I\-N\-D\-O\-W\-\_\-\-H\-E\-I\-G\-H\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define {\bf \-W\-I\-N\-D\-O\-W\-\_\-\-H\-E\-I\-G\-H\-T}~300}}\label{ebp_8h_a5473cf64fa979b48335079c99532e243}
+
+
+\-Client widow height. 
+
+\hypertarget{ebp_8h_a498d9f026138406895e9a34b504ac6a6}{\index{ebp.\-h@{ebp.\-h}!\-W\-I\-N\-D\-O\-W\-\_\-\-W\-I\-D\-T\-H@{\-W\-I\-N\-D\-O\-W\-\_\-\-W\-I\-D\-T\-H}}
+\index{\-W\-I\-N\-D\-O\-W\-\_\-\-W\-I\-D\-T\-H@{\-W\-I\-N\-D\-O\-W\-\_\-\-W\-I\-D\-T\-H}!ebp.h@{ebp.\-h}}
+\subsubsection[{\-W\-I\-N\-D\-O\-W\-\_\-\-W\-I\-D\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define {\bf \-W\-I\-N\-D\-O\-W\-\_\-\-W\-I\-D\-T\-H}~460}}\label{ebp_8h_a498d9f026138406895e9a34b504ac6a6}
+
+
+\-Client window width. 
+
+
+
+\subsection{\-Typedef \-Documentation}
+\hypertarget{ebp_8h_aab5a31ed044f4c36f0b27150216c1a7e}{\index{ebp.\-h@{ebp.\-h}!\-Launch\-App\-Queue@{\-Launch\-App\-Queue}}
+\index{\-Launch\-App\-Queue@{\-Launch\-App\-Queue}!ebp.h@{ebp.\-h}}
+\subsubsection[{\-Launch\-App\-Queue}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf \-\_\-\-Launch\-App\-Queue}  {\bf \-Launch\-App\-Queue}}}\label{ebp_8h_aab5a31ed044f4c36f0b27150216c1a7e}
+
+
+\-Linked list to hold list of app launch requests sent by our client. 
+
+\-This will (supposedly) be useful in verifying that a response received is for a valid \-Launch\-App request that was initiated by this client. \hypertarget{ebp_8h_af96435dbd78faaf59443f2d693b8cac0}{\index{ebp.\-h@{ebp.\-h}!\-Launch\-Dialog\-Queue@{\-Launch\-Dialog\-Queue}}
+\index{\-Launch\-Dialog\-Queue@{\-Launch\-Dialog\-Queue}!ebp.h@{ebp.\-h}}
+\subsubsection[{\-Launch\-Dialog\-Queue}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf \-\_\-\-Launch\-Dialog\-Queue}  {\bf \-Launch\-Dialog\-Queue}}}\label{ebp_8h_af96435dbd78faaf59443f2d693b8cac0}
+
+
+\-Linked list to hold details of requests requests from other hosts to launch apps from this host. 
+
+\-From what \-I understand (can't remember exactly why \-I did this ;) ), however apparently \-G\-T\-K+ elements such as dialogs should be handled in the same thread as the initializing thread, usually in \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()}. \-Therefore data from other threads needs to be passed back to this main thread wherein the dialog is presented to the user. \-This cross-\/thread data exchange is facilated by this structure.
+
+\-T\-O\-D\-O\-: \-Verify buffer sizes of the members or do away with hard-\/coded buffer sizes totally. \hypertarget{ebp_8h_a1e4fc751dec671593f53a28e8fa9d833}{\index{ebp.\-h@{ebp.\-h}!\-New\-Conn\-Data@{\-New\-Conn\-Data}}
+\index{\-New\-Conn\-Data@{\-New\-Conn\-Data}!ebp.h@{ebp.\-h}}
+\subsubsection[{\-New\-Conn\-Data}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf \-\_\-newconndata}  {\bf \-New\-Conn\-Data}}}\label{ebp_8h_a1e4fc751dec671593f53a28e8fa9d833}
+
+
+\-Linked list structure to hold details of the new connection to this host. 
+
+\hypertarget{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\index{ebp.\-h@{ebp.\-h}!\-User@{\-User}}
+\index{\-User@{\-User}!ebp.h@{ebp.\-h}}
+\subsubsection[{\-User}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf \-\_\-user}  {\bf \-User}}}\label{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}
+
+
+\-Linked list structure to hold details of other users discovered. 
+
+\-T\-O\-D\-O\-: \-Verify buffer sizes of the members or do away with hard-\/coded buffer sizes totally. 
+
+\subsection{\-Enumeration \-Type \-Documentation}
+\hypertarget{ebp_8h_a06fc87d81c62e9abb8790b6e5713c55b}{\subsubsection[{anonymous enum}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}}\label{ebp_8h_a06fc87d81c62e9abb8790b6e5713c55b}
+
+
+enums needed by the treeview and treestore model. 
+
+\-These enums are used to create a \-U\-I tree with remote username, expanding the username tree shows a list of applications on that remote host. \begin{Desc}
+\item[\-Enumerator\-: ]\par
+\begin{description}
+\index{\-N\-A\-M\-E@{\-N\-A\-M\-E}!ebp.\-h@{ebp.\-h}}\index{ebp.\-h@{ebp.\-h}!\-N\-A\-M\-E@{\-N\-A\-M\-E}}\item[{\em 
+\hypertarget{ebp_8h_a06fc87d81c62e9abb8790b6e5713c55ba67bc2ced260a8e43805d2480a785d312}{\-N\-A\-M\-E}\label{ebp_8h_a06fc87d81c62e9abb8790b6e5713c55ba67bc2ced260a8e43805d2480a785d312}
+}]treestore enum to hold the remote user\-N\-A\-M\-E. \index{\-U\-S\-E\-R\-N\-O\-D\-E@{\-U\-S\-E\-R\-N\-O\-D\-E}!ebp.\-h@{ebp.\-h}}\index{ebp.\-h@{ebp.\-h}!\-U\-S\-E\-R\-N\-O\-D\-E@{\-U\-S\-E\-R\-N\-O\-D\-E}}\item[{\em 
+\hypertarget{ebp_8h_a06fc87d81c62e9abb8790b6e5713c55baf064a855464e39054b2faf1c91b14871}{\-U\-S\-E\-R\-N\-O\-D\-E}\label{ebp_8h_a06fc87d81c62e9abb8790b6e5713c55baf064a855464e39054b2faf1c91b14871}
+}]treestore enum to hold the \-User\-Node (\-User $\ast$) for the user in the linked list. \index{\-N\-U\-M\-\_\-\-C\-O\-L\-S@{\-N\-U\-M\-\_\-\-C\-O\-L\-S}!ebp.\-h@{ebp.\-h}}\index{ebp.\-h@{ebp.\-h}!\-N\-U\-M\-\_\-\-C\-O\-L\-S@{\-N\-U\-M\-\_\-\-C\-O\-L\-S}}\item[{\em 
+\hypertarget{ebp_8h_a06fc87d81c62e9abb8790b6e5713c55ba8843686a2923021b5ded06faeaaf66f1}{\-N\-U\-M\-\_\-\-C\-O\-L\-S}\label{ebp_8h_a06fc87d81c62e9abb8790b6e5713c55ba8843686a2923021b5ded06faeaaf66f1}
+}]\-Used to set a treestore with 2 columns, one for each of the above. \end{description}
+\end{Desc}
+
+
+
+\subsection{\-Function \-Documentation}
+\hypertarget{ebp_8h_abab79fe0c6b16efcead6529a9aeff103}{\index{ebp.\-h@{ebp.\-h}!add\-\_\-launchdialog\-\_\-queue@{add\-\_\-launchdialog\-\_\-queue}}
+\index{add\-\_\-launchdialog\-\_\-queue@{add\-\_\-launchdialog\-\_\-queue}!ebp.h@{ebp.\-h}}
+\subsubsection[{add\-\_\-launchdialog\-\_\-queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Launch\-Dialog\-Queue}$\ast$ {\bf add\-\_\-launchdialog\-\_\-queue} (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{username, }
+\item[{char $\ast$}]{appname, }
+\item[{uint32\-\_\-t}]{ip}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_abab79fe0c6b16efcead6529a9aeff103}
+
+
+\-Adds details of \-Launch\-App request to the \-Launch\-Dialog\-Queue (struct \-\_\-launchdialogqueue) linked list. 
+
+\-Called by \hyperlink{ebp_8h_adf2291983ac5bd4e98ef90a6ab77625b}{process\-\_\-launchapp\-\_\-req()} \-Inserts the following into the linked list\-:
+\begin{DoxyItemize}
+\item username
+\item appname (\-Application name the user wishes to launch)
+\item ip (\-I\-Pv4 address of the client connecting in)
+\end{DoxyItemize}
+
+returns pointer to the newly created linked list item (\-Launch\-Dialog\-Queue $\ast$). \hypertarget{ebp_8h_ae1f8c2e3864700021be5c13737d04e58}{\index{ebp.\-h@{ebp.\-h}!add\-\_\-newconn@{add\-\_\-newconn}}
+\index{add\-\_\-newconn@{add\-\_\-newconn}!ebp.h@{ebp.\-h}}
+\subsubsection[{add\-\_\-newconn}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-New\-Conn\-Data}$\ast$ {\bf add\-\_\-newconn} (
+\begin{DoxyParamCaption}
+\item[{int}]{newsockfd, }
+\item[{uint32\-\_\-t}]{ip}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_ae1f8c2e3864700021be5c13737d04e58}
+
+
+\-Adds a new connection to the client into the \-New\-Conn\-Data (struct \hyperlink{struct__newconndata}{\-\_\-newconndata}) linked list. 
+
+\-Called by \hyperlink{ebp_8h_a98e5889b5a138ff189f2210bf572427d}{connlistener\-\_\-thread()} \-Inserts the following into the linked list\-:
+\begin{DoxyItemize}
+\item newsockfd (socket file descriptor returned after call to accept())
+\item ip (\-I\-Pv4 address of the client connecting in)
+\end{DoxyItemize}
+
+returns pointer to the newly created linked list item (\-New\-Conn\-Data $\ast$). \hypertarget{ebp_8h_a88fcb30db0a6139419227f644a351ef2}{\index{ebp.\-h@{ebp.\-h}!add\-\_\-to\-\_\-launch\-\_\-queue@{add\-\_\-to\-\_\-launch\-\_\-queue}}
+\index{add\-\_\-to\-\_\-launch\-\_\-queue@{add\-\_\-to\-\_\-launch\-\_\-queue}!ebp.h@{ebp.\-h}}
+\subsubsection[{add\-\_\-to\-\_\-launch\-\_\-queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Launch\-App\-Queue}$\ast$ {\bf add\-\_\-to\-\_\-launch\-\_\-queue} (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{appname, }
+\item[{uint32\-\_\-t}]{ip, }
+\item[{int}]{reqid}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a88fcb30db0a6139419227f644a351ef2}
+
+
+\-Adds sent launch application (\-Launch\-App) requests to \-Launch\-App\-Queue (struct \-\_\-launchappqueue) 
+
+\-Called by \hyperlink{ebp_8h_a3dd443f3ee1bcdf8301e1ed723ba25ef}{send\-\_\-launchapp\-\_\-req()}
+
+\-To be used on receipt of response to verify authenticity of the request. \-N\-O\-T\-E \-: \-As on 18/5/2012 the \-Launch\-App\-Queue (product of this function) is not being looked into to verify the response. \-This may (or may not) be implemented in the future. \-Inserts the following into the linked list\-:
+\begin{DoxyItemize}
+\item appname (\-Name of application to be launched)
+\item ip (\-I\-Pv4 address 
+\end{DoxyItemize}\hypertarget{ebp_8h_ad4697fc5464e104e20d83d7a5cc6f2ec}{\index{ebp.\-h@{ebp.\-h}!add\-\_\-user@{add\-\_\-user}}
+\index{add\-\_\-user@{add\-\_\-user}!ebp.h@{ebp.\-h}}
+\subsubsection[{add\-\_\-user}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-User}$\ast$ {\bf add\-\_\-user} (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{version, }
+\item[{const char $\ast$}]{name, }
+\item[{const char $\ast$}]{ssh\-\_\-login\-\_\-user, }
+\item[{uint32\-\_\-t}]{ip}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_ad4697fc5464e104e20d83d7a5cc6f2ec}
+
+
+\-Add a new user to the \-User (struct \hyperlink{struct__user}{\-\_\-user}) linked list. 
+
+\-Called by \hyperlink{ebp_8h_afb0f9ea6a43e7837b9a391e81f35cf35}{process\-\_\-useronline\-\_\-msg()} and \hyperlink{ebp_8h_a812ffc38f58a183a17919869300072fa}{process\-\_\-useronline\-\_\-avahi\-\_\-msg()} when a new user comes online. \-First searches an existing \-User linked list (if g\-First\-User\-Npde != \-N\-U\-L\-L) for a matching ip. \-If found the function returns with a \-N\-U\-L\-L.
+
+\-If we have to start a new linked list (g\-First\-User\-Node == \-N\-U\-L\-L) or add this linked list to the end of the existing linked list,then allocate memory and setup pointers accordingly.
+
+\-Finally,inserts the following into the new linked list\-:
+\begin{DoxyItemize}
+\item name (as stated in ebp.\-conf)
+\item ssh\-\_\-login\-\_\-user (the username that the \-Open\-S\-S\-H client will need to connect back to this host)
+\item version (e\-Brain\-Pool client version)
+\item ip (\-I\-Pv4 address of the user)
+\end{DoxyItemize}
+
+returns a pointer to the newly created linked list item (\-User $\ast$). \hypertarget{ebp_8h_a05026b760b45f0ee89181c4899205806}{\index{ebp.\-h@{ebp.\-h}!check\-\_\-client\-\_\-status\-\_\-thread@{check\-\_\-client\-\_\-status\-\_\-thread}}
+\index{check\-\_\-client\-\_\-status\-\_\-thread@{check\-\_\-client\-\_\-status\-\_\-thread}!ebp.h@{ebp.\-h}}
+\subsubsection[{check\-\_\-client\-\_\-status\-\_\-thread}]{\setlength{\rightskip}{0pt plus 5cm}gpointer {\bf check\-\_\-client\-\_\-status\-\_\-thread} (
+\begin{DoxyParamCaption}
+\item[{gpointer}]{user\-\_\-data}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a05026b760b45f0ee89181c4899205806}
+
+
+thread spawned by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()} to constantly check if a user can be reached and should be shown as \-Online. 
+
+tries to connect to the remote user
+
+\-If it can't connect,the client is probably no longer alive; delete it from the list \hypertarget{ebp_8h_af11cae71a25ad7a0e5f84e69a1af860e}{\index{ebp.\-h@{ebp.\-h}!connect\-\_\-to\-\_\-client@{connect\-\_\-to\-\_\-client}}
+\index{connect\-\_\-to\-\_\-client@{connect\-\_\-to\-\_\-client}!ebp.h@{ebp.\-h}}
+\subsubsection[{connect\-\_\-to\-\_\-client}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf connect\-\_\-to\-\_\-client} (
+\begin{DoxyParamCaption}
+\item[{uint32\-\_\-t}]{ip, }
+\item[{int $\ast$}]{comm\-\_\-socket}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_af11cae71a25ad7a0e5f84e69a1af860e}
+
+
+\-Establishes a connection to the client specified by ip. 
+
+called by \hyperlink{ebp_8h_a3dd443f3ee1bcdf8301e1ed723ba25ef}{send\-\_\-launchapp\-\_\-req()}, \hyperlink{ebp_8h_a889577c7640c3776ad0649ca65d82b5a}{launchdlg\-\_\-approved()}, \hyperlink{ebp_8h_a05026b760b45f0ee89181c4899205806}{check\-\_\-client\-\_\-status\-\_\-thread()}, \hyperlink{ebp_8h_afb0f9ea6a43e7837b9a391e81f35cf35}{process\-\_\-useronline\-\_\-msg()} \hyperlink{ebp_8h_a3dd443f3ee1bcdf8301e1ed723ba25ef}{send\-\_\-launchapp\-\_\-req()}.
+
+returns the value returned by the call to connect() \hypertarget{ebp_8h_a98e5889b5a138ff189f2210bf572427d}{\index{ebp.\-h@{ebp.\-h}!connlistener\-\_\-thread@{connlistener\-\_\-thread}}
+\index{connlistener\-\_\-thread@{connlistener\-\_\-thread}!ebp.h@{ebp.\-h}}
+\subsubsection[{connlistener\-\_\-thread}]{\setlength{\rightskip}{0pt plus 5cm}gpointer {\bf connlistener\-\_\-thread} (
+\begin{DoxyParamCaption}
+\item[{gpointer}]{user\-\_\-data}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a98e5889b5a138ff189f2210bf572427d}
+
+
+main message processing thread spawned by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()} 
+
+\-This thread\-:
+\begin{DoxyItemize}
+\item endlessly listens in on a socket
+\item accepts a new connection
+\item spawns a new thread to process the new connection 
+\end{DoxyItemize}the new thread is spawned to read data from a new connection and process it \hypertarget{ebp_8h_a7479c653381fb48e00c923b49d39d08a}{\index{ebp.\-h@{ebp.\-h}!del\-\_\-newconn@{del\-\_\-newconn}}
+\index{del\-\_\-newconn@{del\-\_\-newconn}!ebp.h@{ebp.\-h}}
+\subsubsection[{del\-\_\-newconn}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-New\-Conn\-Data}$\ast$ {\bf del\-\_\-newconn} (
+\begin{DoxyParamCaption}
+\item[{{\bf \-New\-Conn\-Data} $\ast$}]{conndata}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a7479c653381fb48e00c923b49d39d08a}
+
+
+\-Deletes a connection from the \-New\-Conn\-Data (struct \hyperlink{struct__newconndata}{\-\_\-newconndata}) linked list. 
+
+\-Called by \hyperlink{ebp_8h_ada195c5562f1821af9a92ebd4f98a6e9}{newconnrequests\-\_\-thread()} to delete the connection after it has finished processing it. returns a \-New\-Conn\-Data$\ast$ to the next item in the linked list or \-N\-U\-L\-L if there are no other items. \hypertarget{ebp_8h_a184a680c26e967b434454922b0e27f1c}{\index{ebp.\-h@{ebp.\-h}!del\-\_\-user@{del\-\_\-user}}
+\index{del\-\_\-user@{del\-\_\-user}!ebp.h@{ebp.\-h}}
+\subsubsection[{del\-\_\-user}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-User}$\ast$ {\bf del\-\_\-user} (
+\begin{DoxyParamCaption}
+\item[{{\bf \-User} $\ast$}]{deluser}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a184a680c26e967b434454922b0e27f1c}
+
+
+\-Delete a user from the \-User (struct \hyperlink{struct__user}{\-\_\-user}) linked list. 
+
+\-Called by \hyperlink{ebp_8h_a6b502ce7f9e1bd8a7d2d7554fa9f7955}{show\-\_\-user\-\_\-offline()} returns a \-User$\ast$ to the next item in the linked list or \-N\-U\-L\-L if there are no other items. \hypertarget{ebp_8h_ae1a56fea0adb7e0326aeb68c9652eeaf}{\index{ebp.\-h@{ebp.\-h}!filter@{filter}}
+\index{filter@{filter}!ebp.h@{ebp.\-h}}
+\subsubsection[{filter}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf filter} (
+\begin{DoxyParamCaption}
+\item[{const struct dirent $\ast$}]{dir}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_ae1a56fea0adb7e0326aeb68c9652eeaf}
+
+
+\-Used by scandir() to filter out and return .desktop files. 
+
+called by \hyperlink{ebp_8h_a06d20fe02389d2d8d5b8fadde7834b19}{get\-\_\-installed\-\_\-apps()} \hypertarget{ebp_8h_af9f662243402dde9b1c6e63da93abd91}{\index{ebp.\-h@{ebp.\-h}!free\-Launch\-App\-Queue@{free\-Launch\-App\-Queue}}
+\index{free\-Launch\-App\-Queue@{free\-Launch\-App\-Queue}!ebp.h@{ebp.\-h}}
+\subsubsection[{free\-Launch\-App\-Queue}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf free\-Launch\-App\-Queue} (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_af9f662243402dde9b1c6e63da93abd91}
+
+
+\-Frees memory allocated for the \-Launch\-App\-Queue (struct \hyperlink{struct___launch_app_queue}{\-\_\-\-Launch\-App\-Queue}) linked list. 
+
+\-Walks backwards from the last element added to the linked list -\/ referenced by g\-Last\-Launch\-App\-Queue. \-Frees memory for each linked list till there are none.
+
+called by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()} \hypertarget{ebp_8h_a340410969fdca9c8d0b5f5a0c7b059f6}{\index{ebp.\-h@{ebp.\-h}!free\-Launch\-Dialog\-Queue@{free\-Launch\-Dialog\-Queue}}
+\index{free\-Launch\-Dialog\-Queue@{free\-Launch\-Dialog\-Queue}!ebp.h@{ebp.\-h}}
+\subsubsection[{free\-Launch\-Dialog\-Queue}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf free\-Launch\-Dialog\-Queue} (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a340410969fdca9c8d0b5f5a0c7b059f6}
+
+
+\-Frees memory allocated for the \-Launch\-Dialog\-Queue (struct \hyperlink{struct___launch_dialog_queue}{\-\_\-\-Launch\-Dialog\-Queue}) linked list. 
+
+\-Walks backwards from the last element added to the linked list -\/ referenced by g\-Last\-Launch\-Dialog. \-Frees memory for each linked list till there are none.
+
+called by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()} \hypertarget{ebp_8h_a3c0bd0d12ed4baca38c7da5235d3a19b}{\index{ebp.\-h@{ebp.\-h}!freeusermem@{freeusermem}}
+\index{freeusermem@{freeusermem}!ebp.h@{ebp.\-h}}
+\subsubsection[{freeusermem}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf freeusermem} (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a3c0bd0d12ed4baca38c7da5235d3a19b}
+
+
+\-Frees memory allocated for the \-User (struct \hyperlink{struct__user}{\-\_\-user}) linked list. 
+
+\-First frees memory allocated for the apps\-\_\-buffer member of struct \hyperlink{struct__user}{\-\_\-user} and then frees the memory for the linked list element. \-It follows the pointers backwards freeing each linked list.
+
+called by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()} \hypertarget{ebp_8h_a06d20fe02389d2d8d5b8fadde7834b19}{\index{ebp.\-h@{ebp.\-h}!get\-\_\-installed\-\_\-apps@{get\-\_\-installed\-\_\-apps}}
+\index{get\-\_\-installed\-\_\-apps@{get\-\_\-installed\-\_\-apps}!ebp.h@{ebp.\-h}}
+\subsubsection[{get\-\_\-installed\-\_\-apps}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ {\bf get\-\_\-installed\-\_\-apps} (
+\begin{DoxyParamCaption}
+\item[{int $\ast$}]{count, }
+\item[{int $\ast$}]{blocksize}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a06d20fe02389d2d8d5b8fadde7834b19}
+
+
+\-Gets a list of applications installed on the host system that can be shared. 
+
+\-Called by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()}
+
+\-Looks in /usr/share/applications for applications installed. \-Reads the .desktop files and retrieves the \-Exec field values.
+
+returns a char$\ast$ list in the format \mbox{[}app1 exec\mbox{]}\-:\mbox{[}app2 exec\mbox{]}\-:... \-Currently we are not handling arguments, split at first whitespace \-T\-O\-D\-O\-: policy for handling args, across remote and code to implement the same, separate $\ast$.desktop \& $\ast$-\/file.desktop \hypertarget{ebp_8h_a231245c107b2a7b8c4a43f49b81061f1}{\index{ebp.\-h@{ebp.\-h}!get\-\_\-remoteuser\-\_\-apps@{get\-\_\-remoteuser\-\_\-apps}}
+\index{get\-\_\-remoteuser\-\_\-apps@{get\-\_\-remoteuser\-\_\-apps}!ebp.h@{ebp.\-h}}
+\subsubsection[{get\-\_\-remoteuser\-\_\-apps}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf get\-\_\-remoteuser\-\_\-apps} (
+\begin{DoxyParamCaption}
+\item[{{\bf \-User} $\ast$}]{\-User\-Node}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a231245c107b2a7b8c4a43f49b81061f1}
+
+
+\-Sends request to remote client to send out the list of applications installed on the host. 
+
+called by \hyperlink{ebp_8h_afdb04a65b83045cc6109899989bc7c3a}{show\-\_\-user\-\_\-online()}
+
+\-Connects to remote client. \-Sends out a \-Get\-Apps request handled by the remote client in it's \hyperlink{ebp_8h_ada195c5562f1821af9a92ebd4f98a6e9}{newconnrequests\-\_\-thread()}. returns 1 on error else 0. \-T\-O\-D\-O\-: apps\-\_\-buffer should be dynamically expanded \hypertarget{ebp_8h_a660c22858bee36de55c4a31f3fe399b3}{\index{ebp.\-h@{ebp.\-h}!getlocaladdrs@{getlocaladdrs}}
+\index{getlocaladdrs@{getlocaladdrs}!ebp.h@{ebp.\-h}}
+\subsubsection[{getlocaladdrs}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf getlocaladdrs} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a660c22858bee36de55c4a31f3fe399b3}
+
+
+\-Retrieves details of the network interfaces on the local system. 
+
+\-Calls getifaddrs() to create a linked list (ifaddr) of the network interfaces on the local system. \hyperlink{avahi-discovery_8c_aa3f6429c6ea796f2e6917ae703c82a75}{avahi\-\_\-resolver\-\_\-found()} later checks the ifaddr function and compares if the host discovered is simply the avahi daemon on the local system or a new unique host on the network.
+
+called by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()} \hypertarget{ebp_8h_aa7eb61b9f00496920b294495c0e45151}{\index{ebp.\-h@{ebp.\-h}!init\-\_\-treeview@{init\-\_\-treeview}}
+\index{init\-\_\-treeview@{init\-\_\-treeview}!ebp.h@{ebp.\-h}}
+\subsubsection[{init\-\_\-treeview}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf init\-\_\-treeview} (
+\begin{DoxyParamCaption}
+\item[{\-Gtk\-Widget $\ast$}]{view, }
+\item[{\-Gtk\-Tree\-Store $\ast$}]{treestore}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_aa7eb61b9f00496920b294495c0e45151}
+
+
+\-Initialize \-G\-T\-K treeview control to display users and their apps. 
+
+\-Connects the \char`\"{}row-\/activate\char`\"{} treeview signal to call on\-\_\-treeview\-\_\-row\-\_\-activate(). \hypertarget{ebp_8h_a5e1fa74fe28f225341d3140b717085bb}{\index{ebp.\-h@{ebp.\-h}!killchild@{killchild}}
+\index{killchild@{killchild}!ebp.h@{ebp.\-h}}
+\subsubsection[{killchild}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf killchild} (
+\begin{DoxyParamCaption}
+\item[{int}]{signo}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a5e1fa74fe28f225341d3140b717085bb}
+
+
+\-Signal handler called in response to \-S\-I\-G\-T\-E\-R\-M,\-S\-I\-G\-I\-N\-T and \-S\-I\-G\-H\-U\-P signals. 
+
+\-The signal handler is setup in \hyperlink{ebp_8h_a59c9b03249680e3795ac58914e3c977a}{pipe\-\_\-to\-\_\-program()} \hypertarget{ebp_8h_a6ccdc10719eba20d890b23bd9954c7e8}{\index{ebp.\-h@{ebp.\-h}!launch\-\_\-approve\-\_\-dialog@{launch\-\_\-approve\-\_\-dialog}}
+\index{launch\-\_\-approve\-\_\-dialog@{launch\-\_\-approve\-\_\-dialog}!ebp.h@{ebp.\-h}}
+\subsubsection[{launch\-\_\-approve\-\_\-dialog}]{\setlength{\rightskip}{0pt plus 5cm}gboolean {\bf launch\-\_\-approve\-\_\-dialog} (
+\begin{DoxyParamCaption}
+\item[{gpointer}]{data}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a6ccdc10719eba20d890b23bd9954c7e8}
+
+
+\-Shows dialog box seeking approval for request from a user to launch application. 
+
+\-Called by \hyperlink{ebp_8h_adf2291983ac5bd4e98ef90a6ab77625b}{process\-\_\-launchapp\-\_\-req()} \-Connects the \char`\"{}response\char`\"{} signal of the dialog box to \hyperlink{ebp_8h_af3d9949857132e8d54396923c6ef3d13}{launch\-\_\-approve\-\_\-dialog\-\_\-response()}. \hypertarget{ebp_8h_af3d9949857132e8d54396923c6ef3d13}{\index{ebp.\-h@{ebp.\-h}!launch\-\_\-approve\-\_\-dialog\-\_\-response@{launch\-\_\-approve\-\_\-dialog\-\_\-response}}
+\index{launch\-\_\-approve\-\_\-dialog\-\_\-response@{launch\-\_\-approve\-\_\-dialog\-\_\-response}!ebp.h@{ebp.\-h}}
+\subsubsection[{launch\-\_\-approve\-\_\-dialog\-\_\-response}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf launch\-\_\-approve\-\_\-dialog\-\_\-response} (
+\begin{DoxyParamCaption}
+\item[{\-Gtk\-Widget $\ast$}]{dialog, }
+\item[{gint}]{response\-\_\-id, }
+\item[{gpointer}]{user\-\_\-data}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_af3d9949857132e8d54396923c6ef3d13}
+
+
+\-Processes response (\-Yes/\-No) from dialog box seeking approval to launch application. 
+
+todo -\/ send a rejection signal to the initiating client \hypertarget{ebp_8h_a889577c7640c3776ad0649ca65d82b5a}{\index{ebp.\-h@{ebp.\-h}!launchdlg\-\_\-approved@{launchdlg\-\_\-approved}}
+\index{launchdlg\-\_\-approved@{launchdlg\-\_\-approved}!ebp.h@{ebp.\-h}}
+\subsubsection[{launchdlg\-\_\-approved}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf launchdlg\-\_\-approved} (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{appname, }
+\item[{uint32\-\_\-t}]{ip}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a889577c7640c3776ad0649ca65d82b5a}
+
+
+\-Handles the condition when user has approved request to launch an application. 
+
+\-Spawns a thread to start an instance of the \-Open\-S\-S\-H server for this request. \-This server instance will \-X forward the application requested by remote client.
+
+\-Connect back to the client that had sent the \-Launch\-App request and send it a \-Launch\-App\-Req\-Accepted message along with the application name. \-This signifies that our host is willing to honour their request and has launched the \-S\-S\-H server. \hypertarget{ebp_8h_ada195c5562f1821af9a92ebd4f98a6e9}{\index{ebp.\-h@{ebp.\-h}!newconnrequests\-\_\-thread@{newconnrequests\-\_\-thread}}
+\index{newconnrequests\-\_\-thread@{newconnrequests\-\_\-thread}!ebp.h@{ebp.\-h}}
+\subsubsection[{newconnrequests\-\_\-thread}]{\setlength{\rightskip}{0pt plus 5cm}gpointer {\bf newconnrequests\-\_\-thread} (
+\begin{DoxyParamCaption}
+\item[{gpointer}]{user\-\_\-data}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_ada195c5562f1821af9a92ebd4f98a6e9}
+
+
+thread launched by \hyperlink{ebp_8h_a98e5889b5a138ff189f2210bf572427d}{connlistener\-\_\-thread()} to process notification / requests. 
+
+\-This thread processes\-:
+\begin{DoxyItemize}
+\item olsr plugin notification for a user coming online (currently disabled)
+\item \-Get\-Apps request to send list of applications installed on current host
+\item \-Launch\-App request by a remote host to launch a new app
+\item \-Launch\-App\-Req\-Accepted message showing that remote host has accepted launch request 
+\end{DoxyItemize}processes e\-Brain\-Online olsr plugin notification when a user comes online (currently disabled)
+
+\-Get\-Apps request sends a list of applications installed on this host
+
+\-Launch\-App request processed when a remote user wishes to launch an application from this host.
+
+\-Launch\-App\-Req\-Accepted request processed when the remote user has \-O\-Ked our app launch request. \hypertarget{ebp_8h_ae23df7382182a81cf7b2cd7211ba4b80}{\index{ebp.\-h@{ebp.\-h}!on\-\_\-treeview\-\_\-row\-\_\-activated@{on\-\_\-treeview\-\_\-row\-\_\-activated}}
+\index{on\-\_\-treeview\-\_\-row\-\_\-activated@{on\-\_\-treeview\-\_\-row\-\_\-activated}!ebp.h@{ebp.\-h}}
+\subsubsection[{on\-\_\-treeview\-\_\-row\-\_\-activated}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf on\-\_\-treeview\-\_\-row\-\_\-activated} (
+\begin{DoxyParamCaption}
+\item[{\-Gtk\-Widget $\ast$}]{widget, }
+\item[{\-Gtk\-Tree\-Path $\ast$}]{path, }
+\item[{\-Gtk\-Tree\-View\-Column $\ast$}]{column, }
+\item[{gpointer}]{user\-\_\-data}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_ae23df7382182a81cf7b2cd7211ba4b80}
+
+
+\-Process the \char`\"{}row-\/activated\char`\"{} \-G\-T\-K treeview signal. 
+
+\-Signal handler setup in \hyperlink{ebp_8h_aa7eb61b9f00496920b294495c0e45151}{init\-\_\-treeview()}.
+
+\-Called when a user clicks on an application to launch it from the remote host. calls \hyperlink{ebp_8h_a3dd443f3ee1bcdf8301e1ed723ba25ef}{send\-\_\-launchapp\-\_\-req()} to send request to remote user to launch application. \hypertarget{ebp_8h_a59c9b03249680e3795ac58914e3c977a}{\index{ebp.\-h@{ebp.\-h}!pipe\-\_\-to\-\_\-program@{pipe\-\_\-to\-\_\-program}}
+\index{pipe\-\_\-to\-\_\-program@{pipe\-\_\-to\-\_\-program}!ebp.h@{ebp.\-h}}
+\subsubsection[{pipe\-\_\-to\-\_\-program}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf pipe\-\_\-to\-\_\-program} (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{path, }
+\item[{char $\ast$$\ast$}]{args, }
+\item[{int $\ast$}]{in, }
+\item[{int $\ast$}]{out, }
+\item[{int $\ast$}]{err}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a59c9b03249680e3795ac58914e3c977a}
+
+
+\-Pipes \-S\-T\-D\-I\-N,\-S\-T\-D\-O\-U\-T and \-S\-T\-D\-E\-R\-R and launches program. 
+
+\-Currently used to pipe and call either the \-Open\-S\-S\-H server (sshd) or client (ssh).
+
+called by \hyperlink{ebp_8h_a247bc40691d7f25e3d09fecb1eca69ef}{start\-\_\-server()} and \hyperlink{ebp_8h_aff5b0edee93abba2bcba5eece3360b04}{process\-\_\-launchreq\-\_\-accepted()} \hypertarget{ebp_8h_adf2291983ac5bd4e98ef90a6ab77625b}{\index{ebp.\-h@{ebp.\-h}!process\-\_\-launchapp\-\_\-req@{process\-\_\-launchapp\-\_\-req}}
+\index{process\-\_\-launchapp\-\_\-req@{process\-\_\-launchapp\-\_\-req}!ebp.h@{ebp.\-h}}
+\subsubsection[{process\-\_\-launchapp\-\_\-req}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf process\-\_\-launchapp\-\_\-req} (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{buf, }
+\item[{{\bf \-New\-Conn\-Data} $\ast$}]{data}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_adf2291983ac5bd4e98ef90a6ab77625b}
+
+
+\-Processes a received \-Launch\-App request from a remote client. 
+
+\-The \-Launch\-App request suggests that a client wishes to run an application from the current host. \-The format of this request is \-Launch\-App\-:\-Appname where \-Appname is the application name. \-Search the \-User\-Node user's list and find username from the \-I\-P
+
+\-Presents dialog box to user seeking approval. \hypertarget{ebp_8h_aff5b0edee93abba2bcba5eece3360b04}{\index{ebp.\-h@{ebp.\-h}!process\-\_\-launchreq\-\_\-accepted@{process\-\_\-launchreq\-\_\-accepted}}
+\index{process\-\_\-launchreq\-\_\-accepted@{process\-\_\-launchreq\-\_\-accepted}!ebp.h@{ebp.\-h}}
+\subsubsection[{process\-\_\-launchreq\-\_\-accepted}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf process\-\_\-launchreq\-\_\-accepted} (
+\begin{DoxyParamCaption}
+\item[{{\bf \-New\-Conn\-Data} $\ast$}]{data}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_aff5b0edee93abba2bcba5eece3360b04}
+
+
+\-Processes the \-Launch\-App\-Req\-Accepted message. 
+
+\-The \-Launch\-App\-Req\-Accepted message signifies that the remote user is willing to launch the application we requested and has started an instance of the \-Open\-S\-S\-H server.
+
+\-This function uses the \-Open\-S\-S\-H client to connect to the server. \-Arguments to the \-Open\-S\-S\-H client (see code) are currently hardcoded.\-Eventually will be taken in from main ebp.\-conf file.
+
+\-Determines username and ip;formats the \mbox{[}username\mbox{]}@\mbox{[}ip\mbox{]} string to be used by ssh client.
+
+verfies within our \-Launch\-App\-Queue that the request had indeed been sent by this host. \-T\-O\-D\-O\-: \-This verification is currently commented out.
+
+\-Finally calls the \-S\-S\-H client to connect to remote host and \-X forward desired application.
+
+stdin,stdout and stderr are piped and /usr/bin/ssh (currently hardcoded) is launched.
+
+\-T\-O\-D\-O\-: for now reading from the piped stderr of the child one char at a time eventually need to put in mechanism to determine and deal with success/failure of the child program. \hypertarget{ebp_8h_a812ffc38f58a183a17919869300072fa}{\index{ebp.\-h@{ebp.\-h}!process\-\_\-useronline\-\_\-avahi\-\_\-msg@{process\-\_\-useronline\-\_\-avahi\-\_\-msg}}
+\index{process\-\_\-useronline\-\_\-avahi\-\_\-msg@{process\-\_\-useronline\-\_\-avahi\-\_\-msg}!ebp.h@{ebp.\-h}}
+\subsubsection[{process\-\_\-useronline\-\_\-avahi\-\_\-msg}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf process\-\_\-useronline\-\_\-avahi\-\_\-msg} (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{ip\-\_\-str, }
+\item[{const char $\ast$}]{username, }
+\item[{const char $\ast$}]{ssh\-\_\-login\-\_\-user, }
+\item[{const char $\ast$}]{version}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a812ffc38f58a183a17919869300072fa}
+
+
+\-Shows a new client discovered by \-Avahi as online. 
+
+called by \hyperlink{avahi-discovery_8c_aa3f6429c6ea796f2e6917ae703c82a75}{avahi\-\_\-resolver\-\_\-found()} when it discovers a new client. checks to see if remote client is reachable and if so shows it as \-Online. \hypertarget{ebp_8h_afb0f9ea6a43e7837b9a391e81f35cf35}{\index{ebp.\-h@{ebp.\-h}!process\-\_\-useronline\-\_\-msg@{process\-\_\-useronline\-\_\-msg}}
+\index{process\-\_\-useronline\-\_\-msg@{process\-\_\-useronline\-\_\-msg}!ebp.h@{ebp.\-h}}
+\subsubsection[{process\-\_\-useronline\-\_\-msg}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf process\-\_\-useronline\-\_\-msg} (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{buf}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_afb0f9ea6a43e7837b9a391e81f35cf35}
+
+
+processes the e\-Brain\-Online olsr plugin notification. 
+
+(currently disabled)
+
+\-Called via \hyperlink{ebp_8h_ada195c5562f1821af9a92ebd4f98a6e9}{newconnrequests\-\_\-thread()} to process the e\-Brain\-Online plugin notification, and show a user online. \-Also checks to see if remote client is reachable. \-This takes care of a bug wherein user keeps flickering in the local client when remote client is unreachable but remote olsr is up. \hypertarget{ebp_8h_a29a55294f0f9f2771bba49ea5c326c58}{\index{ebp.\-h@{ebp.\-h}!readconfigfile@{readconfigfile}}
+\index{readconfigfile@{readconfigfile}!ebp.h@{ebp.\-h}}
+\subsubsection[{readconfigfile}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf readconfigfile} (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a29a55294f0f9f2771bba49ea5c326c58}
+
+
+\-Reads the ebp.\-conf file and retrieves config parameters specified. 
+
+returns 0 on error else 1. \-T\-O\-D\-O\-: for now looking for the config file in the same dir as the exec; should be /etc \hypertarget{ebp_8h_a3dd443f3ee1bcdf8301e1ed723ba25ef}{\index{ebp.\-h@{ebp.\-h}!send\-\_\-launchapp\-\_\-req@{send\-\_\-launchapp\-\_\-req}}
+\index{send\-\_\-launchapp\-\_\-req@{send\-\_\-launchapp\-\_\-req}!ebp.h@{ebp.\-h}}
+\subsubsection[{send\-\_\-launchapp\-\_\-req}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf send\-\_\-launchapp\-\_\-req} (
+\begin{DoxyParamCaption}
+\item[{{\bf \-User} $\ast$}]{\-User\-Node, }
+\item[{char $\ast$}]{appname}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a3dd443f3ee1bcdf8301e1ed723ba25ef}
+
+
+\-Sends request to remote user to launch application. 
+
+\-Called by \hyperlink{ebp_8h_ae23df7382182a81cf7b2cd7211ba4b80}{on\-\_\-treeview\-\_\-row\-\_\-activated()} \-Adds the request sent to a launch queue. \-To be used on receipt of response to verify authenticity of the request.
+
+\-Connects to remote host.
+
+\-Sends \-Launch\-App request along with application name to remote client. \hypertarget{ebp_8h_a1dfbfdf187d7101f856a4e0a646b8ff7}{\index{ebp.\-h@{ebp.\-h}!set\-\_\-launchappqueue\-\_\-locked@{set\-\_\-launchappqueue\-\_\-locked}}
+\index{set\-\_\-launchappqueue\-\_\-locked@{set\-\_\-launchappqueue\-\_\-locked}!ebp.h@{ebp.\-h}}
+\subsubsection[{set\-\_\-launchappqueue\-\_\-locked}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf set\-\_\-launchappqueue\-\_\-locked} (
+\begin{DoxyParamCaption}
+\item[{{\bf \-Launch\-App\-Queue} $\ast$}]{dest, }
+\item[{{\bf \-Launch\-App\-Queue} $\ast$}]{src}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a1dfbfdf187d7101f856a4e0a646b8ff7}
+\hypertarget{ebp_8h_a6b502ce7f9e1bd8a7d2d7554fa9f7955}{\index{ebp.\-h@{ebp.\-h}!show\-\_\-user\-\_\-offline@{show\-\_\-user\-\_\-offline}}
+\index{show\-\_\-user\-\_\-offline@{show\-\_\-user\-\_\-offline}!ebp.h@{ebp.\-h}}
+\subsubsection[{show\-\_\-user\-\_\-offline}]{\setlength{\rightskip}{0pt plus 5cm}gboolean {\bf show\-\_\-user\-\_\-offline} (
+\begin{DoxyParamCaption}
+\item[{gpointer}]{user\-\_\-data}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a6b502ce7f9e1bd8a7d2d7554fa9f7955}
+
+
+\-Shows user as offline by deleting from the treeview. 
+
+called by \hyperlink{ebp_8h_a05026b760b45f0ee89181c4899205806}{check\-\_\-client\-\_\-status\-\_\-thread()}. \-Deletes an unreachable client (and consequently its applications) from the treeview and the \-User linked list. \hypertarget{ebp_8h_afdb04a65b83045cc6109899989bc7c3a}{\index{ebp.\-h@{ebp.\-h}!show\-\_\-user\-\_\-online@{show\-\_\-user\-\_\-online}}
+\index{show\-\_\-user\-\_\-online@{show\-\_\-user\-\_\-online}!ebp.h@{ebp.\-h}}
+\subsubsection[{show\-\_\-user\-\_\-online}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf show\-\_\-user\-\_\-online} (
+\begin{DoxyParamCaption}
+\item[{{\bf \-User} $\ast$}]{\-User\-Node}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_afdb04a65b83045cc6109899989bc7c3a}
+
+
+\-Displays a new user and the applications shared. 
+
+called by \hyperlink{ebp_8h_a812ffc38f58a183a17919869300072fa}{process\-\_\-useronline\-\_\-avahi\-\_\-msg()} and \hyperlink{ebp_8h_afb0f9ea6a43e7837b9a391e81f35cf35}{process\-\_\-useronline\-\_\-msg()}. $<$ \-T\-O\-D\-O\-: memory to be freed; should be dynamically expanded block
+
+retrieves and shows applications shared by the user in the treeview. \hypertarget{ebp_8h_a247bc40691d7f25e3d09fecb1eca69ef}{\index{ebp.\-h@{ebp.\-h}!start\-\_\-server@{start\-\_\-server}}
+\index{start\-\_\-server@{start\-\_\-server}!ebp.h@{ebp.\-h}}
+\subsubsection[{start\-\_\-server}]{\setlength{\rightskip}{0pt plus 5cm}gpointer {\bf start\-\_\-server} (
+\begin{DoxyParamCaption}
+\item[{gpointer}]{ptr\-\_\-ip}
+\end{DoxyParamCaption}
+)}}\label{ebp_8h_a247bc40691d7f25e3d09fecb1eca69ef}
+
+
+\-Thread to start a new instance of the \-Open\-S\-S\-H server. 
+
+\-This thread is spawned by \hyperlink{ebp_8h_a889577c7640c3776ad0649ca65d82b5a}{launchdlg\-\_\-approved()} \-Arguments to the \-Open\-S\-S\-H server (see code) are currently hardcoded.\-Eventually will be taken in from main ebp.\-conf file.
+
+\-Pipe \-S\-T\-D\-I\-N,\-S\-T\-D\-O\-U\-T and \-S\-T\-D\-E\-R\-R and launch /usr/sbin/sshd (currently hardcoded)
+
+\-T\-O\-D\-O\-: for now reading from the piped stderr of the child one char at a time eventually need to put in mechanism to determine and deal with success/failure of the child program. 
+
+\subsection{\-Variable \-Documentation}
+\hypertarget{ebp_8h_ad8fe7e381ba07ddf4d0cdb736cfe5135}{\index{ebp.\-h@{ebp.\-h}!appsdata@{appsdata}}
+\index{appsdata@{appsdata}!ebp.h@{ebp.\-h}}
+\subsubsection[{appsdata}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Apps\-Data} {\bf appsdata}}}\label{ebp_8h_ad8fe7e381ba07ddf4d0cdb736cfe5135}
+\hypertarget{ebp_8h_aa28aeb8980366ea762c29c8dbe0baa38}{\index{ebp.\-h@{ebp.\-h}!childpid@{childpid}}
+\index{childpid@{childpid}!ebp.h@{ebp.\-h}}
+\subsubsection[{childpid}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf childpid}}}\label{ebp_8h_aa28aeb8980366ea762c29c8dbe0baa38}
+
+
+used by \hyperlink{ebp_8h_a59c9b03249680e3795ac58914e3c977a}{pipe\-\_\-to\-\_\-program()} when it forks and launches piped \-Open\-S\-S\-H server/client,etc. 
+
+\hypertarget{ebp_8h_ad3925a9348c164db98f5f0a0770c996e}{\index{ebp.\-h@{ebp.\-h}!config\-\_\-entry\-\_\-username@{config\-\_\-entry\-\_\-username}}
+\index{config\-\_\-entry\-\_\-username@{config\-\_\-entry\-\_\-username}!ebp.h@{ebp.\-h}}
+\subsubsection[{config\-\_\-entry\-\_\-username}]{\setlength{\rightskip}{0pt plus 5cm}gchar$\ast$ {\bf config\-\_\-entry\-\_\-username}}}\label{ebp_8h_ad3925a9348c164db98f5f0a0770c996e}
+
+
+username as read in from ebp.\-conf 
+
+\hypertarget{ebp_8h_a351558798e211564ef2dba55b420354b}{\index{ebp.\-h@{ebp.\-h}!g\-Current\-Conn@{g\-Current\-Conn}}
+\index{g\-Current\-Conn@{g\-Current\-Conn}!ebp.h@{ebp.\-h}}
+\subsubsection[{g\-Current\-Conn}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-New\-Conn\-Data}$\ast$ {\bf g\-Current\-Conn}}}\label{ebp_8h_a351558798e211564ef2dba55b420354b}
+
+
+global pointer to current element in the \-New\-Conn\-Data linked list. 
+
+\hypertarget{ebp_8h_abcc908f232d8b5b89d6bae44e59d0e72}{\index{ebp.\-h@{ebp.\-h}!g\-Current\-Launch\-App\-Queue@{g\-Current\-Launch\-App\-Queue}}
+\index{g\-Current\-Launch\-App\-Queue@{g\-Current\-Launch\-App\-Queue}!ebp.h@{ebp.\-h}}
+\subsubsection[{g\-Current\-Launch\-App\-Queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Launch\-App\-Queue}$\ast$ {\bf g\-Current\-Launch\-App\-Queue}}}\label{ebp_8h_abcc908f232d8b5b89d6bae44e59d0e72}
+
+
+global pointer to current element in the \-Launch\-App\-Queue linked list. 
+
+\hypertarget{ebp_8h_a22f30bef0745dd38bd6c3164d348b44d}{\index{ebp.\-h@{ebp.\-h}!g\-Current\-Launch\-Dialog@{g\-Current\-Launch\-Dialog}}
+\index{g\-Current\-Launch\-Dialog@{g\-Current\-Launch\-Dialog}!ebp.h@{ebp.\-h}}
+\subsubsection[{g\-Current\-Launch\-Dialog}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Launch\-Dialog\-Queue}$\ast$ {\bf g\-Current\-Launch\-Dialog}}}\label{ebp_8h_a22f30bef0745dd38bd6c3164d348b44d}
+
+
+global pointer to current element in the \-Launch\-Dialog\-Queue linked list. 
+
+\hypertarget{ebp_8h_a238e26813fe935b4bc277027dd919e28}{\index{ebp.\-h@{ebp.\-h}!g\-Current\-User\-Node@{g\-Current\-User\-Node}}
+\index{g\-Current\-User\-Node@{g\-Current\-User\-Node}!ebp.h@{ebp.\-h}}
+\subsubsection[{g\-Current\-User\-Node}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-User}$\ast$ {\bf g\-Current\-User\-Node}}}\label{ebp_8h_a238e26813fe935b4bc277027dd919e28}
+
+
+global pointer to current element in the \-User\-Node linked list. 
+
+\hypertarget{ebp_8h_a38b454fe0651a44ca228cf177605c58f}{\index{ebp.\-h@{ebp.\-h}!g\-First\-Conn@{g\-First\-Conn}}
+\index{g\-First\-Conn@{g\-First\-Conn}!ebp.h@{ebp.\-h}}
+\subsubsection[{g\-First\-Conn}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-New\-Conn\-Data}$\ast$ {\bf g\-First\-Conn}}}\label{ebp_8h_a38b454fe0651a44ca228cf177605c58f}
+
+
+global pointer to first element in the \-New\-Conn\-Data linked list. 
+
+\hypertarget{ebp_8h_a5571f07afd8b623fdcfdfbbc30f54d58}{\index{ebp.\-h@{ebp.\-h}!g\-First\-Launch\-App\-Queue@{g\-First\-Launch\-App\-Queue}}
+\index{g\-First\-Launch\-App\-Queue@{g\-First\-Launch\-App\-Queue}!ebp.h@{ebp.\-h}}
+\subsubsection[{g\-First\-Launch\-App\-Queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Launch\-App\-Queue}$\ast$ {\bf g\-First\-Launch\-App\-Queue}}}\label{ebp_8h_a5571f07afd8b623fdcfdfbbc30f54d58}
+
+
+global pointer to first element in the \-Launch\-App\-Queue linked list. 
+
+\hypertarget{ebp_8h_ac566e3ca4026329332a9e4dbcadfbbf7}{\index{ebp.\-h@{ebp.\-h}!g\-First\-Launch\-Dialog@{g\-First\-Launch\-Dialog}}
+\index{g\-First\-Launch\-Dialog@{g\-First\-Launch\-Dialog}!ebp.h@{ebp.\-h}}
+\subsubsection[{g\-First\-Launch\-Dialog}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Launch\-Dialog\-Queue}$\ast$ {\bf g\-First\-Launch\-Dialog}}}\label{ebp_8h_ac566e3ca4026329332a9e4dbcadfbbf7}
+
+
+global pointer to first element in the \-Launch\-Dialog\-Queue linked list. 
+
+\hypertarget{ebp_8h_ad3161f3990d04b15d454c6a4286f8ec7}{\index{ebp.\-h@{ebp.\-h}!g\-First\-User\-Node@{g\-First\-User\-Node}}
+\index{g\-First\-User\-Node@{g\-First\-User\-Node}!ebp.h@{ebp.\-h}}
+\subsubsection[{g\-First\-User\-Node}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-User}$\ast$ {\bf g\-First\-User\-Node}}}\label{ebp_8h_ad3161f3990d04b15d454c6a4286f8ec7}
+
+
+global pointer to first element in the \-User\-Node linked list. 
+
+\hypertarget{ebp_8h_a980ed0248e9ee9aa237a7b96c07ae587}{\index{ebp.\-h@{ebp.\-h}!g\-Last\-Conn@{g\-Last\-Conn}}
+\index{g\-Last\-Conn@{g\-Last\-Conn}!ebp.h@{ebp.\-h}}
+\subsubsection[{g\-Last\-Conn}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-New\-Conn\-Data}$\ast$ {\bf g\-Last\-Conn}}}\label{ebp_8h_a980ed0248e9ee9aa237a7b96c07ae587}
+
+
+global pointer to last element in the \-New\-Conn\-Data linked list. 
+
+\hypertarget{ebp_8h_ad8a751cb497a0077377baeda903baf60}{\index{ebp.\-h@{ebp.\-h}!g\-Last\-Launch\-App\-Queue@{g\-Last\-Launch\-App\-Queue}}
+\index{g\-Last\-Launch\-App\-Queue@{g\-Last\-Launch\-App\-Queue}!ebp.h@{ebp.\-h}}
+\subsubsection[{g\-Last\-Launch\-App\-Queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Launch\-App\-Queue}$\ast$ {\bf g\-Last\-Launch\-App\-Queue}}}\label{ebp_8h_ad8a751cb497a0077377baeda903baf60}
+
+
+global pointer to last element in the \-Launch\-App\-Queue linked list. 
+
+\hypertarget{ebp_8h_acad4bc93249072a49d96166f30e9fbc5}{\index{ebp.\-h@{ebp.\-h}!g\-Last\-Launch\-Dialog@{g\-Last\-Launch\-Dialog}}
+\index{g\-Last\-Launch\-Dialog@{g\-Last\-Launch\-Dialog}!ebp.h@{ebp.\-h}}
+\subsubsection[{g\-Last\-Launch\-Dialog}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Launch\-Dialog\-Queue}$\ast$ {\bf g\-Last\-Launch\-Dialog}}}\label{ebp_8h_acad4bc93249072a49d96166f30e9fbc5}
+
+
+global pointer to last element in the \-Launch\-Dialog\-Queue linked list. 
+
+\hypertarget{ebp_8h_ab4114937203a165cb0576697d13f5d47}{\index{ebp.\-h@{ebp.\-h}!g\-Last\-User\-Node@{g\-Last\-User\-Node}}
+\index{g\-Last\-User\-Node@{g\-Last\-User\-Node}!ebp.h@{ebp.\-h}}
+\subsubsection[{g\-Last\-User\-Node}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-User}$\ast$ {\bf g\-Last\-User\-Node}}}\label{ebp_8h_ab4114937203a165cb0576697d13f5d47}
+
+
+global pointer to last element in the \-User\-Node linked list. 
+
+\hypertarget{ebp_8h_a5bbba81e018d499f26b9a1a8570429db}{\index{ebp.\-h@{ebp.\-h}!ifaddr@{ifaddr}}
+\index{ifaddr@{ifaddr}!ebp.h@{ebp.\-h}}
+\subsubsection[{ifaddr}]{\setlength{\rightskip}{0pt plus 5cm}struct ifaddrs$\ast$ {\bf ifaddr}}}\label{ebp_8h_a5bbba81e018d499f26b9a1a8570429db}
+
+
+details of network interfaces on current system (localhost). 
+
+\hypertarget{ebp_8h_a043e5d5370b0154426dce3631417d3a4}{\index{ebp.\-h@{ebp.\-h}!requestid@{requestid}}
+\index{requestid@{requestid}!ebp.h@{ebp.\-h}}
+\subsubsection[{requestid}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf requestid}}}\label{ebp_8h_a043e5d5370b0154426dce3631417d3a4}
+\hypertarget{ebp_8h_ad2c8fb3df3a737e0685e902870a611d2}{\index{ebp.\-h@{ebp.\-h}!sockfd@{sockfd}}
+\index{sockfd@{sockfd}!ebp.h@{ebp.\-h}}
+\subsubsection[{sockfd}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf sockfd}}}\label{ebp_8h_ad2c8fb3df3a737e0685e902870a611d2}
+
+
+\-Global socket file descriptor,set in \hyperlink{ebp_8h_a98e5889b5a138ff189f2210bf572427d}{connlistener\-\_\-thread()} and closed on exit in \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()}. 
+
+\hypertarget{ebp_8h_a2f48dce7b34e2e526f1a25ca5e5538da}{\index{ebp.\-h@{ebp.\-h}!ssh\-\_\-login\-\_\-userdetails@{ssh\-\_\-login\-\_\-userdetails}}
+\index{ssh\-\_\-login\-\_\-userdetails@{ssh\-\_\-login\-\_\-userdetails}!ebp.h@{ebp.\-h}}
+\subsubsection[{ssh\-\_\-login\-\_\-userdetails}]{\setlength{\rightskip}{0pt plus 5cm}struct passwd$\ast$ {\bf ssh\-\_\-login\-\_\-userdetails}}}\label{ebp_8h_a2f48dce7b34e2e526f1a25ca5e5538da}
+
+
+details of user launching this client,remote ssh clients need to login back to this user. 
+
+\hypertarget{ebp_8h_a3b27749ff8174c046155fecaef4aec25}{\index{ebp.\-h@{ebp.\-h}!treestore@{treestore}}
+\index{treestore@{treestore}!ebp.h@{ebp.\-h}}
+\subsubsection[{treestore}]{\setlength{\rightskip}{0pt plus 5cm}\-Gtk\-Tree\-Store$\ast$ {\bf treestore}}}\label{ebp_8h_a3b27749ff8174c046155fecaef4aec25}
+\hypertarget{ebp_8h_a329dcf03184340d07e4fc4d29fa85f44}{\index{ebp.\-h@{ebp.\-h}!treeview@{treeview}}
+\index{treeview@{treeview}!ebp.h@{ebp.\-h}}
+\subsubsection[{treeview}]{\setlength{\rightskip}{0pt plus 5cm}\-Gtk\-Widget$\ast$ {\bf treeview}}}\label{ebp_8h_a329dcf03184340d07e4fc4d29fa85f44}
+\hypertarget{ebp_8h_a3d346c08cf2d67c388caabffb412b293}{\index{ebp.\-h@{ebp.\-h}!window@{window}}
+\index{window@{window}!ebp.h@{ebp.\-h}}
+\subsubsection[{window}]{\setlength{\rightskip}{0pt plus 5cm}\-Gtk\-Widget$\ast$ {\bf window}}}\label{ebp_8h_a3d346c08cf2d67c388caabffb412b293}
+
+
+\-Pointer to the main top-\/level window. 
+

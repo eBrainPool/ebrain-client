@@ -1,0 +1,71 @@
+\hypertarget{struct__newconndata}{\section{\-\_\-newconndata \-Struct \-Reference}
+\label{struct__newconndata}\index{\-\_\-newconndata@{\-\_\-newconndata}}
+}
+
+
+\-Linked list structure to hold details of the new connection to this host.  
+
+
+
+
+{\ttfamily \#include $<$ebp.\-h$>$}
+
+\subsection*{\-Data \-Fields}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{struct__newconndata_aefdd831ed1cd73e50f980063361576ba}{newsockfd}
+\begin{DoxyCompactList}\small\item\em socket file descriptor for the new connection returned by accept(). \end{DoxyCompactList}\item 
+char \hyperlink{struct__newconndata_a0f29c4c04d503e5e385795a66dfe6890}{buffer} \mbox{[}310\mbox{]}
+\begin{DoxyCompactList}\small\item\em buffer (currently unused) \-T\-O\-D\-O\-: take this off. \end{DoxyCompactList}\item 
+uint32\-\_\-t \hyperlink{struct__newconndata_a69ddb9c845da426f636d9dd0dbed4e7e}{ip}
+\begin{DoxyCompactList}\small\item\em \-I\-Pv4 address of the peer connecting in. \end{DoxyCompactList}\item 
+struct \hyperlink{struct__newconndata}{\-\_\-newconndata} $\ast$ \hyperlink{struct__newconndata_aeec1dced4bad04f81af5d652efe01922}{prev}
+\begin{DoxyCompactList}\small\item\em linked list pointer pointing to previous item in list. \end{DoxyCompactList}\item 
+struct \hyperlink{struct__newconndata}{\-\_\-newconndata} $\ast$ \hyperlink{struct__newconndata_a0fb3e0f3ffb0464599792063a7b86388}{next}
+\begin{DoxyCompactList}\small\item\em linked list pointer pointing to next item in list. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\-Linked list structure to hold details of the new connection to this host. 
+
+\subsection{\-Field \-Documentation}
+\hypertarget{struct__newconndata_a0f29c4c04d503e5e385795a66dfe6890}{\index{\-\_\-newconndata@{\-\_\-newconndata}!buffer@{buffer}}
+\index{buffer@{buffer}!_newconndata@{\-\_\-newconndata}}
+\subsubsection[{buffer}]{\setlength{\rightskip}{0pt plus 5cm}char {\bf buffer}\mbox{[}310\mbox{]}}}\label{struct__newconndata_a0f29c4c04d503e5e385795a66dfe6890}
+
+
+buffer (currently unused) \-T\-O\-D\-O\-: take this off. 
+
+\hypertarget{struct__newconndata_a69ddb9c845da426f636d9dd0dbed4e7e}{\index{\-\_\-newconndata@{\-\_\-newconndata}!ip@{ip}}
+\index{ip@{ip}!_newconndata@{\-\_\-newconndata}}
+\subsubsection[{ip}]{\setlength{\rightskip}{0pt plus 5cm}uint32\-\_\-t {\bf ip}}}\label{struct__newconndata_a69ddb9c845da426f636d9dd0dbed4e7e}
+
+
+\-I\-Pv4 address of the peer connecting in. 
+
+\hypertarget{struct__newconndata_aefdd831ed1cd73e50f980063361576ba}{\index{\-\_\-newconndata@{\-\_\-newconndata}!newsockfd@{newsockfd}}
+\index{newsockfd@{newsockfd}!_newconndata@{\-\_\-newconndata}}
+\subsubsection[{newsockfd}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf newsockfd}}}\label{struct__newconndata_aefdd831ed1cd73e50f980063361576ba}
+
+
+socket file descriptor for the new connection returned by accept(). 
+
+\hypertarget{struct__newconndata_a0fb3e0f3ffb0464599792063a7b86388}{\index{\-\_\-newconndata@{\-\_\-newconndata}!next@{next}}
+\index{next@{next}!_newconndata@{\-\_\-newconndata}}
+\subsubsection[{next}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf \-\_\-newconndata}$\ast$ {\bf next}}}\label{struct__newconndata_a0fb3e0f3ffb0464599792063a7b86388}
+
+
+linked list pointer pointing to next item in list. 
+
+\hypertarget{struct__newconndata_aeec1dced4bad04f81af5d652efe01922}{\index{\-\_\-newconndata@{\-\_\-newconndata}!prev@{prev}}
+\index{prev@{prev}!_newconndata@{\-\_\-newconndata}}
+\subsubsection[{prev}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf \-\_\-newconndata}$\ast$ {\bf prev}}}\label{struct__newconndata_aeec1dced4bad04f81af5d652efe01922}
+
+
+linked list pointer pointing to previous item in list. 
+
+
+
+\-The documentation for this struct was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+src/\hyperlink{ebp_8h}{ebp.\-h}\end{DoxyCompactItemize}

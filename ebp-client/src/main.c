@@ -30,6 +30,10 @@ G_LOCK_DEFINE(launchappqueue);
 G_LOCK_DEFINE(launchdialogqueue);
 G_LOCK_DEFINE(newconndata);
 
+/** entry point for the eBrainPool client.
+ *
+ *  Sets up and initializes the main UI elements. 
+ */
 int main(int argc, char *argv[])
 { 
     GtkWidget *logo = NULL;
@@ -74,32 +78,30 @@ int main(int argc, char *argv[])
 
     gtk_widget_show_all(window);
 
-    // get the user running this process sent to remote users for ssh connects back to this user
+    //! get the username running this process,this is sent to remote users for ssh connects back to this user.
     ssh_login_userdetails = getpwuid(getuid());
     printf("\nssh_login_userdetails->pw_name = %s\n",ssh_login_userdetails->pw_name);
 
-    // Reads in values from the config file
+    //! Reads in values from the config file
     if(readconfigfile() == 0)
       return 0;
 
-    // allocate a memory block and retrieve list of apps installed on the system 
+    //! allocate a memory block and retrieve list of apps installed on the system 
     appsdata.apps = get_installed_apps(&appsdata.count,&appsdata.blocksize); //jeetu - can pass pointer to Appsdata instead
 
-    // get addresses of interfaces on the local system (localhost)
+    //! get addresses of interfaces on the local system (localhost)
     getlocaladdrs(&ifaddr);
 
     avahi_setup();
-
-    // jeetu - assuming for now olsr is running; add code to check for or launch olsr.
    
-    // message thread that ultimately (thru listener_child) processes:
-    // - olsr plugin notification for a user coming online
-    // - GetApps request to send list of applications installed on current host
-    // - LaunchApp request by a remote host to launch a new app
-    // - LaunchAppReqAccepted message showing that remote host has accepted launch request
+    //! spawns message thread that ultimately (thru listener_child) processes:
+    //! - olsr plugin notification for a user coming online
+    //! - GetApps request to send list of applications installed on current host
+    //! - LaunchApp request by a remote host to launch a new app
+    //! - LaunchAppReqAccepted message showing that remote host has accepted launch request
     g_thread_create(connlistener_thread, NULL, FALSE, NULL);    
 
-    // thread to constantly check whether a user is still reachable i.e. online
+    //! spawns thread to constantly check whether a user is still reachable i.e. online
     g_thread_create(check_client_status_thread, NULL, FALSE, NULL);
 
     gdk_threads_enter();
@@ -114,7 +116,9 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-
+/** Initialize GTK treeview control to display users and their apps.
+ *
+ */
 int init_treeview(GtkWidget *treeview,GtkTreeStore *treestore)
 {
     GtkTreeViewColumn *col = NULL;
@@ -135,19 +139,19 @@ int init_treeview(GtkWidget *treeview,GtkTreeStore *treestore)
     gtk_tree_view_set_model(GTK_TREE_VIEW(treeview), GTK_TREE_MODEL(treestore));
     g_object_unref(treestore); 
 
+    //! Connects the "row-activate" treeview signal to call on_treeview_row_activate().
     g_signal_connect(GTK_TREE_VIEW(treeview),"row-activated",G_CALLBACK(on_treeview_row_activated),NULL);
 
     return 0;
 }
 
-//
-// connlistener_thread()
-//
-// main message processing thread that:
-// - endlessly listens in on a socket
-// - accepts a new connection
-// - spawns a new thread to process the new connection
-//
+/** main message processing thread spawned by main()
+ *
+ *  This thread:
+ *  - endlessly listens in on a socket
+ *  - accepts a new connection
+ *  - spawns a new thread to process the new connection
+ */
 gpointer connlistener_thread(gpointer user_data)
 {
     int newsockfd=0, portno=0;
@@ -197,7 +201,7 @@ gpointer connlistener_thread(gpointer user_data)
       	     perror("connlistener_thread: ERROR on accept");
       	   
            newconndata = add_newconn(newsockfd,cli_addr.sin_addr.s_addr);
-           // new thread spawned to read data from a new connection and process it
+           //! the new thread is spawned to read data from a new connection and process it
            g_thread_create(newconnrequests_thread, newconndata, FALSE, NULL);
            }
          i++;
@@ -207,14 +211,15 @@ gpointer connlistener_thread(gpointer user_data)
 
 //TODO: Make sure that all of threads created are killed at program exit
 
-// newconnrequests_thread()
-//
-// thread launched by the connlistener thread that processes:
-// - olsr plugin notification for a user coming online
-// - GetApps request to send list of applications installed on current host
-// - LaunchApp request by a remote host to launch a new app
-// - LaunchAppReqAccepted message showing that remote host has accepted launch request
-//
+
+/** thread launched by connlistener_thread() to process notification / requests.
+ *
+ *  This thread processes:
+ *  - olsr plugin notification for a user coming online (currently disabled)
+ *  - GetApps request to send list of applications installed on current host
+ *  - LaunchApp request by a remote host to launch a new app
+ *  - LaunchAppReqAccepted message showing that remote host has accepted launch request
+ */
 gpointer newconnrequests_thread(gpointer user_data)
 {
     char buffer[260];
@@ -236,7 +241,7 @@ gpointer newconnrequests_thread(gpointer user_data)
       return NULL;
       }
 
-    // processes olsr plugin notification when a user comes online    
+    //! processes eBrainOnline olsr plugin notification when a user comes online (currently disabled)   
     if(buffer[0] != 0)
       {     
       strncpy(str,buffer,256);
@@ -246,7 +251,7 @@ gpointer newconnrequests_thread(gpointer user_data)
         process_useronline_msg(buffer);
         }
 */
-      // sends a list of applications installed on this host  
+      //! GetApps request sends a list of applications installed on this host  
       if(strcmp(token,"GetApps") == 0)
         {
 	    //jeetu - for now sending the complete block of application name
@@ -257,13 +262,13 @@ gpointer newconnrequests_thread(gpointer user_data)
           perror("newconnrequests_thread: ERROR writing to socket");
         }
       
-      // called when a remote user wishes to launch an application from this host   
+      //! LaunchApp request processed when a remote user wishes to launch an application from this host.   
       if(strcmp(token,"LaunchApp") == 0)
         {
         process_launchapp_req(buffer,data);
         }
         
-      // called when the remote user has OKed our app launch request 
+      //! LaunchAppReqAccepted request processed when the remote user has OKed our app launch request. 
       if(strcmp(token,"LaunchAppReqAccepted") == 0)
         {
         strncpy(data->buffer,buffer,strlen(buffer)+1);
@@ -279,7 +284,9 @@ gpointer newconnrequests_thread(gpointer user_data)
     return NULL;
 }
 
-
+/** thread spawned by main() to constantly check if a user can be reached and should be shown as Online.
+ *
+ */
 gpointer check_client_status_thread(gpointer user_data)
 {
     User* temp;
@@ -294,11 +301,12 @@ gpointer check_client_status_thread(gpointer user_data)
            temp = gFirstUserNode;
            while(temp != NULL)
                 {
+                //! tries to connect to the remote user
                 ret = connect_to_client(temp->ip,&comm_socket);
                 if(ret == -1)
                   {
-                  /* can't connect client is probably no longer
-                     alive; delete it from the list*/
+                  //! If it can't connect,the client is probably no longer
+                  //!   alive; delete it from the list
                   g_idle_add(show_user_offline,temp);
                   close(comm_socket);
                   break;
@@ -314,7 +322,11 @@ gpointer check_client_status_thread(gpointer user_data)
 }
 
 
-
+/** processes the eBrainOnline olsr plugin notification. (currently disabled)
+ *
+ *  Called via newconnrequests_thread() to process the eBrainOnline plugin notification,
+ *  and show a user online.
+ */
 int process_useronline_msg(char *buf)
 {
     int j=0;
@@ -370,9 +382,9 @@ int process_useronline_msg(char *buf)
           }
        }
 
-    //check to see if remote client is reachable.
-    //This takes care of a bug wherein user keeps flickering
-    //in the local client when remote client is unreachable but remote olsr is up. 	  
+    //! Also checks to see if remote client is reachable.
+    //! This takes care of a bug wherein user keeps flickering
+    //! in the local client when remote client is unreachable but remote olsr is up. 	  
     ret = connect_to_client(ip,&comm_socket);
     if(ret != -1)
       {
@@ -389,7 +401,10 @@ int process_useronline_msg(char *buf)
 }
 
 
-
+/** Shows a new client discovered by Avahi as online.
+ *
+ *  called by avahi_resolver_found() when it discovers a new client.
+ */
 int process_useronline_avahi_msg(const char *ip_str, const char *username, const char *ssh_login_user,const char *version)
 {
     int ret = 0;
@@ -400,9 +415,7 @@ int process_useronline_avahi_msg(const char *ip_str, const char *username, const
     inet_aton(ip_str,&in);
     printf("\nprocess_useronline_avahi_msg: in.s_addr = %d\n",in.s_addr);
 
-    //check to see if remote client is reachable.
-    //This takes care of a bug wherein user keeps flickering
-    //in the local client when remote client is unreachable but remote olsr is up. 	  
+    //! checks to see if remote client is reachable and if so shows it as Online.
     ret = connect_to_client(ip,&comm_socket);
     if(ret != -1)
       {
@@ -419,7 +432,10 @@ int process_useronline_avahi_msg(const char *ip_str, const char *username, const
 }
 
 
-
+/** Displays a new user and the applications shared.
+ *
+ *  called by process_useronline_avahi_msg() and process_useronline_msg(). 
+ */
 int show_user_online(User *UserNode)
 {
     GtkTreeIter toplevel, child;
@@ -440,8 +456,8 @@ int show_user_online(User *UserNode)
 
     // no need for a mutex here since Usernode should point to a different memory block
     // for each thread anyway, no shared memory region to protect.
-    UserNode->apps_buffer = malloc(5010); //jeetu - memory to be freed; should be dynamically expanded block
-    // retrieve and show applications shared by the user
+    UserNode->apps_buffer = malloc(5010); //!< TODO: memory to be freed; should be dynamically expanded block
+    //! retrieves and shows applications shared by the user in the treeview.
     ret = get_remoteuser_apps(UserNode);
     if(ret == 0)
       {
@@ -461,7 +477,11 @@ int show_user_online(User *UserNode)
     return 0;
 }
 
-
+/** Shows user as offline by deleting from the treeview.
+ *
+ *  called by check_client_status_thread().
+ *  Deletes an unreachable client (and consequently its applications) from the treeview and the User linked list.
+ */
 gboolean show_user_offline(gpointer user_data)
 {
     GtkTreeIter iter;
@@ -492,7 +512,12 @@ gboolean show_user_offline(gpointer user_data)
     return FALSE;
 }
 
-
+/** Process the "row-activated" GTK treeview signal.
+ *
+ *  Signal handler setup in init_treeview().
+ *
+ *  Called when a user clicks on an application to launch it from the remote host.
+ */
 void on_treeview_row_activated(GtkWidget *widget,GtkTreePath *path,GtkTreeViewColumn *column,gpointer user_data)
 {
   GtkTreeIter iter;
@@ -507,11 +532,15 @@ void on_treeview_row_activated(GtkWidget *widget,GtkTreePath *path,GtkTreeViewCo
     {
     gtk_tree_model_get(model, &iter, NAME, &name,  -1);
     gtk_tree_model_get(model, &iter, USERNODE, &user,  -1);
+    //! calls send_launchapp_req() to send request to remote user to launch application.
     send_launchapp_req(user,name);
     }
 }
 
-
+/** Sends request to remote user to launch application.
+ *
+ *  Called by on_treeview_row_activated()
+ */
 void send_launchapp_req(User *UserNode,char *appname)
 {
     char *ip = NULL;
@@ -526,15 +555,18 @@ void send_launchapp_req(User *UserNode,char *appname)
     buf[0] = '\0';
     printf("\nIn send_launchapp_req: (uint32_t)UserNode->ip = %d ip = %s, appname = %s\n",UserNode->ip,ip,appname);
 
+    //! Adds the request sent to a launch queue. To be used on receipt of response to verify authenticity of the request.
     G_LOCK(launchappqueue);	
     gCurrentLaunchAppQueue = add_to_launch_queue(appname,UserNode->ip,requestid);
     G_UNLOCK(launchappqueue);
 
     requestid++;    
 	
+    //! Connects to remote host.
     ret = connect_to_client(UserNode->ip,&comm_socket);
     if(ret == 0)
       {
+      //! Sends LaunchApp request along with application name to remote client.
       snprintf(buf,285,"LaunchApp:%s",appname); //jeetu - hardcoded size
       n = write(comm_socket,buf,strlen(buf));
       if(n < 0) 
@@ -543,7 +575,11 @@ void send_launchapp_req(User *UserNode,char *appname)
       }	
 }
 
-
+/** Processes a received LaunchApp request from a remote client.
+ *
+ *  The LaunchApp request suggests that a client wishes to run an application from the current host.
+ *  The format of this request is LaunchApp:Appname where Appname is the application name.
+ */
 int process_launchapp_req(char *buf,NewConnData *data)
 {
     char appname[257];
@@ -571,7 +607,7 @@ int process_launchapp_req(char *buf,NewConnData *data)
          strncpy(appname,token,256);
        }	
 
-    //Search our user's list and find username from the IP
+    //! Search the UserNode user's list and find username from the IP
     temp = gFirstUserNode;	
     while(temp != NULL)
          {
@@ -585,14 +621,25 @@ int process_launchapp_req(char *buf,NewConnData *data)
          temp = temp->next;
          }
 
+    // From what I understand (can't remember exactly why I did this ;) ), however apparently GTK+
+    // elements such as dialogs should be handled in the same thread as the initializing thread,
+    // usually in main(). Therefore data from other threads needs to be passed back to this main 
+    // thread wherein the dialog is presented to the user. This cross-thread data exchange is
+    // facilated by the launchdialogqueue structure.
+
     launchdialogqueue = add_launchdialog_queue(username,appname,data->ip);
+
+    //! Presents dialog box to user seeking approval.
     g_idle_add(launch_approve_dialog,launchdialogqueue);
 		
     return 0;
 }
 
 
-
+/** Shows dialog box seeking approval for request from a user to launch application
+ *
+ *  Called by process_launchapp_req()
+ */
 gboolean launch_approve_dialog(gpointer data)
 {
     GtkWidget *dialog;
@@ -600,6 +647,7 @@ gboolean launch_approve_dialog(gpointer data)
 
     dialog = gtk_message_dialog_new(GTK_WINDOW(window),GTK_DIALOG_DESTROY_WITH_PARENT,GTK_MESSAGE_QUESTION,GTK_BUTTONS_YES_NO,
                                "User %s wishes to run the application %s off your system.\nAllow?",launchdialogqueue->username,launchdialogqueue->appname);
+    //! Connects the "response" signal of the dialog box to launch_approve_dialog_response().
     g_signal_connect(dialog,"response",G_CALLBACK(launch_approve_dialog_response),launchdialogqueue);
     gtk_widget_show_all(dialog);
 
@@ -607,7 +655,9 @@ gboolean launch_approve_dialog(gpointer data)
 }
 
 
-
+/** Processes response (Yes/No) from dialog box seeking approval to launch application.
+ *
+ */
 void launch_approve_dialog_response(GtkWidget *dialog,gint response_id, gpointer user_data)
 {
     LaunchDialogQueue *launchdialogqueue = (LaunchDialogQueue *) user_data;
@@ -619,7 +669,7 @@ void launch_approve_dialog_response(GtkWidget *dialog,gint response_id, gpointer
              launchdlg_approved(launchdialogqueue->appname,launchdialogqueue->ip);
              break;
           case GTK_RESPONSE_NO:
-             //todo - send a rejection signal to the initiating client
+             //! todo - send a rejection signal to the initiating client
              break;
           default:
              break;
@@ -630,7 +680,9 @@ void launch_approve_dialog_response(GtkWidget *dialog,gint response_id, gpointer
 
 
 
-
+/** Handles the condition when user has approved request to launch an application.
+ *
+ */
 void launchdlg_approved(char *appname,uint32_t ip)
 {
     int comm_socket = 0;
@@ -638,8 +690,13 @@ void launchdlg_approved(char *appname,uint32_t ip)
     char buf[300];	
     int n = 0;
 
+    //! Spawns a thread to start an instance of the OpenSSH server for this request.
+    //! This server instance will X forward the application requested by remote client.
     g_thread_create(start_server,&ip,FALSE,NULL);
 
+    //! Connect back to the client that had sent the LaunchApp request and send it
+    //! a LaunchAppReqAccepted message along with the application name. This signifies
+    //! that our host is willing to honour their request and has launched the SSH server.
     ret = connect_to_client(ip,&comm_socket);
     if(ret == 0)
       {
@@ -653,10 +710,16 @@ void launchdlg_approved(char *appname,uint32_t ip)
 
 
 //TODO: Make sure that all of threads created are killed at program exit
+
+/** Thread to start a new instance of the OpenSSH server.
+ *
+ *  This thread is spawned by launchdlg_approved() 
+ */
 gpointer start_server(gpointer ptr_ip)
 {
     int piped_in = 0, piped_out = 0, piped_err = 0;
     char onechar;
+    //! Arguments to the OpenSSH server (see code) are currently hardcoded.Eventually will be taken in from main ebp.conf file.
     char *args[] = { 
                         "/usr/sbin/sshd",
                         "-e","-D","-d",
@@ -689,14 +752,13 @@ gpointer start_server(gpointer ptr_ip)
                         NULL 
                    };
 
-
+    //! Pipe STDIN,STDOUT and STDERR and launch /usr/sbin/sshd (currently hardcoded)
     pipe_to_program("/usr/sbin/sshd",args,&piped_in,&piped_out,&piped_err);
     
-    // TODO:
-    // for now reading from the piped stderr of the child one char at a time
-    // eventually need to put in mechanism to determine and deal with 
-    // success/failure of the child program
-
+    //! TODO:
+    //! for now reading from the piped stderr of the child one char at a time
+    //! eventually need to put in mechanism to determine and deal with 
+    //! success/failure of the child program.
     while(read(piped_err,&onechar,1) > 0)
          {
          printf("%c",onechar);
@@ -705,7 +767,13 @@ gpointer start_server(gpointer ptr_ip)
     return NULL;
 }
 
-
+/** Processes the LaunchAppReqAccepted message.
+ *
+ *  The LaunchAppReqAccepted message signifies that the remote user is willing to launch
+ *  the application we requested and has started an instance of the OpenSSH server.
+ *
+ *  This function uses the OpenSSH client to connect to the server.
+ */
 int process_launchreq_accepted(NewConnData *data)
 {
     char ip[21];
@@ -720,6 +788,7 @@ int process_launchreq_accepted(NewConnData *data)
     char ssh_login_user[257];
 
     char *str1 = NULL,*token = NULL;
+    //! Arguments to the OpenSSH client (see code) are currently hardcoded.Eventually will be taken in from main ebp.conf file.
     char *args1[] = {
                    "/usr/bin/ssh",
                    "-v", "-X",
@@ -749,6 +818,7 @@ int process_launchreq_accepted(NewConnData *data)
     in.s_addr = data->ip;  
     strncpy(ip,inet_ntoa(in),20);		
 
+    //! Determines username and ip;formats the [username]@[ip] string to be used by ssh client. 
     userlist = gFirstUserNode;
     while(userlist != NULL)
          {
@@ -793,7 +863,10 @@ int process_launchreq_accepted(NewConnData *data)
          }
 
     
-    //check to see if the request was indeed sent
+    //! verfies within our LaunchAppQueue that the request had indeed been sent by this host.
+    //! TODO: This verification is currently commented out.
+
+    //! Finally calls the SSH client to connect to remote host and X forward desired application.
     queue = gFirstLaunchAppQueue;
     while(queue != NULL)
          {
@@ -802,12 +875,13 @@ int process_launchreq_accepted(NewConnData *data)
 //       if(strncmp(queue->appname,appname,20) == 0 && queue->ip == data->cli_addr.sin_addr.s_addr)
 //         {
            sleep(3);
+           //! stdin,stdout and stderr are piped and /usr/bin/ssh (currently hardcoded) is launched.
            pipe_to_program("/usr/bin/ssh",args1,&piped_in,&piped_out,&piped_err);
 
-           // TODO:
-           // for now reading from the piped stderr of the child one char at a time
-           // eventually need to put in mechanism to determine and deal with 
-           // success/failure of the child program. 
+           //! TODO:
+           //! for now reading from the piped stderr of the child one char at a time
+           //! eventually need to put in mechanism to determine and deal with 
+           //! success/failure of the child program. 
            while(read(piped_err,&onechar,1) > 0)
                 {
                 printf("%c",onechar);

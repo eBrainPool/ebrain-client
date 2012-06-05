@@ -1,0 +1,201 @@
+\hypertarget{avahi-discovery_8c}{\section{src/avahi-\/discovery.c \-File \-Reference}
+\label{avahi-discovery_8c}\index{src/avahi-\/discovery.\-c@{src/avahi-\/discovery.\-c}}
+}
+{\ttfamily \#include \char`\"{}ebp.\-h\char`\"{}}\*
+{\ttfamily \#include \char`\"{}avahi-\/discovery.\-h\char`\"{}}\*
+\subsection*{\-Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{avahi-discovery_8c_ab6b27b0e371ca0b376eb974f375ff5ca}{avahi\-\_\-setup} (void)
+\begin{DoxyCompactList}\small\item\em \-Initializes the avahi system, broadcasts this client and prepares to receive notifications on other clients on the \-L\-A\-N. \end{DoxyCompactList}\item 
+void \hyperlink{avahi-discovery_8c_a5737f6f987251a326e517df2e46798e2}{client\-\_\-callback} (\-Avahi\-Client $\ast$c, \-Avahi\-Client\-State state, \-A\-V\-A\-H\-I\-\_\-\-G\-C\-C\-\_\-\-U\-N\-U\-S\-E\-D void $\ast$userdata)
+\begin{DoxyCompactList}\small\item\em \-Callback function setup while allocating a new avahi client. \end{DoxyCompactList}\item 
+int \hyperlink{avahi-discovery_8c_a9ba82854f49f859a54be8e85a44adebf}{create\-\_\-services} (\-Avahi\-Client $\ast$c)
+\begin{DoxyCompactList}\small\item\em \-Creates a new entry group and service for this client. \end{DoxyCompactList}\item 
+void \hyperlink{avahi-discovery_8c_a06c4f33a522276419bbfe69fe8c64b34}{entry\-\_\-group\-\_\-callback} (\-Avahi\-Entry\-Group $\ast$g, \-Avahi\-Entry\-Group\-State state, \-A\-V\-A\-H\-I\-\_\-\-G\-C\-C\-\_\-\-U\-N\-U\-S\-E\-D void $\ast$userdata)
+\begin{DoxyCompactList}\small\item\em \-Creates a new entry group for this client. \end{DoxyCompactList}\item 
+void \hyperlink{avahi-discovery_8c_a2b331683eee5e4914140744a173bc068}{browse\-\_\-callback} (\-Avahi\-Service\-Browser $\ast$b, \-Avahi\-If\-Index interface, \-Avahi\-Protocol protocol, \-Avahi\-Browser\-Event event, const char $\ast$name, const char $\ast$type, const char $\ast$domain, \-A\-V\-A\-H\-I\-\_\-\-G\-C\-C\-\_\-\-U\-N\-U\-S\-E\-D \-Avahi\-Lookup\-Result\-Flags flags, void $\ast$userdata)
+\begin{DoxyCompactList}\small\item\em \-Callback registered by avahi\-\_\-service\-\_\-browser\-\_\-new() at the time of creating a new service browser. \end{DoxyCompactList}\item 
+void \hyperlink{avahi-discovery_8c_a9b958ff0ce85cd9792368b10d92f8076}{resolve\-\_\-callback} (\-Avahi\-Service\-Resolver $\ast$r, \-A\-V\-A\-H\-I\-\_\-\-G\-C\-C\-\_\-\-U\-N\-U\-S\-E\-D \-Avahi\-If\-Index interface, \-A\-V\-A\-H\-I\-\_\-\-G\-C\-C\-\_\-\-U\-N\-U\-S\-E\-D \-Avahi\-Protocol protocol, \-Avahi\-Resolver\-Event event, const char $\ast$name, const char $\ast$type, const char $\ast$domain, const char $\ast$host\-\_\-name, const \-Avahi\-Address $\ast$address, uint16\-\_\-t port, \-Avahi\-String\-List $\ast$txt, \-Avahi\-Lookup\-Result\-Flags flags, \-A\-V\-A\-H\-I\-\_\-\-G\-C\-C\-\_\-\-U\-N\-U\-S\-E\-D void $\ast$userdata)
+\begin{DoxyCompactList}\small\item\em \-Callback called whenever a service is resolved or times out. \end{DoxyCompactList}\item 
+int \hyperlink{avahi-discovery_8c_aa3f6429c6ea796f2e6917ae703c82a75}{avahi\-\_\-resolver\-\_\-found} (const char $\ast$address, const char $\ast$name, const char $\ast$txt)
+\begin{DoxyCompactList}\small\item\em \-Determines that the host found isn't on localhost and then processes it as a new user. \end{DoxyCompactList}\item 
+void \hyperlink{avahi-discovery_8c_a2b2ee856af615d834ad55488d0cdf413}{avahi\-\_\-cleanup} (void)
+\begin{DoxyCompactList}\small\item\em \-Called to free avahi related stuff and cleanup the avahi client,service browser and the polling thread. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{\-Function \-Documentation}
+\hypertarget{avahi-discovery_8c_a2b2ee856af615d834ad55488d0cdf413}{\index{avahi-\/discovery.\-c@{avahi-\/discovery.\-c}!avahi\-\_\-cleanup@{avahi\-\_\-cleanup}}
+\index{avahi\-\_\-cleanup@{avahi\-\_\-cleanup}!avahi-discovery.c@{avahi-\/discovery.\-c}}
+\subsubsection[{avahi\-\_\-cleanup}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf avahi\-\_\-cleanup} (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{avahi-discovery_8c_a2b2ee856af615d834ad55488d0cdf413}
+
+
+\-Called to free avahi related stuff and cleanup the avahi client,service browser and the polling thread. 
+
+called by \hyperlink{avahi-discovery_8c_ab6b27b0e371ca0b376eb974f375ff5ca}{avahi\-\_\-setup()} \-T\-O\-D\-O\-: \-This function should probably be called when the main program quits too. \hypertarget{avahi-discovery_8c_aa3f6429c6ea796f2e6917ae703c82a75}{\index{avahi-\/discovery.\-c@{avahi-\/discovery.\-c}!avahi\-\_\-resolver\-\_\-found@{avahi\-\_\-resolver\-\_\-found}}
+\index{avahi\-\_\-resolver\-\_\-found@{avahi\-\_\-resolver\-\_\-found}!avahi-discovery.c@{avahi-\/discovery.\-c}}
+\subsubsection[{avahi\-\_\-resolver\-\_\-found}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf avahi\-\_\-resolver\-\_\-found} (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{address, }
+\item[{const char $\ast$}]{name, }
+\item[{const char $\ast$}]{txt}
+\end{DoxyParamCaption}
+)}}\label{avahi-discovery_8c_aa3f6429c6ea796f2e6917ae703c82a75}
+
+
+\-Determines that the host found isn't on localhost and then processes it as a new user. 
+
+called by \hyperlink{avahi-discovery_8c_a9b958ff0ce85cd9792368b10d92f8076}{resolve\-\_\-callback()} \-Loops through the interfaces on localhost and compares with the address of the new host resolved.
+
+flag localaddr\-\_\-check == 0 match found;service resides on local host
+
+flag localaddr\-\_\-check == -\/1 match not found;service is unique and does not reside on local host \hypertarget{avahi-discovery_8c_ab6b27b0e371ca0b376eb974f375ff5ca}{\index{avahi-\/discovery.\-c@{avahi-\/discovery.\-c}!avahi\-\_\-setup@{avahi\-\_\-setup}}
+\index{avahi\-\_\-setup@{avahi\-\_\-setup}!avahi-discovery.c@{avahi-\/discovery.\-c}}
+\subsubsection[{avahi\-\_\-setup}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf avahi\-\_\-setup} (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{avahi-discovery_8c_ab6b27b0e371ca0b376eb974f375ff5ca}
+
+
+\-Initializes the avahi system, broadcasts this client and prepares to receive notifications on other clients on the \-L\-A\-N. 
+
+\-Currently sets up this client and listens for other clients broadcasting the \-\_\-presence.\-\_\-tcp service type. \-This is temporary till we have our own service type registered with \-I\-A\-N\-A.
+
+called by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()}
+
+returns 0 on error and 1 on success. \-Allocates main loop object.
+
+\-Allocates a new client.
+
+\-Create the service browser.
+
+\-Finally starts the main event loop thread. \hypertarget{avahi-discovery_8c_a2b331683eee5e4914140744a173bc068}{\index{avahi-\/discovery.\-c@{avahi-\/discovery.\-c}!browse\-\_\-callback@{browse\-\_\-callback}}
+\index{browse\-\_\-callback@{browse\-\_\-callback}!avahi-discovery.c@{avahi-\/discovery.\-c}}
+\subsubsection[{browse\-\_\-callback}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf browse\-\_\-callback} (
+\begin{DoxyParamCaption}
+\item[{\-Avahi\-Service\-Browser $\ast$}]{b, }
+\item[{\-Avahi\-If\-Index}]{interface, }
+\item[{\-Avahi\-Protocol}]{protocol, }
+\item[{\-Avahi\-Browser\-Event}]{event, }
+\item[{const char $\ast$}]{name, }
+\item[{const char $\ast$}]{type, }
+\item[{const char $\ast$}]{domain, }
+\item[{\-A\-V\-A\-H\-I\-\_\-\-G\-C\-C\-\_\-\-U\-N\-U\-S\-E\-D \-Avahi\-Lookup\-Result\-Flags}]{flags, }
+\item[{void $\ast$}]{userdata}
+\end{DoxyParamCaption}
+)}}\label{avahi-discovery_8c_a2b331683eee5e4914140744a173bc068}
+
+
+\-Callback registered by avahi\-\_\-service\-\_\-browser\-\_\-new() at the time of creating a new service browser. 
+
+called by \hyperlink{avahi-discovery_8c_ab6b27b0e371ca0b376eb974f375ff5ca}{avahi\-\_\-setup()}
+
+\-Handles the browser events \-:
+\begin{DoxyItemize}
+\item \-A\-V\-A\-H\-I\-\_\-\-B\-R\-O\-W\-S\-E\-R\-\_\-\-F\-A\-I\-L\-U\-R\-E
+\item \-A\-V\-A\-H\-I\-\_\-\-B\-R\-O\-W\-S\-E\-R\-\_\-\-N\-E\-W
+\item \-A\-V\-A\-H\-I\-\_\-\-B\-R\-O\-W\-S\-E\-R\-\_\-\-R\-E\-M\-O\-V\-E
+\item \-A\-V\-A\-H\-I\-\_\-\-B\-R\-O\-W\-S\-E\-R\-\_\-\-A\-L\-L\-\_\-\-F\-O\-R\-\_\-\-N\-O\-W
+\item \-A\-V\-A\-H\-I\-\_\-\-B\-R\-O\-W\-S\-E\-R\-\_\-\-C\-A\-C\-H\-E\-\_\-\-E\-X\-H\-A\-U\-S\-T\-E\-D 
+\end{DoxyItemize}\-Called whenever a new services becomes available on the \-L\-A\-N or is removed from the \-L\-A\-N \hypertarget{avahi-discovery_8c_a5737f6f987251a326e517df2e46798e2}{\index{avahi-\/discovery.\-c@{avahi-\/discovery.\-c}!client\-\_\-callback@{client\-\_\-callback}}
+\index{client\-\_\-callback@{client\-\_\-callback}!avahi-discovery.c@{avahi-\/discovery.\-c}}
+\subsubsection[{client\-\_\-callback}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf client\-\_\-callback} (
+\begin{DoxyParamCaption}
+\item[{\-Avahi\-Client $\ast$}]{c, }
+\item[{\-Avahi\-Client\-State}]{state, }
+\item[{\-A\-V\-A\-H\-I\-\_\-\-G\-C\-C\-\_\-\-U\-N\-U\-S\-E\-D void $\ast$}]{userdata}
+\end{DoxyParamCaption}
+)}}\label{avahi-discovery_8c_a5737f6f987251a326e517df2e46798e2}
+
+
+\-Callback function setup while allocating a new avahi client. 
+
+callback setup by avahi\-\_\-client\-\_\-new() in \hyperlink{avahi-discovery_8c_ab6b27b0e371ca0b376eb974f375ff5ca}{avahi\-\_\-setup()}.
+
+\-Handles the following states\-:
+\begin{DoxyItemize}
+\item \-A\-V\-A\-H\-I\-\_\-\-C\-L\-I\-E\-N\-T\-\_\-\-S\-\_\-\-R\-U\-N\-N\-I\-N\-G
+\item \-A\-V\-A\-H\-I\-\_\-\-C\-L\-I\-E\-N\-T\-\_\-\-F\-A\-I\-L\-U\-R\-E
+\item \-A\-V\-A\-H\-I\-\_\-\-C\-L\-I\-E\-N\-T\-\_\-\-S\-\_\-\-C\-O\-L\-L\-I\-S\-I\-O\-N
+\item \-A\-V\-A\-H\-I\-\_\-\-C\-L\-I\-E\-N\-T\-\_\-\-S\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-I\-N\-G
+\item \-A\-V\-A\-H\-I\-\_\-\-C\-L\-I\-E\-N\-T\-\_\-\-C\-O\-N\-N\-E\-C\-T\-I\-N\-G 
+\end{DoxyItemize}\-Called whenever the client or server state changes \hypertarget{avahi-discovery_8c_a9ba82854f49f859a54be8e85a44adebf}{\index{avahi-\/discovery.\-c@{avahi-\/discovery.\-c}!create\-\_\-services@{create\-\_\-services}}
+\index{create\-\_\-services@{create\-\_\-services}!avahi-discovery.c@{avahi-\/discovery.\-c}}
+\subsubsection[{create\-\_\-services}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf create\-\_\-services} (
+\begin{DoxyParamCaption}
+\item[{\-Avahi\-Client $\ast$}]{c}
+\end{DoxyParamCaption}
+)}}\label{avahi-discovery_8c_a9ba82854f49f859a54be8e85a44adebf}
+
+
+\-Creates a new entry group and service for this client. 
+
+\-Called in \hyperlink{avahi-discovery_8c_a5737f6f987251a326e517df2e46798e2}{client\-\_\-callback()} in response to the \-A\-V\-A\-H\-I\-\_\-\-C\-L\-I\-E\-N\-T\-\_\-\-S\-\_\-\-R\-U\-N\-N\-I\-N\-G state.
+
+returns 0 on error and 1 on success. \-If this is the first time we're called, let's create a new entry group if necessary.
+
+\-If the group is empty (either because it was just created, or because it was reset previously, add our entries.
+
+\-Adds the ssh login name that is used by the ssh client to connect back to the remote host.
+
+\-T\-O\-D\-O\-: \-Currently using the service type presence; this is temporary till we find an appropriate service type.
+
+\-Currently broadcasting only over \-I\-Pv4 (\-I\-N\-E\-T).
+
+\-Tells the server to register the service. \hypertarget{avahi-discovery_8c_a06c4f33a522276419bbfe69fe8c64b34}{\index{avahi-\/discovery.\-c@{avahi-\/discovery.\-c}!entry\-\_\-group\-\_\-callback@{entry\-\_\-group\-\_\-callback}}
+\index{entry\-\_\-group\-\_\-callback@{entry\-\_\-group\-\_\-callback}!avahi-discovery.c@{avahi-\/discovery.\-c}}
+\subsubsection[{entry\-\_\-group\-\_\-callback}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf entry\-\_\-group\-\_\-callback} (
+\begin{DoxyParamCaption}
+\item[{\-Avahi\-Entry\-Group $\ast$}]{g, }
+\item[{\-Avahi\-Entry\-Group\-State}]{state, }
+\item[{\-A\-V\-A\-H\-I\-\_\-\-G\-C\-C\-\_\-\-U\-N\-U\-S\-E\-D void $\ast$}]{userdata}
+\end{DoxyParamCaption}
+)}}\label{avahi-discovery_8c_a06c4f33a522276419bbfe69fe8c64b34}
+
+
+\-Creates a new entry group for this client. 
+
+called by \hyperlink{avahi-discovery_8c_a9ba82854f49f859a54be8e85a44adebf}{create\-\_\-services()}
+
+\-Handles the states\-:
+\begin{DoxyItemize}
+\item \-A\-V\-A\-H\-I\-\_\-\-E\-N\-T\-R\-Y\-\_\-\-G\-R\-O\-U\-P\-\_\-\-E\-S\-T\-A\-B\-L\-I\-S\-H\-E\-D
+\item \-A\-V\-A\-H\-I\-\_\-\-E\-N\-T\-R\-Y\-\_\-\-G\-R\-O\-U\-P\-\_\-\-C\-O\-L\-L\-I\-S\-I\-O\-N
+\item \-A\-V\-A\-H\-I\-\_\-\-E\-N\-T\-R\-Y\-\_\-\-G\-R\-O\-U\-P\-\_\-\-F\-A\-I\-L\-U\-R\-E
+\item \-A\-V\-A\-H\-I\-\_\-\-E\-N\-T\-R\-Y\-\_\-\-G\-R\-O\-U\-P\-\_\-\-U\-N\-C\-O\-M\-M\-I\-T\-E\-D
+\item \-A\-V\-A\-H\-I\-\_\-\-E\-N\-T\-R\-Y\-\_\-\-G\-R\-O\-U\-P\-\_\-\-R\-E\-G\-I\-S\-T\-E\-R\-I\-N\-G 
+\end{DoxyItemize}\hypertarget{avahi-discovery_8c_a9b958ff0ce85cd9792368b10d92f8076}{\index{avahi-\/discovery.\-c@{avahi-\/discovery.\-c}!resolve\-\_\-callback@{resolve\-\_\-callback}}
+\index{resolve\-\_\-callback@{resolve\-\_\-callback}!avahi-discovery.c@{avahi-\/discovery.\-c}}
+\subsubsection[{resolve\-\_\-callback}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf resolve\-\_\-callback} (
+\begin{DoxyParamCaption}
+\item[{\-Avahi\-Service\-Resolver $\ast$}]{r, }
+\item[{\-A\-V\-A\-H\-I\-\_\-\-G\-C\-C\-\_\-\-U\-N\-U\-S\-E\-D \-Avahi\-If\-Index}]{interface, }
+\item[{\-A\-V\-A\-H\-I\-\_\-\-G\-C\-C\-\_\-\-U\-N\-U\-S\-E\-D \-Avahi\-Protocol}]{protocol, }
+\item[{\-Avahi\-Resolver\-Event}]{event, }
+\item[{const char $\ast$}]{name, }
+\item[{const char $\ast$}]{type, }
+\item[{const char $\ast$}]{domain, }
+\item[{const char $\ast$}]{host\-\_\-name, }
+\item[{const \-Avahi\-Address $\ast$}]{address, }
+\item[{uint16\-\_\-t}]{port, }
+\item[{\-Avahi\-String\-List $\ast$}]{txt, }
+\item[{\-Avahi\-Lookup\-Result\-Flags}]{flags, }
+\item[{\-A\-V\-A\-H\-I\-\_\-\-G\-C\-C\-\_\-\-U\-N\-U\-S\-E\-D void $\ast$}]{userdata}
+\end{DoxyParamCaption}
+)}}\label{avahi-discovery_8c_a9b958ff0ce85cd9792368b10d92f8076}
+
+
+\-Callback called whenever a service is resolved or times out. 
+
+\-Callback setup by avahi\-\_\-service\-\_\-resolver\-\_\-new() in \hyperlink{avahi-discovery_8c_a2b331683eee5e4914140744a173bc068}{browse\-\_\-callback()}
+
+\-Handles the events \-:
+\begin{DoxyItemize}
+\item \-A\-V\-A\-H\-I\-\_\-\-R\-E\-S\-O\-L\-V\-E\-R\-\_\-\-F\-A\-I\-L\-U\-R\-E
+\item \-A\-V\-A\-H\-I\-\_\-\-R\-E\-S\-O\-L\-V\-E\-R\-\_\-\-F\-O\-U\-N\-D 
+\end{DoxyItemize}

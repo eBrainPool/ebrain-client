@@ -1,0 +1,295 @@
+\hypertarget{utils_8c}{\section{src/utils.c \-File \-Reference}
+\label{utils_8c}\index{src/utils.\-c@{src/utils.\-c}}
+}
+{\ttfamily \#include \char`\"{}ebp.\-h\char`\"{}}\*
+\subsection*{\-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\-User} $\ast$ \hyperlink{utils_8c_ad4697fc5464e104e20d83d7a5cc6f2ec}{add\-\_\-user} (const char $\ast$version, const char $\ast$name, const char $\ast$ssh\-\_\-login\-\_\-user, uint32\-\_\-t ip)
+\begin{DoxyCompactList}\small\item\em \-Add a new user to the \-User (struct \hyperlink{struct__user}{\-\_\-user}) linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\-User} $\ast$ \hyperlink{utils_8c_a184a680c26e967b434454922b0e27f1c}{del\-\_\-user} (\hyperlink{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\-User} $\ast$deluser)
+\begin{DoxyCompactList}\small\item\em \-Delete a user from the \-User (struct \hyperlink{struct__user}{\-\_\-user}) linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_a1e4fc751dec671593f53a28e8fa9d833}{\-New\-Conn\-Data} $\ast$ \hyperlink{utils_8c_ae1f8c2e3864700021be5c13737d04e58}{add\-\_\-newconn} (int newsockfd, uint32\-\_\-t ip)
+\begin{DoxyCompactList}\small\item\em \-Adds a new connection to the client into the \-New\-Conn\-Data (struct \hyperlink{struct__newconndata}{\-\_\-newconndata}) linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_a1e4fc751dec671593f53a28e8fa9d833}{\-New\-Conn\-Data} $\ast$ \hyperlink{utils_8c_a7479c653381fb48e00c923b49d39d08a}{del\-\_\-newconn} (\hyperlink{ebp_8h_a1e4fc751dec671593f53a28e8fa9d833}{\-New\-Conn\-Data} $\ast$conndata)
+\begin{DoxyCompactList}\small\item\em \-Deletes a connection from the \-New\-Conn\-Data (struct \hyperlink{struct__newconndata}{\-\_\-newconndata}) linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_af96435dbd78faaf59443f2d693b8cac0}{\-Launch\-Dialog\-Queue} $\ast$ \hyperlink{utils_8c_abab79fe0c6b16efcead6529a9aeff103}{add\-\_\-launchdialog\-\_\-queue} (char $\ast$username, char $\ast$appname, uint32\-\_\-t ip)
+\begin{DoxyCompactList}\small\item\em \-Adds details of \-Launch\-App request to the \-Launch\-Dialog\-Queue (struct \-\_\-launchdialogqueue) linked list. \end{DoxyCompactList}\item 
+\hyperlink{ebp_8h_aab5a31ed044f4c36f0b27150216c1a7e}{\-Launch\-App\-Queue} $\ast$ \hyperlink{utils_8c_a88fcb30db0a6139419227f644a351ef2}{add\-\_\-to\-\_\-launch\-\_\-queue} (char $\ast$appname, uint32\-\_\-t ip, int reqid)
+\begin{DoxyCompactList}\small\item\em \-Adds sent launch application (\-Launch\-App) requests to \-Launch\-App\-Queue (struct \-\_\-launchappqueue) \end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{utils_8c_a06d20fe02389d2d8d5b8fadde7834b19}{get\-\_\-installed\-\_\-apps} (int $\ast$count, int $\ast$blocksize)
+\begin{DoxyCompactList}\small\item\em \-Gets a list of applications installed on the host system that can be shared. \end{DoxyCompactList}\item 
+int \hyperlink{utils_8c_ae1a56fea0adb7e0326aeb68c9652eeaf}{filter} (const struct dirent $\ast$dir)
+\begin{DoxyCompactList}\small\item\em \-Used by scandir() to filter out and return .desktop files. \end{DoxyCompactList}\item 
+int \hyperlink{utils_8c_a231245c107b2a7b8c4a43f49b81061f1}{get\-\_\-remoteuser\-\_\-apps} (\hyperlink{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\-User} $\ast$\-User\-Node)
+\begin{DoxyCompactList}\small\item\em \-Sends request to remote client to send out the list of applications installed on the host. \end{DoxyCompactList}\item 
+int \hyperlink{utils_8c_af11cae71a25ad7a0e5f84e69a1af860e}{connect\-\_\-to\-\_\-client} (uint32\-\_\-t ip, int $\ast$comm\-\_\-socket)
+\begin{DoxyCompactList}\small\item\em \-Establishes a connection to the client specified by ip. \end{DoxyCompactList}\item 
+void \hyperlink{utils_8c_a3c0bd0d12ed4baca38c7da5235d3a19b}{freeusermem} (void)
+\begin{DoxyCompactList}\small\item\em \-Frees memory allocated for the \-User (struct \hyperlink{struct__user}{\-\_\-user}) linked list. \end{DoxyCompactList}\item 
+void \hyperlink{utils_8c_af9f662243402dde9b1c6e63da93abd91}{free\-Launch\-App\-Queue} (void)
+\begin{DoxyCompactList}\small\item\em \-Frees memory allocated for the \-Launch\-App\-Queue (struct \hyperlink{struct___launch_app_queue}{\-\_\-\-Launch\-App\-Queue}) linked list. \end{DoxyCompactList}\item 
+void \hyperlink{utils_8c_a340410969fdca9c8d0b5f5a0c7b059f6}{free\-Launch\-Dialog\-Queue} (void)
+\begin{DoxyCompactList}\small\item\em \-Frees memory allocated for the \-Launch\-Dialog\-Queue (struct \hyperlink{struct___launch_dialog_queue}{\-\_\-\-Launch\-Dialog\-Queue}) linked list. \end{DoxyCompactList}\item 
+int \hyperlink{utils_8c_a660c22858bee36de55c4a31f3fe399b3}{getlocaladdrs} ()
+\begin{DoxyCompactList}\small\item\em \-Retrieves details of the network interfaces on the local system. \end{DoxyCompactList}\item 
+int \hyperlink{utils_8c_a29a55294f0f9f2771bba49ea5c326c58}{readconfigfile} (void)
+\begin{DoxyCompactList}\small\item\em \-Reads the ebp.\-conf file and retrieves config parameters specified. \end{DoxyCompactList}\item 
+void \hyperlink{utils_8c_a59c9b03249680e3795ac58914e3c977a}{pipe\-\_\-to\-\_\-program} (char $\ast$path, char $\ast$$\ast$args, int $\ast$in, int $\ast$out, int $\ast$err)
+\begin{DoxyCompactList}\small\item\em \-Pipes \-S\-T\-D\-I\-N,\-S\-T\-D\-O\-U\-T and \-S\-T\-D\-E\-R\-R and launches program. \end{DoxyCompactList}\item 
+void \hyperlink{utils_8c_a5e1fa74fe28f225341d3140b717085bb}{killchild} (int signo)
+\begin{DoxyCompactList}\small\item\em \-Signal handler called in response to \-S\-I\-G\-T\-E\-R\-M,\-S\-I\-G\-I\-N\-T and \-S\-I\-G\-H\-U\-P signals. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{\-Function \-Documentation}
+\hypertarget{utils_8c_abab79fe0c6b16efcead6529a9aeff103}{\index{utils.\-c@{utils.\-c}!add\-\_\-launchdialog\-\_\-queue@{add\-\_\-launchdialog\-\_\-queue}}
+\index{add\-\_\-launchdialog\-\_\-queue@{add\-\_\-launchdialog\-\_\-queue}!utils.c@{utils.\-c}}
+\subsubsection[{add\-\_\-launchdialog\-\_\-queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Launch\-Dialog\-Queue}$\ast$ {\bf add\-\_\-launchdialog\-\_\-queue} (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{username, }
+\item[{char $\ast$}]{appname, }
+\item[{uint32\-\_\-t}]{ip}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_abab79fe0c6b16efcead6529a9aeff103}
+
+
+\-Adds details of \-Launch\-App request to the \-Launch\-Dialog\-Queue (struct \-\_\-launchdialogqueue) linked list. 
+
+\-Called by \hyperlink{ebp_8h_adf2291983ac5bd4e98ef90a6ab77625b}{process\-\_\-launchapp\-\_\-req()} \-Inserts the following into the linked list\-:
+\begin{DoxyItemize}
+\item username
+\item appname (\-Application name the user wishes to launch)
+\item ip (\-I\-Pv4 address of the client connecting in)
+\end{DoxyItemize}
+
+returns pointer to the newly created linked list item (\-Launch\-Dialog\-Queue $\ast$). \hypertarget{utils_8c_ae1f8c2e3864700021be5c13737d04e58}{\index{utils.\-c@{utils.\-c}!add\-\_\-newconn@{add\-\_\-newconn}}
+\index{add\-\_\-newconn@{add\-\_\-newconn}!utils.c@{utils.\-c}}
+\subsubsection[{add\-\_\-newconn}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-New\-Conn\-Data}$\ast$ {\bf add\-\_\-newconn} (
+\begin{DoxyParamCaption}
+\item[{int}]{newsockfd, }
+\item[{uint32\-\_\-t}]{ip}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_ae1f8c2e3864700021be5c13737d04e58}
+
+
+\-Adds a new connection to the client into the \-New\-Conn\-Data (struct \hyperlink{struct__newconndata}{\-\_\-newconndata}) linked list. 
+
+\-Called by \hyperlink{ebp_8h_a98e5889b5a138ff189f2210bf572427d}{connlistener\-\_\-thread()} \-Inserts the following into the linked list\-:
+\begin{DoxyItemize}
+\item newsockfd (socket file descriptor returned after call to accept())
+\item ip (\-I\-Pv4 address of the client connecting in)
+\end{DoxyItemize}
+
+returns pointer to the newly created linked list item (\-New\-Conn\-Data $\ast$). \hypertarget{utils_8c_a88fcb30db0a6139419227f644a351ef2}{\index{utils.\-c@{utils.\-c}!add\-\_\-to\-\_\-launch\-\_\-queue@{add\-\_\-to\-\_\-launch\-\_\-queue}}
+\index{add\-\_\-to\-\_\-launch\-\_\-queue@{add\-\_\-to\-\_\-launch\-\_\-queue}!utils.c@{utils.\-c}}
+\subsubsection[{add\-\_\-to\-\_\-launch\-\_\-queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Launch\-App\-Queue}$\ast$ {\bf add\-\_\-to\-\_\-launch\-\_\-queue} (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{appname, }
+\item[{uint32\-\_\-t}]{ip, }
+\item[{int}]{reqid}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_a88fcb30db0a6139419227f644a351ef2}
+
+
+\-Adds sent launch application (\-Launch\-App) requests to \-Launch\-App\-Queue (struct \-\_\-launchappqueue) 
+
+\-Called by \hyperlink{ebp_8h_a3dd443f3ee1bcdf8301e1ed723ba25ef}{send\-\_\-launchapp\-\_\-req()}
+
+\-To be used on receipt of response to verify authenticity of the request. \-N\-O\-T\-E \-: \-As on 18/5/2012 the \-Launch\-App\-Queue (product of this function) is not being looked into to verify the response. \-This may (or may not) be implemented in the future. \-Inserts the following into the linked list\-:
+\begin{DoxyItemize}
+\item appname (\-Name of application to be launched)
+\item ip (\-I\-Pv4 address 
+\end{DoxyItemize}\hypertarget{utils_8c_ad4697fc5464e104e20d83d7a5cc6f2ec}{\index{utils.\-c@{utils.\-c}!add\-\_\-user@{add\-\_\-user}}
+\index{add\-\_\-user@{add\-\_\-user}!utils.c@{utils.\-c}}
+\subsubsection[{add\-\_\-user}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-User}$\ast$ {\bf add\-\_\-user} (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{version, }
+\item[{const char $\ast$}]{name, }
+\item[{const char $\ast$}]{ssh\-\_\-login\-\_\-user, }
+\item[{uint32\-\_\-t}]{ip}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_ad4697fc5464e104e20d83d7a5cc6f2ec}
+
+
+\-Add a new user to the \-User (struct \hyperlink{struct__user}{\-\_\-user}) linked list. 
+
+\-Called by \hyperlink{ebp_8h_afb0f9ea6a43e7837b9a391e81f35cf35}{process\-\_\-useronline\-\_\-msg()} and \hyperlink{ebp_8h_a812ffc38f58a183a17919869300072fa}{process\-\_\-useronline\-\_\-avahi\-\_\-msg()} when a new user comes online. \-First searches an existing \-User linked list (if g\-First\-User\-Npde != \-N\-U\-L\-L) for a matching ip. \-If found the function returns with a \-N\-U\-L\-L.
+
+\-If we have to start a new linked list (g\-First\-User\-Node == \-N\-U\-L\-L) or add this linked list to the end of the existing linked list,then allocate memory and setup pointers accordingly.
+
+\-Finally,inserts the following into the new linked list\-:
+\begin{DoxyItemize}
+\item name (as stated in ebp.\-conf)
+\item ssh\-\_\-login\-\_\-user (the username that the \-Open\-S\-S\-H client will need to connect back to this host)
+\item version (e\-Brain\-Pool client version)
+\item ip (\-I\-Pv4 address of the user)
+\end{DoxyItemize}
+
+returns a pointer to the newly created linked list item (\-User $\ast$). \hypertarget{utils_8c_af11cae71a25ad7a0e5f84e69a1af860e}{\index{utils.\-c@{utils.\-c}!connect\-\_\-to\-\_\-client@{connect\-\_\-to\-\_\-client}}
+\index{connect\-\_\-to\-\_\-client@{connect\-\_\-to\-\_\-client}!utils.c@{utils.\-c}}
+\subsubsection[{connect\-\_\-to\-\_\-client}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf connect\-\_\-to\-\_\-client} (
+\begin{DoxyParamCaption}
+\item[{uint32\-\_\-t}]{ip, }
+\item[{int $\ast$}]{comm\-\_\-socket}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_af11cae71a25ad7a0e5f84e69a1af860e}
+
+
+\-Establishes a connection to the client specified by ip. 
+
+called by \hyperlink{ebp_8h_a3dd443f3ee1bcdf8301e1ed723ba25ef}{send\-\_\-launchapp\-\_\-req()}, \hyperlink{ebp_8h_a889577c7640c3776ad0649ca65d82b5a}{launchdlg\-\_\-approved()}, \hyperlink{ebp_8h_a05026b760b45f0ee89181c4899205806}{check\-\_\-client\-\_\-status\-\_\-thread()}, \hyperlink{ebp_8h_afb0f9ea6a43e7837b9a391e81f35cf35}{process\-\_\-useronline\-\_\-msg()} \hyperlink{ebp_8h_a3dd443f3ee1bcdf8301e1ed723ba25ef}{send\-\_\-launchapp\-\_\-req()}.
+
+returns the value returned by the call to connect() \hypertarget{utils_8c_a7479c653381fb48e00c923b49d39d08a}{\index{utils.\-c@{utils.\-c}!del\-\_\-newconn@{del\-\_\-newconn}}
+\index{del\-\_\-newconn@{del\-\_\-newconn}!utils.c@{utils.\-c}}
+\subsubsection[{del\-\_\-newconn}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-New\-Conn\-Data}$\ast$ {\bf del\-\_\-newconn} (
+\begin{DoxyParamCaption}
+\item[{{\bf \-New\-Conn\-Data} $\ast$}]{conndata}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_a7479c653381fb48e00c923b49d39d08a}
+
+
+\-Deletes a connection from the \-New\-Conn\-Data (struct \hyperlink{struct__newconndata}{\-\_\-newconndata}) linked list. 
+
+\-Called by \hyperlink{ebp_8h_ada195c5562f1821af9a92ebd4f98a6e9}{newconnrequests\-\_\-thread()} to delete the connection after it has finished processing it. returns a \-New\-Conn\-Data$\ast$ to the next item in the linked list or \-N\-U\-L\-L if there are no other items. \hypertarget{utils_8c_a184a680c26e967b434454922b0e27f1c}{\index{utils.\-c@{utils.\-c}!del\-\_\-user@{del\-\_\-user}}
+\index{del\-\_\-user@{del\-\_\-user}!utils.c@{utils.\-c}}
+\subsubsection[{del\-\_\-user}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-User}$\ast$ {\bf del\-\_\-user} (
+\begin{DoxyParamCaption}
+\item[{{\bf \-User} $\ast$}]{deluser}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_a184a680c26e967b434454922b0e27f1c}
+
+
+\-Delete a user from the \-User (struct \hyperlink{struct__user}{\-\_\-user}) linked list. 
+
+\-Called by \hyperlink{ebp_8h_a6b502ce7f9e1bd8a7d2d7554fa9f7955}{show\-\_\-user\-\_\-offline()} returns a \-User$\ast$ to the next item in the linked list or \-N\-U\-L\-L if there are no other items. \hypertarget{utils_8c_ae1a56fea0adb7e0326aeb68c9652eeaf}{\index{utils.\-c@{utils.\-c}!filter@{filter}}
+\index{filter@{filter}!utils.c@{utils.\-c}}
+\subsubsection[{filter}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf filter} (
+\begin{DoxyParamCaption}
+\item[{const struct dirent $\ast$}]{dir}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_ae1a56fea0adb7e0326aeb68c9652eeaf}
+
+
+\-Used by scandir() to filter out and return .desktop files. 
+
+called by \hyperlink{ebp_8h_a06d20fe02389d2d8d5b8fadde7834b19}{get\-\_\-installed\-\_\-apps()} \hypertarget{utils_8c_af9f662243402dde9b1c6e63da93abd91}{\index{utils.\-c@{utils.\-c}!free\-Launch\-App\-Queue@{free\-Launch\-App\-Queue}}
+\index{free\-Launch\-App\-Queue@{free\-Launch\-App\-Queue}!utils.c@{utils.\-c}}
+\subsubsection[{free\-Launch\-App\-Queue}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf free\-Launch\-App\-Queue} (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_af9f662243402dde9b1c6e63da93abd91}
+
+
+\-Frees memory allocated for the \-Launch\-App\-Queue (struct \hyperlink{struct___launch_app_queue}{\-\_\-\-Launch\-App\-Queue}) linked list. 
+
+\-Walks backwards from the last element added to the linked list -\/ referenced by g\-Last\-Launch\-App\-Queue. \-Frees memory for each linked list till there are none.
+
+called by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()} \hypertarget{utils_8c_a340410969fdca9c8d0b5f5a0c7b059f6}{\index{utils.\-c@{utils.\-c}!free\-Launch\-Dialog\-Queue@{free\-Launch\-Dialog\-Queue}}
+\index{free\-Launch\-Dialog\-Queue@{free\-Launch\-Dialog\-Queue}!utils.c@{utils.\-c}}
+\subsubsection[{free\-Launch\-Dialog\-Queue}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf free\-Launch\-Dialog\-Queue} (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_a340410969fdca9c8d0b5f5a0c7b059f6}
+
+
+\-Frees memory allocated for the \-Launch\-Dialog\-Queue (struct \hyperlink{struct___launch_dialog_queue}{\-\_\-\-Launch\-Dialog\-Queue}) linked list. 
+
+\-Walks backwards from the last element added to the linked list -\/ referenced by g\-Last\-Launch\-Dialog. \-Frees memory for each linked list till there are none.
+
+called by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()} \hypertarget{utils_8c_a3c0bd0d12ed4baca38c7da5235d3a19b}{\index{utils.\-c@{utils.\-c}!freeusermem@{freeusermem}}
+\index{freeusermem@{freeusermem}!utils.c@{utils.\-c}}
+\subsubsection[{freeusermem}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf freeusermem} (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_a3c0bd0d12ed4baca38c7da5235d3a19b}
+
+
+\-Frees memory allocated for the \-User (struct \hyperlink{struct__user}{\-\_\-user}) linked list. 
+
+\-First frees memory allocated for the apps\-\_\-buffer member of struct \hyperlink{struct__user}{\-\_\-user} and then frees the memory for the linked list element. \-It follows the pointers backwards freeing each linked list.
+
+called by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()} \hypertarget{utils_8c_a06d20fe02389d2d8d5b8fadde7834b19}{\index{utils.\-c@{utils.\-c}!get\-\_\-installed\-\_\-apps@{get\-\_\-installed\-\_\-apps}}
+\index{get\-\_\-installed\-\_\-apps@{get\-\_\-installed\-\_\-apps}!utils.c@{utils.\-c}}
+\subsubsection[{get\-\_\-installed\-\_\-apps}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ {\bf get\-\_\-installed\-\_\-apps} (
+\begin{DoxyParamCaption}
+\item[{int $\ast$}]{count, }
+\item[{int $\ast$}]{blocksize}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_a06d20fe02389d2d8d5b8fadde7834b19}
+
+
+\-Gets a list of applications installed on the host system that can be shared. 
+
+\-Called by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()}
+
+\-Looks in /usr/share/applications for applications installed. \-Reads the .desktop files and retrieves the \-Exec field values.
+
+returns a char$\ast$ list in the format \mbox{[}app1 exec\mbox{]}\-:\mbox{[}app2 exec\mbox{]}\-:... \-Currently we are not handling arguments, split at first whitespace \-T\-O\-D\-O\-: policy for handling args, across remote and code to implement the same, separate $\ast$.desktop \& $\ast$-\/file.desktop \hypertarget{utils_8c_a231245c107b2a7b8c4a43f49b81061f1}{\index{utils.\-c@{utils.\-c}!get\-\_\-remoteuser\-\_\-apps@{get\-\_\-remoteuser\-\_\-apps}}
+\index{get\-\_\-remoteuser\-\_\-apps@{get\-\_\-remoteuser\-\_\-apps}!utils.c@{utils.\-c}}
+\subsubsection[{get\-\_\-remoteuser\-\_\-apps}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf get\-\_\-remoteuser\-\_\-apps} (
+\begin{DoxyParamCaption}
+\item[{{\bf \-User} $\ast$}]{\-User\-Node}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_a231245c107b2a7b8c4a43f49b81061f1}
+
+
+\-Sends request to remote client to send out the list of applications installed on the host. 
+
+called by \hyperlink{ebp_8h_afdb04a65b83045cc6109899989bc7c3a}{show\-\_\-user\-\_\-online()}
+
+\-Connects to remote client. \-Sends out a \-Get\-Apps request handled by the remote client in it's \hyperlink{ebp_8h_ada195c5562f1821af9a92ebd4f98a6e9}{newconnrequests\-\_\-thread()}. returns 1 on error else 0. \-T\-O\-D\-O\-: apps\-\_\-buffer should be dynamically expanded \hypertarget{utils_8c_a660c22858bee36de55c4a31f3fe399b3}{\index{utils.\-c@{utils.\-c}!getlocaladdrs@{getlocaladdrs}}
+\index{getlocaladdrs@{getlocaladdrs}!utils.c@{utils.\-c}}
+\subsubsection[{getlocaladdrs}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf getlocaladdrs} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_a660c22858bee36de55c4a31f3fe399b3}
+
+
+\-Retrieves details of the network interfaces on the local system. 
+
+\-Calls getifaddrs() to create a linked list (ifaddr) of the network interfaces on the local system. \hyperlink{avahi-discovery_8c_aa3f6429c6ea796f2e6917ae703c82a75}{avahi\-\_\-resolver\-\_\-found()} later checks the ifaddr function and compares if the host discovered is simply the avahi daemon on the local system or a new unique host on the network.
+
+called by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()} \hypertarget{utils_8c_a5e1fa74fe28f225341d3140b717085bb}{\index{utils.\-c@{utils.\-c}!killchild@{killchild}}
+\index{killchild@{killchild}!utils.c@{utils.\-c}}
+\subsubsection[{killchild}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf killchild} (
+\begin{DoxyParamCaption}
+\item[{int}]{signo}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_a5e1fa74fe28f225341d3140b717085bb}
+
+
+\-Signal handler called in response to \-S\-I\-G\-T\-E\-R\-M,\-S\-I\-G\-I\-N\-T and \-S\-I\-G\-H\-U\-P signals. 
+
+\-The signal handler is setup in \hyperlink{ebp_8h_a59c9b03249680e3795ac58914e3c977a}{pipe\-\_\-to\-\_\-program()} \hypertarget{utils_8c_a59c9b03249680e3795ac58914e3c977a}{\index{utils.\-c@{utils.\-c}!pipe\-\_\-to\-\_\-program@{pipe\-\_\-to\-\_\-program}}
+\index{pipe\-\_\-to\-\_\-program@{pipe\-\_\-to\-\_\-program}!utils.c@{utils.\-c}}
+\subsubsection[{pipe\-\_\-to\-\_\-program}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf pipe\-\_\-to\-\_\-program} (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{path, }
+\item[{char $\ast$$\ast$}]{args, }
+\item[{int $\ast$}]{in, }
+\item[{int $\ast$}]{out, }
+\item[{int $\ast$}]{err}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_a59c9b03249680e3795ac58914e3c977a}
+
+
+\-Pipes \-S\-T\-D\-I\-N,\-S\-T\-D\-O\-U\-T and \-S\-T\-D\-E\-R\-R and launches program. 
+
+\-Currently used to pipe and call either the \-Open\-S\-S\-H server (sshd) or client (ssh).
+
+called by \hyperlink{ebp_8h_a247bc40691d7f25e3d09fecb1eca69ef}{start\-\_\-server()} and \hyperlink{ebp_8h_aff5b0edee93abba2bcba5eece3360b04}{process\-\_\-launchreq\-\_\-accepted()} \hypertarget{utils_8c_a29a55294f0f9f2771bba49ea5c326c58}{\index{utils.\-c@{utils.\-c}!readconfigfile@{readconfigfile}}
+\index{readconfigfile@{readconfigfile}!utils.c@{utils.\-c}}
+\subsubsection[{readconfigfile}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf readconfigfile} (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{utils_8c_a29a55294f0f9f2771bba49ea5c326c58}
+
+
+\-Reads the ebp.\-conf file and retrieves config parameters specified. 
+
+returns 0 on error else 1. \-T\-O\-D\-O\-: for now looking for the config file in the same dir as the exec; should be /etc 

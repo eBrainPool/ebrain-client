@@ -26,6 +26,11 @@
 
 #include "ebp.h"
 
+/** Add a new user to the User (struct _user) linked list. 
+ *
+ *  Called by process_useronline_msg() and process_useronline_avahi_msg() when a new user comes online.
+ *
+ */
 User* add_user(const char* version,const char* name,const char *ssh_login_user,uint32_t ip)
 {
     User* temp = NULL;
@@ -36,6 +41,8 @@ User* add_user(const char* version,const char* name,const char *ssh_login_user,u
     in.s_addr = ip;  //jeetu - this is wrong. ip should actually be the ip of the client sending request
     strip = inet_ntoa(in);	
  
+    //! First searches an existing User linked list (if gFirstUserNpde != NULL) for a matching ip.
+    //! If found the function returns with a NULL. 
     temp = gFirstUserNode;
     while(temp != NULL)
          {
@@ -44,6 +51,8 @@ User* add_user(const char* version,const char* name,const char *ssh_login_user,u
          temp = temp->next;
          }
 
+    //! If we have to start a new linked list (gFirstUserNode == NULL) or add this linked list
+    //! to the end of the existing linked list,then allocate memory and setup pointers accordingly. 
     // first entry		
     if(gFirstUserNode == NULL)
       {
@@ -66,24 +75,37 @@ User* add_user(const char* version,const char* name,const char *ssh_login_user,u
       gLastUserNode = current_node;
       }
 
+    //! Finally,inserts the following into the new linked list: 
+    //! - name (as stated in ebp.conf)
+    //! - ssh_login_user (the username that the OpenSSH client will need to connect back to this host)
+    //! - version (eBrainPool client version)
+    //! - ip (IPv4 address of the user)
     strncpy(current_node->name,name,20); //jeetu - hardcoded size
     strncpy(current_node->ssh_login_user,ssh_login_user,256);
     strncpy(current_node->version,version,6);
     current_node->ip = ip;
 
     printf("\nadd_user: current_node->name = %s current_node->ip = %d strip = %s\n",current_node->name, current_node->ip,strip);
-	
+
+    //! returns a pointer to the newly created linked list item (User *).	
     return current_node;
 }
 
 
-
+/** Delete a user from the User (struct _user) linked list.
+ *
+ *  Called by show_user_offline()
+ *  returns a User* to the next item in the linked list or NULL if there are no other items.
+ */
 User* del_user(User* deluser)
 {
     User* prevuser;
     User* nextuser;
     prevuser = deluser->prev;
     nextuser = deluser->next;
+
+    // If this is the only entry in the User linked list,initialize global pointers to NULL.
+    // else adjust the global pointers and the previous/next linked list pointers accordingly.
     if(prevuser == NULL && nextuser == NULL)
       {
       gFirstUserNode = NULL;
@@ -118,12 +140,17 @@ User* del_user(User* deluser)
 }
 
 
-
+/** Adds a new connection to the client into the NewConnData (struct _newconndata) linked list.
+ *
+ *  Called by connlistener_thread()
+ */
 NewConnData *add_newconn(int newsockfd,uint32_t ip)
 {
     NewConnData* temp = NULL;
     NewConnData* current_node = NULL;
 
+    // If we have to start a new linked list (gFirstConn == NULL) or add this linked list
+    // to the end of the existing linked list,then allocate memory and setup pointers accordingly.
     // first entry		
     if(gFirstConn == NULL)
       {
@@ -146,21 +173,32 @@ NewConnData *add_newconn(int newsockfd,uint32_t ip)
       gLastConn = current_node;
       }
 
+    //! Inserts the following into the linked list:
+    //! - newsockfd (socket file descriptor returned after call to accept())
+    //! - ip (IPv4 address of the client connecting in) 
     current_node->newsockfd = newsockfd;
     current_node->ip = ip;
 	
+    //! returns pointer to the newly created linked list item (NewConnData *).
     return current_node;
 
 }
 
 
-
+/** Deletes a connection from the NewConnData (struct _newconndata) linked list.
+ *
+ *  Called by newconnrequests_thread() to delete the connection after it has finished processing it.
+ *  returns a NewConnData* to the next item in the linked list or NULL if there are no other items. 
+ */
 NewConnData *del_newconn(NewConnData *conndata)
 {
     NewConnData* prevconn;
     NewConnData* nextconn;
     prevconn = conndata->prev;
     nextconn = conndata->next;
+
+    // If this is the only entry in the NewConnData linked list,initialize global pointers to NULL.
+    // else adjust the global pointers and the previous/next linked list pointers accordingly.
     if(prevconn == NULL && nextconn == NULL)
       {
       gFirstConn = NULL;
@@ -195,11 +233,17 @@ NewConnData *del_newconn(NewConnData *conndata)
 
 }
 
-
+/** Adds details of LaunchApp request to the LaunchDialogQueue (struct _launchdialogqueue) linked list.
+ *
+ *  Called by process_launchapp_req()
+ */
 LaunchDialogQueue *add_launchdialog_queue(char *username,char *appname,uint32_t ip)
 {
    LaunchDialogQueue* temp = NULL;
    LaunchDialogQueue* current_node = NULL;
+
+   // If we have to start a new linked list (gFirstLaunchDialog == NULL) or add this linked list
+   // to the end of the existing linked list,then allocate memory and setup pointers accordingly.
 
    // first entry		
    if(gFirstLaunchDialog == NULL)
@@ -223,15 +267,27 @@ LaunchDialogQueue *add_launchdialog_queue(char *username,char *appname,uint32_t 
      gLastLaunchDialog = current_node;
      }
 
+   //! Inserts the following into the linked list:
+   //! - username 
+   //! - appname (Application name the user wishes to launch)
+   //! - ip (IPv4 address of the client connecting in)
    strncpy(current_node->username,username,90);
    strncpy(current_node->appname,appname,90);
    current_node->ip = ip;
-	
+
+   //! returns pointer to the newly created linked list item (LaunchDialogQueue *).
    return current_node;
 
 }
 
-
+/** Adds sent launch application (LaunchApp) requests to LaunchAppQueue (struct _launchappqueue)
+ * 
+ *  Called by send_launchapp_req()
+ *
+ *  To be used on receipt of response to verify authenticity of the request.
+ *  NOTE : As on 18/5/2012 the LaunchAppQueue (product of this function) is not being looked into to verify the response.
+ *         This may (or may not) be implemented in the future.
+ */
 LaunchAppQueue* add_to_launch_queue(char *appname,uint32_t ip,int reqid)
 {
     LaunchAppQueue* temp;
@@ -264,7 +320,10 @@ LaunchAppQueue* add_to_launch_queue(char *appname,uint32_t ip,int reqid)
       current_node->next = NULL;
       gLastLaunchAppQueue = current_node;
       }
-	
+
+    //! Inserts the following into the linked list:
+    //! - appname (Name of application to be launched)
+    //! - ip (IPv4 address 	
     strncpy(current_node->appname,appname,20); //jeetu - hardcoded size  
     current_node->ip = ip;
     current_node->reqid = reqid;
@@ -273,6 +332,15 @@ LaunchAppQueue* add_to_launch_queue(char *appname,uint32_t ip,int reqid)
 }
 
 
+/** Gets a list of applications installed on the host system that can be shared. 
+ *
+ *  Called by main()
+ *  
+ *  Looks in /usr/share/applications for applications installed. Reads the 
+ *  .desktop files and retrieves the Exec field values.
+ *
+ *  returns a char* list in the format [app1 exec]:[app2 exec]:...
+ */
 char* get_installed_apps(int* count,int* blocksize)
 {	
     int n = 0;
@@ -291,7 +359,8 @@ char* get_installed_apps(int* count,int* blocksize)
     // memory should get freed in main() with free(appsdata.apps)
     buf = malloc(1);
     buf[0] = '\0';
-	
+
+    // calls filter() which helps find .desktop files in the directory. 	
     n = scandir("/usr/share/applications", &namelist, filter, alphasort);
     if(n < 0)
       perror("list_installed_apps: error scandir");
@@ -312,9 +381,9 @@ char* get_installed_apps(int* count,int* blocksize)
         else
           {
           retval =  g_key_file_get_locale_string(key_file, "Desktop Entry", "Exec", NULL, &error);
-          // we are not handling arguments, split at first whitespace
-          // TODO: policy for handling args, across remote
-          // code to implement the same, separate *.desktop & *-file.desktop
+          //! Currently we are not handling arguments, split at first whitespace
+          //! TODO: policy for handling args, across remote and
+          //! code to implement the same, separate *.desktop & *-file.desktop
           retval = strtok(retval, " ");
           if(retval!= NULL) 
             {
@@ -335,7 +404,10 @@ char* get_installed_apps(int* count,int* blocksize)
 }
 
 
-
+/** Used by scandir() to filter out and return .desktop files
+ *
+ *  called by get_installed_apps()
+ */
 int filter(const struct dirent *dir)
 {
     if(strstr(dir->d_name,".desktop") != NULL)  
@@ -345,7 +417,14 @@ int filter(const struct dirent *dir)
 }
 
 
-
+/** Sends request to remote client to send out the list of applications installed on the host.
+ *
+ *  called by show_user_online()
+ *
+ *  Connects to remote client. Sends out a GetApps request handled by the remote client in
+ *  it's newconnrequests_thread().
+ *  returns 1 on error else 0.
+ */
 int get_remoteuser_apps(User *UserNode)
 {
     int ret = 0;
@@ -358,7 +437,7 @@ int get_remoteuser_apps(User *UserNode)
       n = write(comm_socket,"GetApps:",9);
       if(n < 0) 
         perror("get_remoteuser_apps: ERROR writing to socket");
-      n = recv(comm_socket,UserNode->apps_buffer,5000,MSG_WAITALL); //jeetu - apps_buffer should be dynamically expanded
+      n = recv(comm_socket,UserNode->apps_buffer,5000,MSG_WAITALL); //! TODO: apps_buffer should be dynamically expanded
       if(n < 0)
         { 
         perror("get_remoteuser_apps: ERROR reading from socket");
@@ -371,7 +450,13 @@ int get_remoteuser_apps(User *UserNode)
     return ret;
 }
 
-
+/** Establishes a connection to the client specified by ip.
+ *
+ *  called by send_launchapp_req(), launchdlg_approved(), check_client_status_thread(), process_useronline_msg()
+ *            send_launchapp_req().
+ *
+ *  returns the value returned by the call to connect()
+ */
 int connect_to_client(uint32_t ip,int *comm_socket)
 {
     struct sockaddr_in s_in;
@@ -387,9 +472,15 @@ int connect_to_client(uint32_t ip,int *comm_socket)
     ret = connect(*comm_socket,(struct sockaddr *) &s_in,sizeof(s_in));
     return(ret);
 }
+		
 
-
-
+/** Frees memory allocated for the User (struct _user) linked list. 
+ *
+ *  First frees memory allocated for the apps_buffer member of struct _user and then frees the
+ *  memory for the linked list element. It follows the pointers backwards freeing each linked list.
+ *
+ *  called by main() 
+ */ 
 void freeusermem(void)
 {
     User *temp = gLastUserNode;
@@ -405,7 +496,13 @@ void freeusermem(void)
 }
 
 
-
+/** Frees memory allocated for the LaunchAppQueue (struct _LaunchAppQueue) linked list.
+ *
+ *  Walks backwards from the last element added to the linked list - referenced by
+ *  gLastLaunchAppQueue. Frees memory for each linked list till there are none.
+ *
+ *  called by main()
+ */
 void freeLaunchAppQueue(void)
 {
     LaunchAppQueue* temp;
@@ -421,6 +518,13 @@ void freeLaunchAppQueue(void)
 }
 
 
+/** Frees memory allocated for the LaunchDialogQueue (struct _LaunchDialogQueue) linked list.
+ *
+ *  Walks backwards from the last element added to the linked list - referenced by
+ *  gLastLaunchDialog. Frees memory for each linked list till there are none.
+ * 
+ *  called by main()
+ */
 void freeLaunchDialogQueue(void)
 {
     LaunchDialogQueue* temp;
@@ -435,12 +539,16 @@ void freeLaunchDialogQueue(void)
          }
 }
 
-
+/** Retrieves details of the network interfaces on the local system.
+ *
+ *  Calls getifaddrs() to create a linked list (ifaddr) of the network interfaces on the local system. 
+ *  avahi_resolver_found() later checks the ifaddr function and compares if the host discovered is 
+ *  simply the avahi daemon on the local system or a new unique host on the network.
+ *
+ *  called by main()
+ */
 int getlocaladdrs()
 {
-//    struct ifaddrs *ifa;
-//    int family, s;
-//    char host[NI_MAXHOST];
 
     if(getifaddrs(&ifaddr) == -1) 
       {
@@ -448,46 +556,19 @@ int getlocaladdrs()
       return 0;
       }
 
-//for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) {
-//               if (ifa->ifa_addr == NULL)
-//                   continue;
-//
-//               family = ifa->ifa_addr->sa_family;
-//
-//               /* Display interface name and family (including symbolic
-//                  form of the latter for the common families) */
-//
-//               printf("%s  address family: %d%s\n",
-//                       ifa->ifa_name, family,
-//                       (family == AF_PACKET) ? " (AF_PACKET)" :
-//                       (family == AF_INET) ?   " (AF_INET)" :
-//                       (family == AF_INET6) ?  " (AF_INET6)" : "");
-///* For an AF_INET* interface address, display the address */
-//
-//               if (family == AF_INET || family == AF_INET6) {
-//                   s = getnameinfo(ifa->ifa_addr,
-//                           (family == AF_INET) ? sizeof(struct sockaddr_in) :
-//                                                 sizeof(struct sockaddr_in6),
-//                           host, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
-//                   if (s != 0) {
-//                       printf("getnameinfo() failed: %s\n", gai_strerror(s));
-//                       exit(EXIT_FAILURE);
-//                   }
-//                   printf("\taddress: <%s>\n", host);
-//               }
-//           }
-
-
     return 1;    
 }
 
 
-
+/** Reads the ebp.conf file and retrieves config parameters specified.
+ *
+ *  returns 0 on error else 1.
+ */ 
 int readconfigfile(void)
 {
     GKeyFile     *key_file;
     GError       *error;
-    const char *configfile = "./ebp.conf";  //jeetu - for now looking for the config file in the same dir as the exec; should be /etc
+    const char *configfile = "./ebp.conf";  //! TODO: for now looking for the config file in the same dir as the exec; should be /etc
  
     key_file = g_key_file_new (); 
     error = NULL;
@@ -513,7 +594,12 @@ int readconfigfile(void)
 
 
 
-
+/** Pipes STDIN,STDOUT and STDERR and launches program.
+ *
+ *  Currently used to pipe and call either the OpenSSH server (sshd) or client (ssh).
+ *
+ *  called by start_server() and process_launchreq_accepted()
+ */
 void pipe_to_program(char *path, char **args, int *in, int *out, int *err)
 {
 	int c_in = 0, c_out = 0, c_err = 0;
@@ -576,7 +662,10 @@ void pipe_to_program(char *path, char **args, int *in, int *out, int *err)
 }
 
 
-/* ARGSUSED */
+/** Signal handler called in response to SIGTERM,SIGINT and SIGHUP signals.
+ *
+ *  The signal handler is setup in pipe_to_program()
+ */ 
 void killchild(int signo)
 {
 	if (childpid > 1) {

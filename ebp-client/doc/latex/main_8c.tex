@@ -1,0 +1,367 @@
+\hypertarget{main_8c}{\section{src/main.c \-File \-Reference}
+\label{main_8c}\index{src/main.\-c@{src/main.\-c}}
+}
+{\ttfamily \#include $<$config.\-h$>$}\*
+{\ttfamily \#include $<$glib/gi18n.\-h$>$}\*
+{\ttfamily \#include \char`\"{}ebp.\-h\char`\"{}}\*
+{\ttfamily \#include \char`\"{}avahi-\/discovery.\-h\char`\"{}}\*
+\subsection*{\-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{main_8c_aff24d63b95f1df9b9683e447a57480f3}{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E} (\hyperlink{ebp_8h_a329dcf03184340d07e4fc4d29fa85f44}{treeview})
+\item 
+\hyperlink{main_8c_ae3dce9233f49d643a94a4ff799c7dd00}{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E} (\hyperlink{ebp_8h_a3b27749ff8174c046155fecaef4aec25}{treestore})
+\item 
+\hyperlink{main_8c_ab7b8e614583c31bffc568b0bde911da1}{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E} (user)
+\item 
+\hyperlink{main_8c_a7c7c28fdc5535ceb8327b78b20f115e9}{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E} (launchappqueue)
+\item 
+\hyperlink{main_8c_a5e98d0f6f3a054c19ae5340598aee60b}{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E} (launchdialogqueue)
+\item 
+\hyperlink{main_8c_ae805096a5ac9a9e9ffa616cb3ab15c2f}{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E} (newconndata)
+\item 
+int \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em entry point for the e\-Brain\-Pool client. \end{DoxyCompactList}\item 
+int \hyperlink{main_8c_a2e0582a85d0687f6cefaedcf26320795}{init\-\_\-treeview} (\-Gtk\-Widget $\ast$\hyperlink{ebp_8h_a329dcf03184340d07e4fc4d29fa85f44}{treeview}, \-Gtk\-Tree\-Store $\ast$\hyperlink{ebp_8h_a3b27749ff8174c046155fecaef4aec25}{treestore})
+\begin{DoxyCompactList}\small\item\em \-Initialize \-G\-T\-K treeview control to display users and their apps. \end{DoxyCompactList}\item 
+gpointer \hyperlink{main_8c_a98e5889b5a138ff189f2210bf572427d}{connlistener\-\_\-thread} (gpointer user\-\_\-data)
+\begin{DoxyCompactList}\small\item\em main message processing thread spawned by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()} \end{DoxyCompactList}\item 
+gpointer \hyperlink{main_8c_ada195c5562f1821af9a92ebd4f98a6e9}{newconnrequests\-\_\-thread} (gpointer user\-\_\-data)
+\begin{DoxyCompactList}\small\item\em thread launched by \hyperlink{ebp_8h_a98e5889b5a138ff189f2210bf572427d}{connlistener\-\_\-thread()} to process notification / requests. \end{DoxyCompactList}\item 
+gpointer \hyperlink{main_8c_a05026b760b45f0ee89181c4899205806}{check\-\_\-client\-\_\-status\-\_\-thread} (gpointer user\-\_\-data)
+\begin{DoxyCompactList}\small\item\em thread spawned by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()} to constantly check if a user can be reached and should be shown as \-Online. \end{DoxyCompactList}\item 
+int \hyperlink{main_8c_afb0f9ea6a43e7837b9a391e81f35cf35}{process\-\_\-useronline\-\_\-msg} (char $\ast$buf)
+\begin{DoxyCompactList}\small\item\em processes the e\-Brain\-Online olsr plugin notification. \end{DoxyCompactList}\item 
+int \hyperlink{main_8c_a07daa9f602148263d90cd760d753d274}{process\-\_\-useronline\-\_\-avahi\-\_\-msg} (const char $\ast$ip\-\_\-str, const char $\ast$username, const char $\ast$ssh\-\_\-login\-\_\-user, const char $\ast$version)
+\begin{DoxyCompactList}\small\item\em \-Shows a new client discovered by \-Avahi as online. \end{DoxyCompactList}\item 
+int \hyperlink{main_8c_afdb04a65b83045cc6109899989bc7c3a}{show\-\_\-user\-\_\-online} (\hyperlink{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\-User} $\ast$\-User\-Node)
+\begin{DoxyCompactList}\small\item\em \-Displays a new user and the applications shared. \end{DoxyCompactList}\item 
+gboolean \hyperlink{main_8c_a6b502ce7f9e1bd8a7d2d7554fa9f7955}{show\-\_\-user\-\_\-offline} (gpointer user\-\_\-data)
+\begin{DoxyCompactList}\small\item\em \-Shows user as offline by deleting from the treeview. \end{DoxyCompactList}\item 
+void \hyperlink{main_8c_ae23df7382182a81cf7b2cd7211ba4b80}{on\-\_\-treeview\-\_\-row\-\_\-activated} (\-Gtk\-Widget $\ast$widget, \-Gtk\-Tree\-Path $\ast$path, \-Gtk\-Tree\-View\-Column $\ast$column, gpointer user\-\_\-data)
+\begin{DoxyCompactList}\small\item\em \-Process the \char`\"{}row-\/activated\char`\"{} \-G\-T\-K treeview signal. \end{DoxyCompactList}\item 
+void \hyperlink{main_8c_a3dd443f3ee1bcdf8301e1ed723ba25ef}{send\-\_\-launchapp\-\_\-req} (\hyperlink{ebp_8h_ac00ad52f7e8ccf1f8ff5898e1f4a6d11}{\-User} $\ast$\-User\-Node, char $\ast$appname)
+\begin{DoxyCompactList}\small\item\em \-Sends request to remote user to launch application. \end{DoxyCompactList}\item 
+int \hyperlink{main_8c_adf2291983ac5bd4e98ef90a6ab77625b}{process\-\_\-launchapp\-\_\-req} (char $\ast$buf, \hyperlink{ebp_8h_a1e4fc751dec671593f53a28e8fa9d833}{\-New\-Conn\-Data} $\ast$data)
+\begin{DoxyCompactList}\small\item\em \-Processes a received \-Launch\-App request from a remote client. \end{DoxyCompactList}\item 
+gboolean \hyperlink{main_8c_a6ccdc10719eba20d890b23bd9954c7e8}{launch\-\_\-approve\-\_\-dialog} (gpointer data)
+\begin{DoxyCompactList}\small\item\em \-Shows dialog box seeking approval for request from a user to launch application. \end{DoxyCompactList}\item 
+void \hyperlink{main_8c_af3d9949857132e8d54396923c6ef3d13}{launch\-\_\-approve\-\_\-dialog\-\_\-response} (\-Gtk\-Widget $\ast$dialog, gint response\-\_\-id, gpointer user\-\_\-data)
+\begin{DoxyCompactList}\small\item\em \-Processes response (\-Yes/\-No) from dialog box seeking approval to launch application. \end{DoxyCompactList}\item 
+void \hyperlink{main_8c_a889577c7640c3776ad0649ca65d82b5a}{launchdlg\-\_\-approved} (char $\ast$appname, uint32\-\_\-t ip)
+\begin{DoxyCompactList}\small\item\em \-Handles the condition when user has approved request to launch an application. \end{DoxyCompactList}\item 
+gpointer \hyperlink{main_8c_a247bc40691d7f25e3d09fecb1eca69ef}{start\-\_\-server} (gpointer ptr\-\_\-ip)
+\begin{DoxyCompactList}\small\item\em \-Thread to start a new instance of the \-Open\-S\-S\-H server. \end{DoxyCompactList}\item 
+int \hyperlink{main_8c_aff5b0edee93abba2bcba5eece3360b04}{process\-\_\-launchreq\-\_\-accepted} (\hyperlink{ebp_8h_a1e4fc751dec671593f53a28e8fa9d833}{\-New\-Conn\-Data} $\ast$data)
+\begin{DoxyCompactList}\small\item\em \-Processes the \-Launch\-App\-Req\-Accepted message. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{\-Function \-Documentation}
+\hypertarget{main_8c_a05026b760b45f0ee89181c4899205806}{\index{main.\-c@{main.\-c}!check\-\_\-client\-\_\-status\-\_\-thread@{check\-\_\-client\-\_\-status\-\_\-thread}}
+\index{check\-\_\-client\-\_\-status\-\_\-thread@{check\-\_\-client\-\_\-status\-\_\-thread}!main.c@{main.\-c}}
+\subsubsection[{check\-\_\-client\-\_\-status\-\_\-thread}]{\setlength{\rightskip}{0pt plus 5cm}gpointer {\bf check\-\_\-client\-\_\-status\-\_\-thread} (
+\begin{DoxyParamCaption}
+\item[{gpointer}]{user\-\_\-data}
+\end{DoxyParamCaption}
+)}}\label{main_8c_a05026b760b45f0ee89181c4899205806}
+
+
+thread spawned by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()} to constantly check if a user can be reached and should be shown as \-Online. 
+
+tries to connect to the remote user
+
+\-If it can't connect,the client is probably no longer alive; delete it from the list \hypertarget{main_8c_a98e5889b5a138ff189f2210bf572427d}{\index{main.\-c@{main.\-c}!connlistener\-\_\-thread@{connlistener\-\_\-thread}}
+\index{connlistener\-\_\-thread@{connlistener\-\_\-thread}!main.c@{main.\-c}}
+\subsubsection[{connlistener\-\_\-thread}]{\setlength{\rightskip}{0pt plus 5cm}gpointer {\bf connlistener\-\_\-thread} (
+\begin{DoxyParamCaption}
+\item[{gpointer}]{user\-\_\-data}
+\end{DoxyParamCaption}
+)}}\label{main_8c_a98e5889b5a138ff189f2210bf572427d}
+
+
+main message processing thread spawned by \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()} 
+
+\-This thread\-:
+\begin{DoxyItemize}
+\item endlessly listens in on a socket
+\item accepts a new connection
+\item spawns a new thread to process the new connection 
+\end{DoxyItemize}the new thread is spawned to read data from a new connection and process it \hypertarget{main_8c_aff24d63b95f1df9b9683e447a57480f3}{\index{main.\-c@{main.\-c}!\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E@{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}}
+\index{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E@{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}!main.c@{main.\-c}}
+\subsubsection[{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E} (
+\begin{DoxyParamCaption}
+\item[{{\bf treeview}}]{}
+\end{DoxyParamCaption}
+)}}\label{main_8c_aff24d63b95f1df9b9683e447a57480f3}
+\hypertarget{main_8c_ae3dce9233f49d643a94a4ff799c7dd00}{\index{main.\-c@{main.\-c}!\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E@{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}}
+\index{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E@{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}!main.c@{main.\-c}}
+\subsubsection[{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E} (
+\begin{DoxyParamCaption}
+\item[{{\bf treestore}}]{}
+\end{DoxyParamCaption}
+)}}\label{main_8c_ae3dce9233f49d643a94a4ff799c7dd00}
+\hypertarget{main_8c_ab7b8e614583c31bffc568b0bde911da1}{\index{main.\-c@{main.\-c}!\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E@{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}}
+\index{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E@{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}!main.c@{main.\-c}}
+\subsubsection[{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E} (
+\begin{DoxyParamCaption}
+\item[{user}]{}
+\end{DoxyParamCaption}
+)}}\label{main_8c_ab7b8e614583c31bffc568b0bde911da1}
+\hypertarget{main_8c_a7c7c28fdc5535ceb8327b78b20f115e9}{\index{main.\-c@{main.\-c}!\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E@{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}}
+\index{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E@{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}!main.c@{main.\-c}}
+\subsubsection[{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E} (
+\begin{DoxyParamCaption}
+\item[{launchappqueue}]{}
+\end{DoxyParamCaption}
+)}}\label{main_8c_a7c7c28fdc5535ceb8327b78b20f115e9}
+\hypertarget{main_8c_a5e98d0f6f3a054c19ae5340598aee60b}{\index{main.\-c@{main.\-c}!\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E@{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}}
+\index{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E@{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}!main.c@{main.\-c}}
+\subsubsection[{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E} (
+\begin{DoxyParamCaption}
+\item[{launchdialogqueue}]{}
+\end{DoxyParamCaption}
+)}}\label{main_8c_a5e98d0f6f3a054c19ae5340598aee60b}
+\hypertarget{main_8c_ae805096a5ac9a9e9ffa616cb3ab15c2f}{\index{main.\-c@{main.\-c}!\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E@{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}}
+\index{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E@{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}!main.c@{main.\-c}}
+\subsubsection[{\-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-G\-\_\-\-L\-O\-C\-K\-\_\-\-D\-E\-F\-I\-N\-E} (
+\begin{DoxyParamCaption}
+\item[{newconndata}]{}
+\end{DoxyParamCaption}
+)}}\label{main_8c_ae805096a5ac9a9e9ffa616cb3ab15c2f}
+\hypertarget{main_8c_a2e0582a85d0687f6cefaedcf26320795}{\index{main.\-c@{main.\-c}!init\-\_\-treeview@{init\-\_\-treeview}}
+\index{init\-\_\-treeview@{init\-\_\-treeview}!main.c@{main.\-c}}
+\subsubsection[{init\-\_\-treeview}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf init\-\_\-treeview} (
+\begin{DoxyParamCaption}
+\item[{\-Gtk\-Widget $\ast$}]{treeview, }
+\item[{\-Gtk\-Tree\-Store $\ast$}]{treestore}
+\end{DoxyParamCaption}
+)}}\label{main_8c_a2e0582a85d0687f6cefaedcf26320795}
+
+
+\-Initialize \-G\-T\-K treeview control to display users and their apps. 
+
+\-Connects the \char`\"{}row-\/activate\char`\"{} treeview signal to call on\-\_\-treeview\-\_\-row\-\_\-activate(). \hypertarget{main_8c_a6ccdc10719eba20d890b23bd9954c7e8}{\index{main.\-c@{main.\-c}!launch\-\_\-approve\-\_\-dialog@{launch\-\_\-approve\-\_\-dialog}}
+\index{launch\-\_\-approve\-\_\-dialog@{launch\-\_\-approve\-\_\-dialog}!main.c@{main.\-c}}
+\subsubsection[{launch\-\_\-approve\-\_\-dialog}]{\setlength{\rightskip}{0pt plus 5cm}gboolean {\bf launch\-\_\-approve\-\_\-dialog} (
+\begin{DoxyParamCaption}
+\item[{gpointer}]{data}
+\end{DoxyParamCaption}
+)}}\label{main_8c_a6ccdc10719eba20d890b23bd9954c7e8}
+
+
+\-Shows dialog box seeking approval for request from a user to launch application. 
+
+\-Called by \hyperlink{ebp_8h_adf2291983ac5bd4e98ef90a6ab77625b}{process\-\_\-launchapp\-\_\-req()} \-Connects the \char`\"{}response\char`\"{} signal of the dialog box to \hyperlink{ebp_8h_af3d9949857132e8d54396923c6ef3d13}{launch\-\_\-approve\-\_\-dialog\-\_\-response()}. \hypertarget{main_8c_af3d9949857132e8d54396923c6ef3d13}{\index{main.\-c@{main.\-c}!launch\-\_\-approve\-\_\-dialog\-\_\-response@{launch\-\_\-approve\-\_\-dialog\-\_\-response}}
+\index{launch\-\_\-approve\-\_\-dialog\-\_\-response@{launch\-\_\-approve\-\_\-dialog\-\_\-response}!main.c@{main.\-c}}
+\subsubsection[{launch\-\_\-approve\-\_\-dialog\-\_\-response}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf launch\-\_\-approve\-\_\-dialog\-\_\-response} (
+\begin{DoxyParamCaption}
+\item[{\-Gtk\-Widget $\ast$}]{dialog, }
+\item[{gint}]{response\-\_\-id, }
+\item[{gpointer}]{user\-\_\-data}
+\end{DoxyParamCaption}
+)}}\label{main_8c_af3d9949857132e8d54396923c6ef3d13}
+
+
+\-Processes response (\-Yes/\-No) from dialog box seeking approval to launch application. 
+
+todo -\/ send a rejection signal to the initiating client \hypertarget{main_8c_a889577c7640c3776ad0649ca65d82b5a}{\index{main.\-c@{main.\-c}!launchdlg\-\_\-approved@{launchdlg\-\_\-approved}}
+\index{launchdlg\-\_\-approved@{launchdlg\-\_\-approved}!main.c@{main.\-c}}
+\subsubsection[{launchdlg\-\_\-approved}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf launchdlg\-\_\-approved} (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{appname, }
+\item[{uint32\-\_\-t}]{ip}
+\end{DoxyParamCaption}
+)}}\label{main_8c_a889577c7640c3776ad0649ca65d82b5a}
+
+
+\-Handles the condition when user has approved request to launch an application. 
+
+\-Spawns a thread to start an instance of the \-Open\-S\-S\-H server for this request. \-This server instance will \-X forward the application requested by remote client.
+
+\-Connect back to the client that had sent the \-Launch\-App request and send it a \-Launch\-App\-Req\-Accepted message along with the application name. \-This signifies that our host is willing to honour their request and has launched the \-S\-S\-H server. \hypertarget{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{\index{main.\-c@{main.\-c}!main@{main}}
+\index{main@{main}!main.c@{main.\-c}}
+\subsubsection[{main}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf main} (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{main_8c_a0ddf1224851353fc92bfbff6f499fa97}
+
+
+entry point for the e\-Brain\-Pool client. 
+
+\-Sets up and initializes the main \-U\-I elements. get the username running this process,this is sent to remote users for ssh connects back to this user.
+
+\-Reads in values from the config file
+
+allocate a memory block and retrieve list of apps installed on the system
+
+get addresses of interfaces on the local system (localhost)
+
+spawns message thread that ultimately (thru listener\-\_\-child) processes\-:
+\begin{DoxyItemize}
+\item olsr plugin notification for a user coming online
+\item \-Get\-Apps request to send list of applications installed on current host
+\item \-Launch\-App request by a remote host to launch a new app
+\item \-Launch\-App\-Req\-Accepted message showing that remote host has accepted launch request
+\end{DoxyItemize}
+
+spawns thread to constantly check whether a user is still reachable i.\-e. online \hypertarget{main_8c_ada195c5562f1821af9a92ebd4f98a6e9}{\index{main.\-c@{main.\-c}!newconnrequests\-\_\-thread@{newconnrequests\-\_\-thread}}
+\index{newconnrequests\-\_\-thread@{newconnrequests\-\_\-thread}!main.c@{main.\-c}}
+\subsubsection[{newconnrequests\-\_\-thread}]{\setlength{\rightskip}{0pt plus 5cm}gpointer {\bf newconnrequests\-\_\-thread} (
+\begin{DoxyParamCaption}
+\item[{gpointer}]{user\-\_\-data}
+\end{DoxyParamCaption}
+)}}\label{main_8c_ada195c5562f1821af9a92ebd4f98a6e9}
+
+
+thread launched by \hyperlink{ebp_8h_a98e5889b5a138ff189f2210bf572427d}{connlistener\-\_\-thread()} to process notification / requests. 
+
+\-This thread processes\-:
+\begin{DoxyItemize}
+\item olsr plugin notification for a user coming online (currently disabled)
+\item \-Get\-Apps request to send list of applications installed on current host
+\item \-Launch\-App request by a remote host to launch a new app
+\item \-Launch\-App\-Req\-Accepted message showing that remote host has accepted launch request 
+\end{DoxyItemize}processes e\-Brain\-Online olsr plugin notification when a user comes online (currently disabled)
+
+\-Get\-Apps request sends a list of applications installed on this host
+
+\-Launch\-App request processed when a remote user wishes to launch an application from this host.
+
+\-Launch\-App\-Req\-Accepted request processed when the remote user has \-O\-Ked our app launch request. \hypertarget{main_8c_ae23df7382182a81cf7b2cd7211ba4b80}{\index{main.\-c@{main.\-c}!on\-\_\-treeview\-\_\-row\-\_\-activated@{on\-\_\-treeview\-\_\-row\-\_\-activated}}
+\index{on\-\_\-treeview\-\_\-row\-\_\-activated@{on\-\_\-treeview\-\_\-row\-\_\-activated}!main.c@{main.\-c}}
+\subsubsection[{on\-\_\-treeview\-\_\-row\-\_\-activated}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf on\-\_\-treeview\-\_\-row\-\_\-activated} (
+\begin{DoxyParamCaption}
+\item[{\-Gtk\-Widget $\ast$}]{widget, }
+\item[{\-Gtk\-Tree\-Path $\ast$}]{path, }
+\item[{\-Gtk\-Tree\-View\-Column $\ast$}]{column, }
+\item[{gpointer}]{user\-\_\-data}
+\end{DoxyParamCaption}
+)}}\label{main_8c_ae23df7382182a81cf7b2cd7211ba4b80}
+
+
+\-Process the \char`\"{}row-\/activated\char`\"{} \-G\-T\-K treeview signal. 
+
+\-Signal handler setup in \hyperlink{ebp_8h_aa7eb61b9f00496920b294495c0e45151}{init\-\_\-treeview()}.
+
+\-Called when a user clicks on an application to launch it from the remote host. calls \hyperlink{ebp_8h_a3dd443f3ee1bcdf8301e1ed723ba25ef}{send\-\_\-launchapp\-\_\-req()} to send request to remote user to launch application. \hypertarget{main_8c_adf2291983ac5bd4e98ef90a6ab77625b}{\index{main.\-c@{main.\-c}!process\-\_\-launchapp\-\_\-req@{process\-\_\-launchapp\-\_\-req}}
+\index{process\-\_\-launchapp\-\_\-req@{process\-\_\-launchapp\-\_\-req}!main.c@{main.\-c}}
+\subsubsection[{process\-\_\-launchapp\-\_\-req}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf process\-\_\-launchapp\-\_\-req} (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{buf, }
+\item[{{\bf \-New\-Conn\-Data} $\ast$}]{data}
+\end{DoxyParamCaption}
+)}}\label{main_8c_adf2291983ac5bd4e98ef90a6ab77625b}
+
+
+\-Processes a received \-Launch\-App request from a remote client. 
+
+\-The \-Launch\-App request suggests that a client wishes to run an application from the current host. \-The format of this request is \-Launch\-App\-:\-Appname where \-Appname is the application name. \-Search the \-User\-Node user's list and find username from the \-I\-P
+
+\-Presents dialog box to user seeking approval. \hypertarget{main_8c_aff5b0edee93abba2bcba5eece3360b04}{\index{main.\-c@{main.\-c}!process\-\_\-launchreq\-\_\-accepted@{process\-\_\-launchreq\-\_\-accepted}}
+\index{process\-\_\-launchreq\-\_\-accepted@{process\-\_\-launchreq\-\_\-accepted}!main.c@{main.\-c}}
+\subsubsection[{process\-\_\-launchreq\-\_\-accepted}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf process\-\_\-launchreq\-\_\-accepted} (
+\begin{DoxyParamCaption}
+\item[{{\bf \-New\-Conn\-Data} $\ast$}]{data}
+\end{DoxyParamCaption}
+)}}\label{main_8c_aff5b0edee93abba2bcba5eece3360b04}
+
+
+\-Processes the \-Launch\-App\-Req\-Accepted message. 
+
+\-The \-Launch\-App\-Req\-Accepted message signifies that the remote user is willing to launch the application we requested and has started an instance of the \-Open\-S\-S\-H server.
+
+\-This function uses the \-Open\-S\-S\-H client to connect to the server. \-Arguments to the \-Open\-S\-S\-H client (see code) are currently hardcoded.\-Eventually will be taken in from main ebp.\-conf file.
+
+\-Determines username and ip;formats the \mbox{[}username\mbox{]}@\mbox{[}ip\mbox{]} string to be used by ssh client.
+
+verfies within our \-Launch\-App\-Queue that the request had indeed been sent by this host. \-T\-O\-D\-O\-: \-This verification is currently commented out.
+
+\-Finally calls the \-S\-S\-H client to connect to remote host and \-X forward desired application.
+
+stdin,stdout and stderr are piped and /usr/bin/ssh (currently hardcoded) is launched.
+
+\-T\-O\-D\-O\-: for now reading from the piped stderr of the child one char at a time eventually need to put in mechanism to determine and deal with success/failure of the child program. \hypertarget{main_8c_a07daa9f602148263d90cd760d753d274}{\index{main.\-c@{main.\-c}!process\-\_\-useronline\-\_\-avahi\-\_\-msg@{process\-\_\-useronline\-\_\-avahi\-\_\-msg}}
+\index{process\-\_\-useronline\-\_\-avahi\-\_\-msg@{process\-\_\-useronline\-\_\-avahi\-\_\-msg}!main.c@{main.\-c}}
+\subsubsection[{process\-\_\-useronline\-\_\-avahi\-\_\-msg}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf process\-\_\-useronline\-\_\-avahi\-\_\-msg} (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{ip\-\_\-str, }
+\item[{const char $\ast$}]{username, }
+\item[{const char $\ast$}]{ssh\-\_\-login\-\_\-user, }
+\item[{const char $\ast$}]{version}
+\end{DoxyParamCaption}
+)}}\label{main_8c_a07daa9f602148263d90cd760d753d274}
+
+
+\-Shows a new client discovered by \-Avahi as online. 
+
+called by \hyperlink{avahi-discovery_8c_aa3f6429c6ea796f2e6917ae703c82a75}{avahi\-\_\-resolver\-\_\-found()} when it discovers a new client. checks to see if remote client is reachable and if so shows it as \-Online. \hypertarget{main_8c_afb0f9ea6a43e7837b9a391e81f35cf35}{\index{main.\-c@{main.\-c}!process\-\_\-useronline\-\_\-msg@{process\-\_\-useronline\-\_\-msg}}
+\index{process\-\_\-useronline\-\_\-msg@{process\-\_\-useronline\-\_\-msg}!main.c@{main.\-c}}
+\subsubsection[{process\-\_\-useronline\-\_\-msg}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf process\-\_\-useronline\-\_\-msg} (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{buf}
+\end{DoxyParamCaption}
+)}}\label{main_8c_afb0f9ea6a43e7837b9a391e81f35cf35}
+
+
+processes the e\-Brain\-Online olsr plugin notification. 
+
+(currently disabled)
+
+\-Called via \hyperlink{ebp_8h_ada195c5562f1821af9a92ebd4f98a6e9}{newconnrequests\-\_\-thread()} to process the e\-Brain\-Online plugin notification, and show a user online. \-Also checks to see if remote client is reachable. \-This takes care of a bug wherein user keeps flickering in the local client when remote client is unreachable but remote olsr is up. \hypertarget{main_8c_a3dd443f3ee1bcdf8301e1ed723ba25ef}{\index{main.\-c@{main.\-c}!send\-\_\-launchapp\-\_\-req@{send\-\_\-launchapp\-\_\-req}}
+\index{send\-\_\-launchapp\-\_\-req@{send\-\_\-launchapp\-\_\-req}!main.c@{main.\-c}}
+\subsubsection[{send\-\_\-launchapp\-\_\-req}]{\setlength{\rightskip}{0pt plus 5cm}void {\bf send\-\_\-launchapp\-\_\-req} (
+\begin{DoxyParamCaption}
+\item[{{\bf \-User} $\ast$}]{\-User\-Node, }
+\item[{char $\ast$}]{appname}
+\end{DoxyParamCaption}
+)}}\label{main_8c_a3dd443f3ee1bcdf8301e1ed723ba25ef}
+
+
+\-Sends request to remote user to launch application. 
+
+\-Called by \hyperlink{ebp_8h_ae23df7382182a81cf7b2cd7211ba4b80}{on\-\_\-treeview\-\_\-row\-\_\-activated()} \-Adds the request sent to a launch queue. \-To be used on receipt of response to verify authenticity of the request.
+
+\-Connects to remote host.
+
+\-Sends \-Launch\-App request along with application name to remote client. \hypertarget{main_8c_a6b502ce7f9e1bd8a7d2d7554fa9f7955}{\index{main.\-c@{main.\-c}!show\-\_\-user\-\_\-offline@{show\-\_\-user\-\_\-offline}}
+\index{show\-\_\-user\-\_\-offline@{show\-\_\-user\-\_\-offline}!main.c@{main.\-c}}
+\subsubsection[{show\-\_\-user\-\_\-offline}]{\setlength{\rightskip}{0pt plus 5cm}gboolean {\bf show\-\_\-user\-\_\-offline} (
+\begin{DoxyParamCaption}
+\item[{gpointer}]{user\-\_\-data}
+\end{DoxyParamCaption}
+)}}\label{main_8c_a6b502ce7f9e1bd8a7d2d7554fa9f7955}
+
+
+\-Shows user as offline by deleting from the treeview. 
+
+called by \hyperlink{ebp_8h_a05026b760b45f0ee89181c4899205806}{check\-\_\-client\-\_\-status\-\_\-thread()}. \-Deletes an unreachable client (and consequently its applications) from the treeview and the \-User linked list. \hypertarget{main_8c_afdb04a65b83045cc6109899989bc7c3a}{\index{main.\-c@{main.\-c}!show\-\_\-user\-\_\-online@{show\-\_\-user\-\_\-online}}
+\index{show\-\_\-user\-\_\-online@{show\-\_\-user\-\_\-online}!main.c@{main.\-c}}
+\subsubsection[{show\-\_\-user\-\_\-online}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf show\-\_\-user\-\_\-online} (
+\begin{DoxyParamCaption}
+\item[{{\bf \-User} $\ast$}]{\-User\-Node}
+\end{DoxyParamCaption}
+)}}\label{main_8c_afdb04a65b83045cc6109899989bc7c3a}
+
+
+\-Displays a new user and the applications shared. 
+
+called by \hyperlink{ebp_8h_a812ffc38f58a183a17919869300072fa}{process\-\_\-useronline\-\_\-avahi\-\_\-msg()} and \hyperlink{ebp_8h_afb0f9ea6a43e7837b9a391e81f35cf35}{process\-\_\-useronline\-\_\-msg()}. $<$ \-T\-O\-D\-O\-: memory to be freed; should be dynamically expanded block
+
+retrieves and shows applications shared by the user in the treeview. \hypertarget{main_8c_a247bc40691d7f25e3d09fecb1eca69ef}{\index{main.\-c@{main.\-c}!start\-\_\-server@{start\-\_\-server}}
+\index{start\-\_\-server@{start\-\_\-server}!main.c@{main.\-c}}
+\subsubsection[{start\-\_\-server}]{\setlength{\rightskip}{0pt plus 5cm}gpointer {\bf start\-\_\-server} (
+\begin{DoxyParamCaption}
+\item[{gpointer}]{ptr\-\_\-ip}
+\end{DoxyParamCaption}
+)}}\label{main_8c_a247bc40691d7f25e3d09fecb1eca69ef}
+
+
+\-Thread to start a new instance of the \-Open\-S\-S\-H server. 
+
+\-This thread is spawned by \hyperlink{ebp_8h_a889577c7640c3776ad0649ca65d82b5a}{launchdlg\-\_\-approved()} \-Arguments to the \-Open\-S\-S\-H server (see code) are currently hardcoded.\-Eventually will be taken in from main ebp.\-conf file.
+
+\-Pipe \-S\-T\-D\-I\-N,\-S\-T\-D\-O\-U\-T and \-S\-T\-D\-E\-R\-R and launch /usr/sbin/sshd (currently hardcoded)
+
+\-T\-O\-D\-O\-: for now reading from the piped stderr of the child one char at a time eventually need to put in mechanism to determine and deal with success/failure of the child program. 

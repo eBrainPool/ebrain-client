@@ -1,0 +1,73 @@
+\hypertarget{struct___launch_app_queue}{\section{\-\_\-\-Launch\-App\-Queue \-Struct \-Reference}
+\label{struct___launch_app_queue}\index{\-\_\-\-Launch\-App\-Queue@{\-\_\-\-Launch\-App\-Queue}}
+}
+
+
+\-Linked list to hold list of app launch requests sent by our client.  
+
+
+
+
+{\ttfamily \#include $<$ebp.\-h$>$}
+
+\subsection*{\-Data \-Fields}
+\begin{DoxyCompactItemize}
+\item 
+gchar \hyperlink{struct___launch_app_queue_af8cf62147ff95b08bd4b2d5200c73640}{appname} \mbox{[}300\mbox{]}
+\begin{DoxyCompactList}\small\item\em application name requested to be launched. \end{DoxyCompactList}\item 
+uint32\-\_\-t \hyperlink{struct___launch_app_queue_a69ddb9c845da426f636d9dd0dbed4e7e}{ip}
+\begin{DoxyCompactList}\small\item\em ip address of the remote host request has been sent to. \end{DoxyCompactList}\item 
+int \hyperlink{struct___launch_app_queue_a2358dbe4119c1a52c0dc643be9977af9}{reqid}
+\begin{DoxyCompactList}\small\item\em request id. \end{DoxyCompactList}\item 
+struct \hyperlink{struct___launch_app_queue}{\-\_\-\-Launch\-App\-Queue} $\ast$ \hyperlink{struct___launch_app_queue_a6f9df1a0cb11dcb6a5938b0d7f80a124}{prev}
+\begin{DoxyCompactList}\small\item\em linked list pointer pointing to previous item in list. \end{DoxyCompactList}\item 
+struct \hyperlink{struct___launch_app_queue}{\-\_\-\-Launch\-App\-Queue} $\ast$ \hyperlink{struct___launch_app_queue_a35e0e803873d619d27995e4ddae06229}{next}
+\begin{DoxyCompactList}\small\item\em linked list pointer pointing to next item in list. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\-Linked list to hold list of app launch requests sent by our client. 
+
+\-This will (supposedly) be useful in verifying that a response received is for a valid \-Launch\-App request that was initiated by this client. 
+
+\subsection{\-Field \-Documentation}
+\hypertarget{struct___launch_app_queue_af8cf62147ff95b08bd4b2d5200c73640}{\index{\-\_\-\-Launch\-App\-Queue@{\-\_\-\-Launch\-App\-Queue}!appname@{appname}}
+\index{appname@{appname}!_LaunchAppQueue@{\-\_\-\-Launch\-App\-Queue}}
+\subsubsection[{appname}]{\setlength{\rightskip}{0pt plus 5cm}gchar {\bf appname}\mbox{[}300\mbox{]}}}\label{struct___launch_app_queue_af8cf62147ff95b08bd4b2d5200c73640}
+
+
+application name requested to be launched. 
+
+\hypertarget{struct___launch_app_queue_a69ddb9c845da426f636d9dd0dbed4e7e}{\index{\-\_\-\-Launch\-App\-Queue@{\-\_\-\-Launch\-App\-Queue}!ip@{ip}}
+\index{ip@{ip}!_LaunchAppQueue@{\-\_\-\-Launch\-App\-Queue}}
+\subsubsection[{ip}]{\setlength{\rightskip}{0pt plus 5cm}uint32\-\_\-t {\bf ip}}}\label{struct___launch_app_queue_a69ddb9c845da426f636d9dd0dbed4e7e}
+
+
+ip address of the remote host request has been sent to. 
+
+\hypertarget{struct___launch_app_queue_a35e0e803873d619d27995e4ddae06229}{\index{\-\_\-\-Launch\-App\-Queue@{\-\_\-\-Launch\-App\-Queue}!next@{next}}
+\index{next@{next}!_LaunchAppQueue@{\-\_\-\-Launch\-App\-Queue}}
+\subsubsection[{next}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf \-\_\-\-Launch\-App\-Queue}$\ast$ {\bf next}}}\label{struct___launch_app_queue_a35e0e803873d619d27995e4ddae06229}
+
+
+linked list pointer pointing to next item in list. 
+
+\hypertarget{struct___launch_app_queue_a6f9df1a0cb11dcb6a5938b0d7f80a124}{\index{\-\_\-\-Launch\-App\-Queue@{\-\_\-\-Launch\-App\-Queue}!prev@{prev}}
+\index{prev@{prev}!_LaunchAppQueue@{\-\_\-\-Launch\-App\-Queue}}
+\subsubsection[{prev}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf \-\_\-\-Launch\-App\-Queue}$\ast$ {\bf prev}}}\label{struct___launch_app_queue_a6f9df1a0cb11dcb6a5938b0d7f80a124}
+
+
+linked list pointer pointing to previous item in list. 
+
+\hypertarget{struct___launch_app_queue_a2358dbe4119c1a52c0dc643be9977af9}{\index{\-\_\-\-Launch\-App\-Queue@{\-\_\-\-Launch\-App\-Queue}!reqid@{reqid}}
+\index{reqid@{reqid}!_LaunchAppQueue@{\-\_\-\-Launch\-App\-Queue}}
+\subsubsection[{reqid}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf reqid}}}\label{struct___launch_app_queue_a2358dbe4119c1a52c0dc643be9977af9}
+
+
+request id. 
+
+
+
+\-The documentation for this struct was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+src/\hyperlink{ebp_8h}{ebp.\-h}\end{DoxyCompactItemize}
