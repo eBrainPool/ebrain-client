@@ -26,7 +26,15 @@
 #include "ebp.h"
 #include "avahi-discovery.h"
 
-
+/** Initializes the avahi system, broadcasts this client and prepares to receive notifications on other clients on the LAN.
+ *
+ *  Currently sets up this client and listens for other clients broadcasting the _presence._tcp service type. 
+ *  This is temporary till we have our own service type registered with IANA.
+ *
+ *  called by main()
+ *
+ *  returns 0 on error and 1 on success.
+ */
 int avahi_setup(void)
 {
     int error;
@@ -36,7 +44,7 @@ int avahi_setup(void)
     avahi_name = NULL;
     group = NULL;
 
-    /* Allocate main loop object */
+    //! Allocates main loop object. 
     if(!(threaded_poll = avahi_threaded_poll_new())) 
       {
       fprintf(stderr, "Failed to create simple poll object.\n");
@@ -46,10 +54,10 @@ int avahi_setup(void)
 
     avahi_name = avahi_strdup(config_entry_username);
 
-    /* Allocate a new client */
+    //! Allocates a new client. 
     client = avahi_client_new(avahi_threaded_poll_get(threaded_poll), 0, client_callback, NULL, &error);
 
-    /* Check whether creating the client object succeeded */
+    // Check whether creating the client object succeeded
     if(!client) 
       {
       fprintf(stderr, "Failed to create client: %s\n", avahi_strerror(error));
@@ -57,14 +65,14 @@ int avahi_setup(void)
       return 0;
       }
 
-    /* Create the service browser */
+    //! Create the service browser.
     if(!(sb = avahi_service_browser_new(client, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, "_presence._tcp", NULL, 0, browse_callback, client))) 
       {
       fprintf(stderr, "Failed to create service browser: %s\n", avahi_strerror(avahi_client_errno(client)));
       avahi_cleanup();
       }
 
-    /* Start the main event loop thread */
+    //! Finally starts the main event loop thread.
     if(avahi_threaded_poll_start(threaded_poll) < 0) 
       {
       avahi_cleanup();
@@ -74,13 +82,23 @@ int avahi_setup(void)
     return 1;
 }
 
-
+/** Callback function setup while allocating a new avahi client.
+ *
+ *  callback setup by avahi_client_new() in avahi_setup().
+ *
+ *  Handles the following states:
+ *  - AVAHI_CLIENT_S_RUNNING
+ *  - AVAHI_CLIENT_FAILURE
+ *  - AVAHI_CLIENT_S_COLLISION
+ *  - AVAHI_CLIENT_S_REGISTERING
+ *  - AVAHI_CLIENT_CONNECTING
+ */
 void client_callback(AvahiClient *c, AvahiClientState state, AVAHI_GCC_UNUSED void * userdata) 
 {
     int ret = 1;
     assert(c);
 
-    /* Called whenever the client or server state changes */
+    //! Called whenever the client or server state changes
 
     switch(state) 
           {
@@ -122,18 +140,21 @@ void client_callback(AvahiClient *c, AvahiClientState state, AVAHI_GCC_UNUSED vo
 }
 
 
-
-
-
+/** Creates a new entry group and service for this client.
+ *
+ *  Called in client_callback() in response to the AVAHI_CLIENT_S_RUNNING state.
+ *  
+ *  returns 0 on error and 1 on success.
+ */
 int create_services(AvahiClient *c) 
 {
 
-    char *n, r[128];
+    char *n, ssh_login_username[270];
     int ret;
     assert(c);
 
-    /* If this is the first time we're called, let's create a new
-     * entry group if necessary */
+    //! If this is the first time we're called, let's create a new
+    //! entry group if necessary. 
 
     if(!group)
       {
@@ -145,26 +166,26 @@ int create_services(AvahiClient *c)
         }
       }
 
-    /* If the group is empty (either because it was just created, or
-     * because it was reset previously, add our entries.  */
+    //! If the group is empty (either because it was just created, or
+    //! because it was reset previously, add our entries. 
 
     if(avahi_entry_group_is_empty(group)) 
       {
       fprintf(stderr, "Adding service '%s'\n", avahi_name);
 
-      /* Create some random TXT data */
-      snprintf(r, sizeof(r), "random=%i", rand());
+      //! Adds the ssh login name that is used by the ssh client to connect back to the remote host.
+      snprintf(ssh_login_username, sizeof(ssh_login_username)+11, "ssh_login=%s", ssh_login_userdetails->pw_name);
 
       /* We will now add two services and one subtype to the entry
        * group. The two services have the same name, but differ in
        * the service type (IPP vs. BSD LPR). Only services with the
        * same name should be put in the same entry group. */
 
-      /* jeetu - Currently using the service type presence; this is temporary till we find an appropriate service type */
+      //! TODO: Currently using the service type presence; this is temporary till we find an appropriate service type.
 
-      /* Currently broadcasting only over IPv4 (INET) */
+      //! Currently broadcasting only over IPv4 (INET).
 
-      if((ret = avahi_entry_group_add_service(group, AVAHI_IF_UNSPEC, AVAHI_PROTO_INET, 0, avahi_name, "_presence._tcp", NULL, NULL, 651, "test=blah", r, NULL)) < 0)      
+      if((ret = avahi_entry_group_add_service(group, AVAHI_IF_UNSPEC, AVAHI_PROTO_INET, 0, avahi_name, "_presence._tcp", NULL, NULL, 651, ssh_login_username, NULL)) < 0)      
         {
         if(ret == AVAHI_ERR_COLLISION)
           {
@@ -179,7 +200,7 @@ int create_services(AvahiClient *c)
           avahi_entry_group_reset(group);
 
           create_services(c);
-          return;
+          return 0;
           }
 
         fprintf(stderr, "Failed to add _presence._tcp service: %s\n", avahi_strerror(ret));
@@ -187,7 +208,7 @@ int create_services(AvahiClient *c)
         return 0;
         }
 
-      /* Tell the server to register the service */
+      //! Tells the server to register the service.
       if((ret = avahi_entry_group_commit(group)) < 0) 
         {
         fprintf(stderr, "Failed to commit entry group: %s\n", avahi_strerror(ret));
@@ -201,7 +222,17 @@ int create_services(AvahiClient *c)
 
 
 
-
+/** Creates a new entry group for this client. 
+ *
+ *  called by create_services()
+ *  
+ *  Handles the states:
+ *  - AVAHI_ENTRY_GROUP_ESTABLISHED
+ *  - AVAHI_ENTRY_GROUP_COLLISION
+ *  - AVAHI_ENTRY_GROUP_FAILURE
+ *  - AVAHI_ENTRY_GROUP_UNCOMMITED
+ *  - AVAHI_ENTRY_GROUP_REGISTERING
+ */
 void entry_group_callback(AvahiEntryGroup *g, AvahiEntryGroupState state, AVAHI_GCC_UNUSED void *userdata) 
 {
     char *n;
@@ -247,7 +278,17 @@ void entry_group_callback(AvahiEntryGroup *g, AvahiEntryGroupState state, AVAHI_
 
 
 
-
+/** Callback registered by avahi_service_browser_new() at the time of creating a new service browser.
+ *
+ *  called by avahi_setup()
+ *
+ *  Handles the browser events :
+ *  - AVAHI_BROWSER_FAILURE
+ *  - AVAHI_BROWSER_NEW
+ *  - AVAHI_BROWSER_REMOVE
+ *  - AVAHI_BROWSER_ALL_FOR_NOW
+ *  - AVAHI_BROWSER_CACHE_EXHAUSTED
+ */ 
 void browse_callback(
     AvahiServiceBrowser *b,
     AvahiIfIndex interface,
@@ -263,7 +304,7 @@ void browse_callback(
     AvahiClient *c = userdata;
     assert(b);
 
-    /* Called whenever a new services becomes available on the LAN or is removed from the LAN */
+    //! Called whenever a new services becomes available on the LAN or is removed from the LAN
 
     switch(event) 
           {
@@ -298,7 +339,14 @@ void browse_callback(
 }
 
 
-
+/** Callback called whenever a service is resolved or times out.  
+ *
+ *  Callback setup by avahi_service_resolver_new() in browse_callback()
+ *
+ *  Handles the events :
+ *  - AVAHI_RESOLVER_FAILURE
+ *  - AVAHI_RESOLVER_FOUND
+ */
 void resolve_callback(
     AvahiServiceResolver *r,
     AVAHI_GCC_UNUSED AvahiIfIndex interface,
@@ -314,7 +362,7 @@ void resolve_callback(
     AvahiLookupResultFlags flags,
     AVAHI_GCC_UNUSED void* userdata) 
 {
-    char a[AVAHI_ADDRESS_STR_MAX], *t;
+    char a[AVAHI_ADDRESS_STR_MAX], *strtxt;
 
     assert(r);
 
@@ -331,9 +379,10 @@ void resolve_callback(
               fprintf(stderr, "Service '%s' of type '%s' in domain '%s':\n", name, type, domain);
 
               avahi_address_snprint(a, sizeof(a), address);
-              t = avahi_string_list_to_string(txt);
+              strtxt = avahi_string_list_to_string(txt);
+              printf("\nresolve_callback: strtxt = %s\n",strtxt);
 
-              avahi_resolver_found(a,name);
+              avahi_resolver_found(a,name,strtxt);
 /*              fprintf(stderr,
                       "\t%s:%u (%s)\n"
                       "\tTXT=%s\n"
@@ -352,7 +401,7 @@ void resolve_callback(
                       !!(flags & AVAHI_LOOKUP_RESULT_MULTICAST),
                       !!(flags & AVAHI_LOOKUP_RESULT_CACHED));
 */
-              avahi_free(t);
+              avahi_free(strtxt);
           }
 
     avahi_service_resolver_free(r);
@@ -360,18 +409,25 @@ void resolve_callback(
 
 
 
-
-
-int avahi_resolver_found(const char *address, const char *name)
+/** Determines that the host found isn't on localhost and then processes it as a new user.
+ *
+ *  called by resolve_callback()
+ */
+int avahi_resolver_found(const char *address, const char *name,const char *txt)
 {
 
     struct ifaddrs *ifa;
     int family, s;
     char host[NI_MAXHOST];
     int localaddr_check = -1;
+    char *ssh_login_user = NULL;
+    char str1[257];
+    char *saveptr1 = NULL;
 
     printf("\navahi_resolver_found: address = %s\n",address);
 
+    //! Loops through the interfaces on localhost and compares with the address of the
+    //! new host resolved.
     for(ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) 
        {
        if(ifa->ifa_addr == NULL)
@@ -405,16 +461,20 @@ int avahi_resolver_found(const char *address, const char *name)
          
          if(strcmp(address,host) == 0)
            {
-           localaddr_check = 0; /* match found; service resides on local host */
+           //! flag localaddr_check == 0 match found;service resides on local host
+           localaddr_check = 0;
            break;         
            }
          }
        }
 
+    //! flag localaddr_check == -1 match not found;service is unique and does not reside on local host
     if(localaddr_check == -1)
       {
-      printf("\nUnique address found %s\n",address);
-      process_useronline_avahi_msg(address,name,"v0.2");
+      sscanf(txt,"\"ssh_login=%s",&str1);
+      ssh_login_user = strtok_r(str1, "\"", &saveptr1);
+      printf("\nUnique address found %s str1= %s ssh_login_user = %s\n",address,str1,ssh_login_user);
+      process_useronline_avahi_msg(address,name,ssh_login_user,"v0.3");
       }
 
     return 1;
@@ -423,7 +483,11 @@ int avahi_resolver_found(const char *address, const char *name)
 
 
 
-
+/** Called to free avahi related stuff and cleanup the avahi client,service browser and the polling thread.
+ *
+ *  called by avahi_setup()
+ *  TODO: This function should probably be called when the main program quits too.
+ */
 void avahi_cleanup(void)
 {
     /* Cleanup things */

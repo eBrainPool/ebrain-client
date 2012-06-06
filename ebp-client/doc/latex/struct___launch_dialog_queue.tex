@@ -1,0 +1,75 @@
+\hypertarget{struct___launch_dialog_queue}{\section{\-\_\-\-Launch\-Dialog\-Queue \-Struct \-Reference}
+\label{struct___launch_dialog_queue}\index{\-\_\-\-Launch\-Dialog\-Queue@{\-\_\-\-Launch\-Dialog\-Queue}}
+}
+
+
+\-Linked list to hold details of requests requests from other hosts to launch apps from this host.  
+
+
+
+
+{\ttfamily \#include $<$ebp.\-h$>$}
+
+\subsection*{\-Data \-Fields}
+\begin{DoxyCompactItemize}
+\item 
+char \hyperlink{struct___launch_dialog_queue_a05eeba7fa0e9f1c4fcb8110937b46236}{username} \mbox{[}100\mbox{]}
+\begin{DoxyCompactList}\small\item\em username of remote client (as set in their ebp.\-conf) sending the request. \end{DoxyCompactList}\item 
+char \hyperlink{struct___launch_dialog_queue_aa9bb8e0298777697761f6c5d34032a78}{appname} \mbox{[}100\mbox{]}
+\begin{DoxyCompactList}\small\item\em application name on this host which the remote user wishes to run. \end{DoxyCompactList}\item 
+uint32\-\_\-t \hyperlink{struct___launch_dialog_queue_a69ddb9c845da426f636d9dd0dbed4e7e}{ip}
+\begin{DoxyCompactList}\small\item\em \-I\-Pv4 address of remote host connecting in. \end{DoxyCompactList}\item 
+struct \hyperlink{struct___launch_dialog_queue}{\-\_\-\-Launch\-Dialog\-Queue} $\ast$ \hyperlink{struct___launch_dialog_queue_afdf1225bcd61e554ebfcc98eacc3c234}{prev}
+\begin{DoxyCompactList}\small\item\em linked list pointer pointing to previous item in list. \end{DoxyCompactList}\item 
+struct \hyperlink{struct___launch_dialog_queue}{\-\_\-\-Launch\-Dialog\-Queue} $\ast$ \hyperlink{struct___launch_dialog_queue_a4a84428c2db73786a25a86dec566e549}{next}
+\begin{DoxyCompactList}\small\item\em linked list pointer pointing to next item in list. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\-Linked list to hold details of requests requests from other hosts to launch apps from this host. 
+
+\-From what \-I understand (can't remember exactly why \-I did this ;) ), however apparently \-G\-T\-K+ elements such as dialogs should be handled in the same thread as the initializing thread, usually in \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main()}. \-Therefore data from other threads needs to be passed back to this main thread wherein the dialog is presented to the user. \-This cross-\/thread data exchange is facilated by this structure.
+
+\-T\-O\-D\-O\-: \-Verify buffer sizes of the members or do away with hard-\/coded buffer sizes totally. 
+
+\subsection{\-Field \-Documentation}
+\hypertarget{struct___launch_dialog_queue_aa9bb8e0298777697761f6c5d34032a78}{\index{\-\_\-\-Launch\-Dialog\-Queue@{\-\_\-\-Launch\-Dialog\-Queue}!appname@{appname}}
+\index{appname@{appname}!_LaunchDialogQueue@{\-\_\-\-Launch\-Dialog\-Queue}}
+\subsubsection[{appname}]{\setlength{\rightskip}{0pt plus 5cm}char {\bf appname}\mbox{[}100\mbox{]}}}\label{struct___launch_dialog_queue_aa9bb8e0298777697761f6c5d34032a78}
+
+
+application name on this host which the remote user wishes to run. 
+
+\hypertarget{struct___launch_dialog_queue_a69ddb9c845da426f636d9dd0dbed4e7e}{\index{\-\_\-\-Launch\-Dialog\-Queue@{\-\_\-\-Launch\-Dialog\-Queue}!ip@{ip}}
+\index{ip@{ip}!_LaunchDialogQueue@{\-\_\-\-Launch\-Dialog\-Queue}}
+\subsubsection[{ip}]{\setlength{\rightskip}{0pt plus 5cm}uint32\-\_\-t {\bf ip}}}\label{struct___launch_dialog_queue_a69ddb9c845da426f636d9dd0dbed4e7e}
+
+
+\-I\-Pv4 address of remote host connecting in. 
+
+\hypertarget{struct___launch_dialog_queue_a4a84428c2db73786a25a86dec566e549}{\index{\-\_\-\-Launch\-Dialog\-Queue@{\-\_\-\-Launch\-Dialog\-Queue}!next@{next}}
+\index{next@{next}!_LaunchDialogQueue@{\-\_\-\-Launch\-Dialog\-Queue}}
+\subsubsection[{next}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf \-\_\-\-Launch\-Dialog\-Queue}$\ast$ {\bf next}}}\label{struct___launch_dialog_queue_a4a84428c2db73786a25a86dec566e549}
+
+
+linked list pointer pointing to next item in list. 
+
+\hypertarget{struct___launch_dialog_queue_afdf1225bcd61e554ebfcc98eacc3c234}{\index{\-\_\-\-Launch\-Dialog\-Queue@{\-\_\-\-Launch\-Dialog\-Queue}!prev@{prev}}
+\index{prev@{prev}!_LaunchDialogQueue@{\-\_\-\-Launch\-Dialog\-Queue}}
+\subsubsection[{prev}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf \-\_\-\-Launch\-Dialog\-Queue}$\ast$ {\bf prev}}}\label{struct___launch_dialog_queue_afdf1225bcd61e554ebfcc98eacc3c234}
+
+
+linked list pointer pointing to previous item in list. 
+
+\hypertarget{struct___launch_dialog_queue_a05eeba7fa0e9f1c4fcb8110937b46236}{\index{\-\_\-\-Launch\-Dialog\-Queue@{\-\_\-\-Launch\-Dialog\-Queue}!username@{username}}
+\index{username@{username}!_LaunchDialogQueue@{\-\_\-\-Launch\-Dialog\-Queue}}
+\subsubsection[{username}]{\setlength{\rightskip}{0pt plus 5cm}char {\bf username}\mbox{[}100\mbox{]}}}\label{struct___launch_dialog_queue_a05eeba7fa0e9f1c4fcb8110937b46236}
+
+
+username of remote client (as set in their ebp.\-conf) sending the request. 
+
+
+
+\-The documentation for this struct was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+src/\hyperlink{ebp_8h}{ebp.\-h}\end{DoxyCompactItemize}

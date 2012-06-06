@@ -1,0 +1,100 @@
+\hypertarget{struct__user}{\section{\-\_\-user \-Struct \-Reference}
+\label{struct__user}\index{\-\_\-user@{\-\_\-user}}
+}
+
+
+\-Linked list structure to hold details of other users discovered.  
+
+
+
+
+{\ttfamily \#include $<$ebp.\-h$>$}
+
+\subsection*{\-Data \-Fields}
+\begin{DoxyCompactItemize}
+\item 
+char \hyperlink{struct__user_a9997d8ee2df51d18efed254a5aa016fd}{name} \mbox{[}20\mbox{]}
+\begin{DoxyCompactList}\small\item\em username or alias set in ebp.\-conf as would be displayed to other users. \end{DoxyCompactList}\item 
+char \hyperlink{struct__user_af76bd0a7de47a2e1828baff39eaaed91}{ssh\-\_\-login\-\_\-user} \mbox{[}257\mbox{]}
+\begin{DoxyCompactList}\small\item\em username ssh clients need to login to this host. \end{DoxyCompactList}\item 
+char \hyperlink{struct__user_a165e21f39fbada4a3730f571966fb4bb}{version} \mbox{[}6\mbox{]}
+\begin{DoxyCompactList}\small\item\em client version information (currently not used). \end{DoxyCompactList}\item 
+uint32\-\_\-t \hyperlink{struct__user_a69ddb9c845da426f636d9dd0dbed4e7e}{ip}
+\begin{DoxyCompactList}\small\item\em \-I\-Pv4 address of this user. \end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{struct__user_af76725a970e53676ee8ec7c0f83804d0}{apps\-\_\-buffer}
+\begin{DoxyCompactList}\small\item\em buffer to hold list of applications on this remote host. \end{DoxyCompactList}\item 
+unsigned int \hyperlink{struct__user_af1ec161713df6e2c66484fc4bdedd69e}{noofapps}
+\begin{DoxyCompactList}\small\item\em \-No. of applications on this remote host. \end{DoxyCompactList}\item 
+struct \hyperlink{struct__user}{\-\_\-user} $\ast$ \hyperlink{struct__user_a77ae9f3a44069973bbb7bffeff831ba9}{prev}
+\begin{DoxyCompactList}\small\item\em linked list pointer pointing to previous item in list. \end{DoxyCompactList}\item 
+struct \hyperlink{struct__user}{\-\_\-user} $\ast$ \hyperlink{struct__user_a8519a91a83c9b946512eaafe3b7a6c4b}{next}
+\begin{DoxyCompactList}\small\item\em linked list pointer pointing to next item in list. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\-Linked list structure to hold details of other users discovered. 
+
+\-T\-O\-D\-O\-: \-Verify buffer sizes of the members or do away with hard-\/coded buffer sizes totally. 
+
+\subsection{\-Field \-Documentation}
+\hypertarget{struct__user_af76725a970e53676ee8ec7c0f83804d0}{\index{\-\_\-user@{\-\_\-user}!apps\-\_\-buffer@{apps\-\_\-buffer}}
+\index{apps\-\_\-buffer@{apps\-\_\-buffer}!_user@{\-\_\-user}}
+\subsubsection[{apps\-\_\-buffer}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ {\bf apps\-\_\-buffer}}}\label{struct__user_af76725a970e53676ee8ec7c0f83804d0}
+
+
+buffer to hold list of applications on this remote host. 
+
+\hypertarget{struct__user_a69ddb9c845da426f636d9dd0dbed4e7e}{\index{\-\_\-user@{\-\_\-user}!ip@{ip}}
+\index{ip@{ip}!_user@{\-\_\-user}}
+\subsubsection[{ip}]{\setlength{\rightskip}{0pt plus 5cm}uint32\-\_\-t {\bf ip}}}\label{struct__user_a69ddb9c845da426f636d9dd0dbed4e7e}
+
+
+\-I\-Pv4 address of this user. 
+
+\hypertarget{struct__user_a9997d8ee2df51d18efed254a5aa016fd}{\index{\-\_\-user@{\-\_\-user}!name@{name}}
+\index{name@{name}!_user@{\-\_\-user}}
+\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}char {\bf name}\mbox{[}20\mbox{]}}}\label{struct__user_a9997d8ee2df51d18efed254a5aa016fd}
+
+
+username or alias set in ebp.\-conf as would be displayed to other users. 
+
+\hypertarget{struct__user_a8519a91a83c9b946512eaafe3b7a6c4b}{\index{\-\_\-user@{\-\_\-user}!next@{next}}
+\index{next@{next}!_user@{\-\_\-user}}
+\subsubsection[{next}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf \-\_\-user}$\ast$ {\bf next}}}\label{struct__user_a8519a91a83c9b946512eaafe3b7a6c4b}
+
+
+linked list pointer pointing to next item in list. 
+
+\hypertarget{struct__user_af1ec161713df6e2c66484fc4bdedd69e}{\index{\-\_\-user@{\-\_\-user}!noofapps@{noofapps}}
+\index{noofapps@{noofapps}!_user@{\-\_\-user}}
+\subsubsection[{noofapps}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf noofapps}}}\label{struct__user_af1ec161713df6e2c66484fc4bdedd69e}
+
+
+\-No. of applications on this remote host. 
+
+\hypertarget{struct__user_a77ae9f3a44069973bbb7bffeff831ba9}{\index{\-\_\-user@{\-\_\-user}!prev@{prev}}
+\index{prev@{prev}!_user@{\-\_\-user}}
+\subsubsection[{prev}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf \-\_\-user}$\ast$ {\bf prev}}}\label{struct__user_a77ae9f3a44069973bbb7bffeff831ba9}
+
+
+linked list pointer pointing to previous item in list. 
+
+\hypertarget{struct__user_af76bd0a7de47a2e1828baff39eaaed91}{\index{\-\_\-user@{\-\_\-user}!ssh\-\_\-login\-\_\-user@{ssh\-\_\-login\-\_\-user}}
+\index{ssh\-\_\-login\-\_\-user@{ssh\-\_\-login\-\_\-user}!_user@{\-\_\-user}}
+\subsubsection[{ssh\-\_\-login\-\_\-user}]{\setlength{\rightskip}{0pt plus 5cm}char {\bf ssh\-\_\-login\-\_\-user}\mbox{[}257\mbox{]}}}\label{struct__user_af76bd0a7de47a2e1828baff39eaaed91}
+
+
+username ssh clients need to login to this host. 
+
+\hypertarget{struct__user_a165e21f39fbada4a3730f571966fb4bb}{\index{\-\_\-user@{\-\_\-user}!version@{version}}
+\index{version@{version}!_user@{\-\_\-user}}
+\subsubsection[{version}]{\setlength{\rightskip}{0pt plus 5cm}char {\bf version}\mbox{[}6\mbox{]}}}\label{struct__user_a165e21f39fbada4a3730f571966fb4bb}
+
+
+client version information (currently not used). 
+
+
+
+\-The documentation for this struct was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+src/\hyperlink{ebp_8h}{ebp.\-h}\end{DoxyCompactItemize}
