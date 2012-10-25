@@ -347,7 +347,7 @@ char* get_installed_apps(int* count,int* blocksize)
     int i = 0;
     struct dirent **namelist = NULL;
     int size = 0;
-    char *buf;
+    char *buf = malloc(1);
     char file[256];
     file[0] = '\0';
     
@@ -357,9 +357,8 @@ char* get_installed_apps(int* count,int* blocksize)
     GError   *error;
     
     // memory should get freed in main() with free(appsdata.apps)
-    buf = malloc(1);
     buf[0] = '\0';
-
+    
     // calls filter() which helps find .desktop files in the directory. 	
     n = scandir("/usr/share/applications", &namelist, filter, alphasort);
     if(n < 0)
@@ -368,12 +367,10 @@ char* get_installed_apps(int* count,int* blocksize)
       {
       while(i < n)
         {
-        size = size + strlen(namelist[i]->d_name) + 8;
-        buf = realloc(buf,size);
     
         error = NULL;
         strcpy(file,"/usr/share/applications/");
-        strncat(file, namelist[i]->d_name, strlen(namelist[i]->d_name)); 
+        snprintf(file,25+strlen(namelist[i]->d_name),"/usr/share/applications/%s",namelist[i]->d_name);
         if(!g_key_file_load_from_file (key_file,  file, 0, &error))
           {
           printf("Failed to load \"%s\": %s\n",  namelist[i]->d_name, error->message);
@@ -387,13 +384,16 @@ char* get_installed_apps(int* count,int* blocksize)
           retval = strtok(retval, " ");
           if(retval!= NULL) 
             {
+            size = size + strlen(retval) + 1;
+            buf = realloc(buf, size);
+                     
             strncat(buf, retval, strlen(retval));
             strncat(buf,":",1);
             }
           }           
       	free(namelist[i]);
       	i++;
-        }
+        } 
       free(namelist);
       }	
 
