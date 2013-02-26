@@ -161,7 +161,11 @@ int requestid;
 struct ifaddrs *ifaddr;                      //!< details of network interfaces on current system (localhost).
 
 //config file values
-gchar *config_entry_username;                //!< username as read in from ebp.conf
+gchar *config_entry_username;                //!< username as defined in from ebp.conf
+gchar *config_container_ip;                  //!< ipv4 address of lxc container on the host as read in from ebp.conf
+gchar *config_container_sshd_port;           //!< port sshd listens on in the lxc container as read in from ebp.conf
+gchar *config_host_forwarded_port;           //!< port on the host that is forwarded to the sshd on container as read in from ebp.conf
+gchar *config_container_ssh_user;           //!< username in container the remote hosts ssh needs to login to as read in from ebp.conf
 
 int childpid;                                //!< used by pipe_to_program() when it forks and launches piped OpenSSH server/client,etc.
 struct passwd *ssh_login_userdetails;        //!< details of user launching this client,remote ssh clients need to login back to this user.
@@ -171,9 +175,6 @@ struct passwd *ssh_login_userdetails;        //!< details of user launching this
 //-----------------------
 
 int init_treeview(GtkWidget *view,GtkTreeStore *treestore);
-gpointer connlistener_thread(gpointer user_data);
-gpointer newconnrequests_thread(gpointer user_data);
-gpointer check_client_status_thread(gpointer user_data);
 char* get_installed_apps(int* count,int* blocksize);
 int filter(const struct dirent *dir);
 int process_useronline_msg(char *buf);
@@ -190,7 +191,6 @@ LaunchAppQueue* add_to_launch_queue(char *appname,uint32_t ip,int reqid);
 void set_launchappqueue_locked(LaunchAppQueue *dest,LaunchAppQueue *src);
 int process_launchapp_req(char *buf,NewConnData *data);
 gboolean launch_approve_dialog(gpointer data);
-gpointer start_server(gpointer ptr_ip);
 int process_launchreq_accepted(NewConnData *data);
 void freeusermem(void);
 void freeLaunchAppQueue(void);
@@ -203,6 +203,16 @@ int process_useronline_avahi_msg(const char *ip, const char *username, const cha
 void pipe_to_program(char *path, char **args, int *in, int *out,int *err);
 void killchild(int signo);
 int readconfigfile(void);
+
+//----------
+//Threads
+//----------
+
+gpointer connlistener_thread(gpointer user_data);
+gpointer newconnrequests_thread(gpointer user_data);
+gpointer check_client_status_thread(gpointer user_data);
+gpointer create_port_to_container_thread(gpointer user_data);
+gpointer start_server(gpointer ptr_ip);
 
 //----------
 //Signals

@@ -93,6 +93,17 @@ int main(int argc, char *argv[])
     getlocaladdrs(&ifaddr);
 
     avahi_setup();
+
+    //! Spawns a thread to setup ssh port forwarding between host and container.
+    //! Therefore ssh client on host connects to server in container and sets up 
+    //! a port on host. Any remote ebp client connects to this port via ssh and
+    //! is forwarded to the sshd in the container. Application requests will then
+    //! be X forwarded from within the container.
+
+    //! TODO: Ideally a port should only be created if the user allows a user to access
+    //! the machine. With a perpetual port created as is done here there is a chance
+    //! a user with the right keys can bypass the ebp client and still have apps X forwarded.
+    g_thread_create(create_port_to_container_thread,NULL,FALSE,NULL);
    
     //! spawns message thread that ultimately (thru listener_child) processes:
     //! - olsr plugin notification for a user coming online
@@ -692,7 +703,8 @@ void launchdlg_approved(char *appname,uint32_t ip)
 
     //! Spawns a thread to start an instance of the OpenSSH server for this request.
     //! This server instance will X forward the application requested by remote client.
-    g_thread_create(start_server,&ip,FALSE,NULL);
+    //g_thread_create(start_server,&ip,FALSE,NULL);
+    //g_thread_create(create_port_to_container,&ip,FALSE,NULL);
 
     //! Connect back to the client that had sent the LaunchApp request and send it
     //! a LaunchAppReqAccepted message along with the application name. This signifies
@@ -767,6 +779,89 @@ gpointer start_server(gpointer ptr_ip)
     return NULL;
 }
 
+
+
+/** Thread to establish local port forwarding to the container.
+ *
+ *  Uses OpenSSH client to connect to the sshd in the container and establish port forwarding
+ *  from host to container. This allows external ebp clients to connect to the host ip and have applications
+ *  run within the container without having any networking access directly into the container.
+ *
+ *  This thread is spawned by launchdlg_approved() 
+ */
+gpointer create_port_to_container_thread(gpointer user_data)
+{
+    int piped_in = 0, piped_out = 0, piped_err = 0;
+    int j = 0,i = 0;
+    char onechar;
+
+    //! Arguments to the OpenSSH client (see code) are currently hardcoded.Eventually will be taken in from main ebp.conf file.
+    char *args1[] = {
+                   "/usr/bin/ssh",
+                   "-v",
+                   "-o", "Host *",
+                   "-o", "RSAAuthentication no",
+                   "-o", "PasswordAuthentication no",
+                   "-o", "IdentityFile ~/.ebp/clientkeys",
+                   "-o", "Port 22",
+                   "-o", "Ciphers arcfour256,arcfour128",
+                   "-o", "StrictHostKeyChecking no",
+                   "-o", "UserKnownHostsFile ~/.ebp/known_hosts",
+                   "-o", "Compression yes",
+                   "-o", "CompressionLevel 7",
+                   "-o", "SendEnv LANG LC_*",
+                   "-o", "HashKnownHosts no",
+                   "-o", "GSSAPIAuthentication no",
+                   "-o", "GSSAPIDelegateCredentials no", 
+                   "-g","-L",
+                   ""              
+                   "",
+                   "",
+                   NULL 
+                   };
+    char args2[3][300];
+
+    args2[0][0] = '\0';
+    args2[1][0] = '\0';
+    args2[2][0] = '\0';
+
+    sprintf(args2[0],"%s:%s:%s",config_host_forwarded_port,config_container_ip,config_container_sshd_port);  
+    sprintf(args2[1],"%s@%s",config_container_ssh_user,config_container_ip);
+    sprintf(args2[2],"/bin/cat");                    //! keep alive this connection without giving a bash prompt.
+
+    // include arguments for user@host to connect to and the appname    
+    j = 0; 
+    while(args1[j] != NULL)
+         {
+         // substitute the empty placeholder strings ("") in args1 with the correct values
+         if(strcmp(args1[j],"") == 0)
+           {
+           args1[j] = args2[i];
+           i++;
+           }
+         printf("args1[j] = %s\n",args1[j]);
+         j++;
+         }
+
+    //! Pipe STDIN,STDOUT and STDERR and launch /usr/sbin/ssh (currently hardcoded)
+    pipe_to_program("/usr/bin/ssh",args1,&piped_in,&piped_out,&piped_err);
+    
+    //! TODO:
+    //! for now reading from the piped stderr of the child one char at a time
+    //! eventually need to put in mechanism to determine and deal with 
+    //! success/failure of the child program.
+    while(read(piped_err,&onechar,1) > 0)
+         {
+         printf("%c",onechar);
+         }
+
+    return NULL;
+}
+
+
+
+
+
 /** Processes the LaunchAppReqAccepted message.
  *
  *  The LaunchAppReqAccepted message signifies that the remote user is willing to launch
@@ -823,9 +918,10 @@ int process_launchreq_accepted(NewConnData *data)
     while(userlist != NULL)
          {
          if(userlist->ip == data->ip)
-           {
+           {          
            printf("\nprocess_launchreq_accepted: userlist->name = %s userlist->ssh_login_user = %s\n",userlist->name,userlist->ssh_login_user);
-           sprintf(args2[0],"%s@%s",userlist->ssh_login_user,ip);
+           //sprintf(args2[0],"%s@%s",userlist->ssh_login_user,ip); 
+           sprintf(args2[0],"ebp@%s",userlist->ssh_login_user,ip); // jeetu - temporaily hardcoded
            break;
            }
          userlist = userlist->next;

@@ -384,7 +384,7 @@ char* get_installed_apps(int* count,int* blocksize)
           retval = strtok(retval, " ");
           if(retval!= NULL) 
             {
-            size = size + strlen(retval) + 1;
+            size = size + strlen(retval) + 2;
             buf = realloc(buf, size);
                      
             strncat(buf, retval, strlen(retval));
@@ -573,6 +573,9 @@ int readconfigfile(void)
     key_file = g_key_file_new (); 
     error = NULL;
     
+    config_entry_username = NULL;
+    config_container_ip = NULL;
+    
     if(!g_key_file_load_from_file (key_file,  configfile, 0, &error))
       {
       fprintf (stderr,"\nFailed to load config file: %s\n",  error->message);
@@ -581,11 +584,16 @@ int readconfigfile(void)
       }
 
     error = NULL;
-    config_entry_username = g_key_file_get_value (key_file, "General", "Username", &error);
-    if(config_entry_username == NULL)
+    config_entry_username = g_key_file_get_value (key_file, "General", "Username", NULL);
+    config_container_ssh_user = g_key_file_get_value (key_file, "Lxc Container", "container_ssh_user", NULL);
+    config_container_ip = g_key_file_get_value (key_file, "Lxc Container", "container_ip", NULL);
+    config_container_sshd_port = g_key_file_get_value (key_file, "Lxc Container", "container_sshd_port", NULL);
+    config_host_forwarded_port = g_key_file_get_value (key_file, "Lxc Container", "host_forwarded_port", NULL);
+
+    if(config_entry_username == NULL || config_container_ip == NULL 
+       || config_container_sshd_port == NULL || config_host_forwarded_port == NULL)
       {
-      fprintf(stderr,"\nHmm. What are you trying to pull on me?\nError reading config file. %s.\n",error->message);
-      g_error_free(error);
+      fprintf(stderr,"\nHmm. What are you trying to pull on me?\nError reading config file.\n");
       return 0;
       }
 
