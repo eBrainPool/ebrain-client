@@ -346,19 +346,20 @@ char* get_installed_apps(int* count,int* blocksize)
     int n = 0;
     int i = 0;
     struct dirent **namelist = NULL;
-    int size = 0;
-    char *buf = malloc(1);
-    char file[256];
-    file[0] = '\0';
+    size_t namelist_size, size= 0;
+    char *buf = NULL;
+    char *file,*file1 = NULL;
+    char *sep=NULL;
     
-    gchar *retval;
+    gchar *retval=NULL;
     GKeyFile *key_file;
     key_file = g_key_file_new (); 
     GError   *error;
     
-    // memory should get freed in main() with free(appsdata.apps)
-    buf[0] = '\0';
+    sep = ":";
     
+    retval = malloc(1000); 
+    file = malloc(1000);
     // calls filter() which helps find .desktop files in the directory. 	
     n = scandir("/usr/share/applications", &namelist, filter, alphasort);
     if(n < 0)
@@ -367,10 +368,17 @@ char* get_installed_apps(int* count,int* blocksize)
       {
       while(i < n)
         {
-    
         error = NULL;
-        strcpy(file,"/usr/share/applications/");
-        snprintf(file,25+strlen(namelist[i]->d_name),"/usr/share/applications/%s",namelist[i]->d_name);
+        if (namelist[i]->d_name){
+        namelist_size =  snprintf(NULL, 0, "/usr/share/applications/%s",namelist[i]->d_name);
+        if (!(file1 = realloc(file, namelist_size +1)))
+         {
+         free(file);
+         return 0;
+         }
+        file = file1;
+        snprintf(file, namelist_size +1,"/usr/share/applications/%s",namelist[i]->d_name);
+        }
         if(!g_key_file_load_from_file (key_file,  file, 0, &error))
           {
           printf("Failed to load \"%s\": %s\n",  namelist[i]->d_name, error->message);
@@ -384,13 +392,12 @@ char* get_installed_apps(int* count,int* blocksize)
           retval = strtok(retval, " ");
           if(retval!= NULL) 
             {
-            size = size + strlen(retval) + 1;
-            buf = realloc(buf, size);
-                     
-            strncat(buf, retval, strlen(retval));
-            strncat(buf,":",1);
+            _snprintf_safecopy(&retval, &buf, &sep);
             }
-          }           
+          } 
+    
+        file = NULL;
+        free(file1);
       	free(namelist[i]);
       	i++;
         } 
@@ -403,10 +410,50 @@ char* get_installed_apps(int* count,int* blocksize)
     return(buf);
 }
 
+/** safe method for snprintf copy
+ *  Quick & Efficient, with Dynamic allocation, using realloc. Allocates  if passed pointer is NULL
+ *
+ * Pass three char pointers (address), Value to be copied, Pointer to copy it to, and the separation string
+ *
+ * This function does not return, it operates on the pointers directly
+ */
+void _snprintf_safecopy(char **value, char **dest_pointer, char **appendstring)
+{
+  size_t localsize;
+  char *buffer=NULL;
+ 
+  if (*dest_pointer != NULL)
+    { 
+    localsize =  snprintf(NULL, 0, "%s%s%s", *dest_pointer, *appendstring, *value);
+    if (!(buffer = realloc(buffer, localsize +1)))
+      {
+        free(buffer);
+      }
+    else 
+      {
+      snprintf(buffer, localsize +1, "%s%s%s", *dest_pointer, *appendstring, *value);
+      *dest_pointer = buffer;
+      }
+    }
+  else
+    { // For first init, starting value, without append strings
+    localsize =  snprintf(NULL, 0, "%s", *value);
+    if (!(buffer = realloc(buffer, localsize +1)))
+      {
+      free(*dest_pointer);
+      }
+    else 
+      {
+      snprintf(buffer, localsize +1, "%s", *value);
+      *dest_pointer = buffer;
+      }
+    }
+}
 
 /** Used by scandir() to filter out and return .desktop files
  *
  *  called by get_installed_apps()
+
  */
 int filter(const struct dirent *dir)
 {
