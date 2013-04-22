@@ -920,8 +920,9 @@ int process_launchreq_accepted(NewConnData *data)
          if(userlist->ip == data->ip)
            {          
            printf("\nprocess_launchreq_accepted: userlist->name = %s userlist->ssh_login_user = %s\n",userlist->name,userlist->ssh_login_user);
-           //sprintf(args2[0],"%s@%s",userlist->ssh_login_user,ip); 
-           sprintf(args2[0],"ebp@%s",userlist->ssh_login_user,ip); // jeetu - temporaily hardcoded
+           // jeetu - user temporaily hardcoded;eventually the container user the remote ssh needs to connect to could
+           //         be passed along as part of the avahi service message TXT field or in some other way.
+           sprintf(args2[0],"ebp@%s",ip); 
            break;
            }
          userlist = userlist->next;
