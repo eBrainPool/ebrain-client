@@ -36,48 +36,42 @@ G_LOCK_DEFINE(newconndata);
  */
 int main(int argc, char *argv[])
 { 
-    GtkWidget *logo = NULL;
-    GtkWidget *label = NULL;
-    GtkWidget *vbox = NULL;
-    GtkWidget *hbox = NULL;
-    GtkWidget *scrolledwindow = NULL;
+    GtkBuilder *builder;    
     char buf[302];
     GdkRGBA rgba = {1.0,1.0,1.0,1.0};
+    GError *error = NULL;
 
     g_thread_init (NULL);
     gdk_threads_init();
     gtk_init (&argc, &argv);
 
-    window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_widget_set_size_request(window,WINDOW_WIDTH,WINDOW_HEIGHT);
-    gtk_window_set_title(GTK_WINDOW(window),"eBrainPool");
-    gtk_widget_override_background_color(window,GTK_STATE_NORMAL, &rgba);
-    g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+    /* Create new GtkBuilder object */
+    builder = gtk_builder_new();
 
-    vbox = gtk_vbox_new(FALSE,2);
-    hbox = gtk_hbox_new(FALSE,2);
-    
-    logo = gtk_image_new_from_file("./ebrain_logo_1.png");
-    gtk_box_pack_start(GTK_BOX(hbox),logo,FALSE,FALSE,1);
+    /* Load UI from file. If error occurs, report it and quit application.*/
+    if(!gtk_builder_add_from_file( builder, "./ui/mainwindow.glade", &error ) )
+      {
+      g_warning( "%s", error->message );
+      g_error_free(error);
+      return(1);
+      }
 
-    snprintf(buf,300,"eBrainPool allows you to run\nsoftware from other\nnearby eBrainers shown\nin the list below.");
-    label = gtk_label_new(buf);
-    gtk_box_pack_start(GTK_BOX(hbox),label,FALSE,TRUE,1);
+    /* Get main window pointer from UI */
+    window = GTK_WIDGET(gtk_builder_get_object(builder, "window1"));
 
-    gtk_box_pack_start(GTK_BOX(vbox),hbox,FALSE,TRUE,1);
-
-    treeview = gtk_tree_view_new();
+    /* Connect signals */
+    gtk_builder_connect_signals(builder, NULL);
+        
+    treeview = GTK_WIDGET(gtk_builder_get_object(builder, "treeview1"));
     treestore = gtk_tree_store_new(NUM_COLS,G_TYPE_STRING,G_TYPE_POINTER);
     init_treeview(treeview,treestore);
-      
-    scrolledwindow = gtk_scrolled_window_new(NULL,NULL);
-    gtk_container_add(GTK_CONTAINER(scrolledwindow),treeview);
-    gtk_box_pack_start(GTK_BOX(vbox),scrolledwindow,TRUE,TRUE,1);
 
-    gtk_container_add(GTK_CONTAINER(window), vbox);    
+    /* Destroy builder, since we don't need it anymore */
+    g_object_unref(G_OBJECT(builder));
 
-    gtk_widget_show_all(window);
-
+    /* Show window. All other widgets are automatically shown by GtkBuilder */
+    gtk_widget_show(window);
+    
     //! get the username running this process,this is sent to remote users for ssh connects back to this user.
     ssh_login_userdetails = getpwuid(getuid());
     printf("\nssh_login_userdetails->pw_name = %s\n",ssh_login_userdetails->pw_name);
