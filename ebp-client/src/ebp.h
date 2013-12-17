@@ -31,6 +31,8 @@
 #include <pthread.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
 #include <netinet/in.h>
 #include <unistd.h>
 #include <dirent.h>
@@ -40,6 +42,7 @@
 #include <netdb.h>
 #include <pwd.h>
 #include <gtk/gtk.h>
+#include <fcntl.h>
 
 /** enums needed by the treeview and treestore model.
  * 
@@ -56,6 +59,7 @@ enum
 #define WINDOW_WIDTH 460       //!< Client window width.
 #define WINDOW_HEIGHT 300      //!< Client widow height.
 #define CLIENT_COMM_PORT 2010  //!< Port no. on which this server listens on. TODO: should eventually be set in ebp.conf file.
+#define PREF_DLG_APPLY_BUTTON 2 //!< The Response ID for the Apply button of the preferences dialog
 
 //-----------------
 // Structures
@@ -136,6 +140,16 @@ typedef struct _LaunchDialogQueue
     struct _LaunchDialogQueue *next;       //!< linked list pointer pointing to next item in list.
     } LaunchDialogQueue;
 
+
+/** Structure for glade based UI dialogs and widgets.
+ *
+ */
+typedef struct _UiData
+    {
+    GtkWidget *preferences_dlg;
+    GtkEntry *entry_screen_name;
+    } UiData;
+
 //--------------------
 // Global Variables
 //--------------------
@@ -161,7 +175,7 @@ int requestid;
 struct ifaddrs *ifaddr;                      //!< details of network interfaces on current system (localhost).
 
 //config file values
-gchar *config_entry_username;                //!< username as read in from ebp.conf
+gchar config_entry_username[32];             //!< username as read in from ebp.conf; 32 chars max
 
 int childpid;                                //!< used by pipe_to_program() when it forks and launches piped OpenSSH server/client,etc.
 struct passwd *ssh_login_userdetails;        //!< details of user launching this client,remote ssh clients need to login back to this user.
@@ -203,6 +217,9 @@ int process_useronline_avahi_msg(const char *ip, const char *username, const cha
 void pipe_to_program(char *path, char **args, int *in, int *out,int *err);
 void killchild(int signo);
 int readconfigfile(void);
+void cb_show_preferences(GtkButton *button, UiData *uidata);
+void retrieve_and_save_prefs(UiData *uidata);
+void _snprintf_safecopy(char **value, char **dest_pointer, char **appendstring);
 
 //----------
 //Signals

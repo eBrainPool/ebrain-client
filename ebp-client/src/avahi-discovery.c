@@ -94,8 +94,7 @@ int avahi_setup(void)
  *  - AVAHI_CLIENT_CONNECTING
  */
 void client_callback(AvahiClient *c, AvahiClientState state, AVAHI_GCC_UNUSED void * userdata) 
-{
-    int ret = 1;
+{       
     assert(c);
 
     //! Called whenever the client or server state changes
@@ -106,7 +105,7 @@ void client_callback(AvahiClient *c, AvahiClientState state, AVAHI_GCC_UNUSED vo
 
               /* The server has startup successfully and registered its host
                * name on the network, so it's time to create our services */
-              ret = create_services(c);
+              create_services(c);
               break;
 
           case AVAHI_CLIENT_FAILURE:
@@ -471,7 +470,7 @@ int avahi_resolver_found(const char *address, const char *name,const char *txt)
     //! flag localaddr_check == -1 match not found;service is unique and does not reside on local host
     if(localaddr_check == -1)
       {
-      sscanf(txt,"\"ssh_login=%s",&str1);
+      sscanf(txt,"\"ssh_login=%s",&str1[0]);
       ssh_login_user = strtok_r(str1, "\"", &saveptr1);
       printf("\nUnique address found %s str1= %s ssh_login_user = %s\n",address,str1,ssh_login_user);
       process_useronline_avahi_msg(address,name,ssh_login_user,"v0.3");

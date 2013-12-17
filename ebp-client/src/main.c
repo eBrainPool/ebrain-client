@@ -36,10 +36,9 @@ G_LOCK_DEFINE(newconndata);
  */
 int main(int argc, char *argv[])
 { 
-    GtkBuilder *builder;    
-    char buf[302];
-    GdkRGBA rgba = {1.0,1.0,1.0,1.0};
+    GtkBuilder *builder;        
     GError *error = NULL;
+    UiData uidata;
 
     g_thread_init (NULL);
     gdk_threads_init();
@@ -49,7 +48,7 @@ int main(int argc, char *argv[])
     builder = gtk_builder_new();
 
     /* Load UI from file. If error occurs, report it and quit application.*/
-    if(!gtk_builder_add_from_file( builder, "./ui/mainwindow.glade", &error ) )
+    if(!gtk_builder_add_from_file( builder, "./ui/ebrainpool_ui.glade", &error ) )
       {
       g_warning( "%s", error->message );
       g_error_free(error);
@@ -58,9 +57,11 @@ int main(int argc, char *argv[])
 
     /* Get main window pointer from UI */
     window = GTK_WIDGET(gtk_builder_get_object(builder, "window1"));
+    uidata.preferences_dlg = GTK_WIDGET(gtk_builder_get_object(builder, "pref_dialog"));
+    uidata.entry_screen_name = (GtkEntry *) gtk_builder_get_object(builder, "entry_screen_name");
 
     /* Connect signals */
-    gtk_builder_connect_signals(builder, NULL);
+    gtk_builder_connect_signals(builder, &uidata);
         
     treeview = GTK_WIDGET(gtk_builder_get_object(builder, "treeview1"));
     treestore = gtk_tree_store_new(NUM_COLS,G_TYPE_STRING,G_TYPE_POINTER);
@@ -886,3 +887,24 @@ int process_launchreq_accepted(NewConnData *data)
 
     return 0;   
 }
+
+/** Shows the Preferences dialog when a user clicks on the Preferences button in the main window.  
+ *
+ *  Callback function to the clicked event for the Preferences button. The glade file has the 
+ *  clicked signal of GtkButton handled by the cb_show_preferences function.
+ */
+void cb_show_preferences(GtkButton *button, UiData *uidata)
+{
+    int response = 0;  
+
+    /* Run the preferences_dlg. */
+    gtk_entry_set_text(uidata->entry_screen_name,config_entry_username);
+    response = gtk_dialog_run(GTK_DIALOG(uidata->preferences_dlg));
+    //! Hides the dialog instead of destroying it completely.
+    gtk_widget_hide(uidata->preferences_dlg);
+    /* If the Apply button was pressed save the settings to the configuration file */
+    if(response == PREF_DLG_APPLY_BUTTON)
+      retrieve_and_save_prefs(uidata);      
+
+}
+

@@ -616,6 +616,7 @@ int readconfigfile(void)
     GKeyFile     *key_file;
     GError       *error;
     const char *configfile = "./ebp.conf";  //! TODO: for now looking for the config file in the same dir as the exec; should be /etc
+    const char *screen_name = NULL;
  
     key_file = g_key_file_new (); 
     error = NULL;
@@ -628,13 +629,14 @@ int readconfigfile(void)
       }
 
     error = NULL;
-    config_entry_username = g_key_file_get_value (key_file, "General", "Username", &error);
-    if(config_entry_username == NULL)
+    screen_name = g_key_file_get_value (key_file, "General", "Username", &error);    
+    if(screen_name == NULL)
       {
       fprintf(stderr,"\nHmm. What are you trying to pull on me?\nError reading config file. %s.\n",error->message);
       g_error_free(error);
       return 0;
       }
+    strncpy(config_entry_username,screen_name,32);
 
     return 1;
 }
@@ -649,56 +651,57 @@ int readconfigfile(void)
  */
 void pipe_to_program(char *path, char **args, int *in, int *out, int *err)
 {
-	int c_in = 0, c_out = 0, c_err = 0;
-	int pin[2], pout[2], perr[2];
+    int c_in = 0, c_out = 0, c_err = 0;
+    int pin[2], pout[2], perr[2];
 
-	if ((pipe(pin) == -1) || (pipe(pout) == -1) || (pipe(perr) == -1))
+    if((pipe(pin) == -1) || (pipe(pout) == -1) || (pipe(perr) == -1))
 		//fatal("pipe: %s", strerror(errno));
-	   {
-	   fprintf(stderr,"fork: %s\n", strerror(errno));
+      {
+      fprintf(stderr,"fork: %s\n", strerror(errno));
+      _exit(1);
+      }
+    *in = pin[0];
+    *out = pout[1];
+    *err = perr[0];
+    c_in = pout[0];
+    c_out = pin[1];
+    c_err = perr[1];
+
+    if((childpid = fork()) == -1)	
+      {
+      fprintf(stderr,"fork: %s\n", strerror(errno));
+      _exit(1);
+      }
+
+    else if(childpid == 0) 
+           {
+	   if((dup2(c_in, STDIN_FILENO) == -1) ||
+              (dup2(c_out, STDOUT_FILENO) == -1) ||
+	      (dup2(c_err, STDERR_FILENO) == -1)) 
+             {
+	     fprintf(stderr, "dup2: %s\n", strerror(errno));
+	     _exit(1);
+	     }
+	   close(*in);
+	   close(*out);
+	   close(*err);
+	   close(c_in);
+	   close(c_out);
+	   close(c_err);
+
+	   /*
+	    * The underlying ssh is in the same process group, so we must
+	    * ignore SIGINT if we want to gracefully abort commands,
+	    * otherwise the signal will make it to the ssh process and
+	    * kill it too.  Contrawise, since sftp sends SIGTERMs to the
+            * underlying ssh, it must *not* ignore that signal.
+	    */
+	   signal(SIGINT, SIG_IGN);
+	   signal(SIGTERM, SIG_DFL);
+	   execvp(path, args);
+	   fprintf(stderr, "exec: %s: %s\n", path, strerror(errno));
 	   _exit(1);
 	   }
-	*in = pin[0];
-	*out = pout[1];
-	*err = perr[0];
-	c_in = pout[0];
-	c_out = pin[1];
-	c_err = perr[1];
-
-	if ((childpid = fork()) == -1)
-		//fatal("fork: %s", strerror(errno));
-           {
-	   fprintf(stderr,"fork: %s\n", strerror(errno));
-	   _exit(1);
-           }
-
-	else if (childpid == 0) {
-		if ((dup2(c_in, STDIN_FILENO) == -1) ||
-		    (dup2(c_out, STDOUT_FILENO) == -1) ||
-		    (dup2(c_err, STDERR_FILENO) == -1)) {
-			fprintf(stderr, "dup2: %s\n", strerror(errno));
-			_exit(1);
-		}
-		close(*in);
-		close(*out);
-		close(*err);
-		close(c_in);
-		close(c_out);
-		close(c_err);
-
-		/*
-		 * The underlying ssh is in the same process group, so we must
-		 * ignore SIGINT if we want to gracefully abort commands,
-		 * otherwise the signal will make it to the ssh process and
-		 * kill it too.  Contrawise, since sftp sends SIGTERMs to the
-		 * underlying ssh, it must *not* ignore that signal.
-		 */
-		signal(SIGINT, SIG_IGN);
-		signal(SIGTERM, SIG_DFL);
-		execvp(path, args);
-		fprintf(stderr, "exec: %s: %s\n", path, strerror(errno));
-		_exit(1);
-	}
 
 	signal(SIGTERM, killchild);
 	signal(SIGINT, killchild);
@@ -715,11 +718,46 @@ void pipe_to_program(char *path, char **args, int *in, int *out, int *err)
  */ 
 void killchild(int signo)
 {
-	if (childpid > 1) {
-		kill(childpid, SIGTERM);
-		waitpid(childpid, NULL, 0);
-	}
-
-	_exit(1);
+    if(childpid > 1) 
+      {
+      kill(childpid, SIGTERM);
+      waitpid(childpid, NULL, 0);
+      }
+    _exit(1);
 }
 
+
+/** Retrieves preferences from the preferences dialog (pref_dialog) saves it in the config file.
+ *
+ */
+void retrieve_and_save_prefs(UiData *uidata)
+{
+    const char *screen_name = NULL;
+    GKeyFile     *key_file = NULL;
+    GError       *error = NULL;
+    gsize length = 0;
+    const char *configfile = "./ebp.conf";  //! TODO: for now looking for the config file in the same dir as the exec; should be /etc
+    gchar *str_key_file = NULL;
+    int fd = 0;
+
+    screen_name = gtk_entry_get_text(uidata->entry_screen_name);
+    strncpy(config_entry_username,screen_name,32); 
+   
+    key_file = g_key_file_new (); 
+    error = NULL;
+    
+    if(!g_key_file_load_from_file (key_file,  configfile, G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS, &error))
+      {
+      fprintf (stderr,"\nFailed to load config file: %s\n",  error->message);
+      g_error_free (error);
+      return;
+      }
+
+    g_key_file_set_value (key_file, "General", "Username", screen_name);
+    str_key_file = g_key_file_to_data(key_file,&length,NULL);
+    g_key_file_free (key_file);
+
+    fd = open(configfile,O_RDWR);
+    write(fd,str_key_file,length);    
+    close(fd);
+}

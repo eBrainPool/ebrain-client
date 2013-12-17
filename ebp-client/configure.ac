@@ -29,7 +29,7 @@ AM_PROG_LIBTOOL
 
 
 PKG_CHECK_MODULES(EBP, avahi-client
-[gtk+-3.0])
+[gtk+-3.0] [gthread-2.0])
 
 
 
