@@ -615,7 +615,7 @@ int readconfigfile(void)
 {
     GKeyFile     *key_file;
     GError       *error;
-    const char *configfile = "./ebp.conf";  //! TODO: for now looking for the config file in the same dir as the exec; should be /etc
+    const char *configfile = "./src/ebp.conf";  //! TODO: for now looking for the config file in the same dir as the exec; should be /etc
     const char *screen_name = NULL;
  
     key_file = g_key_file_new (); 

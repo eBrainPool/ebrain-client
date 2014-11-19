@@ -1,2 +1,8 @@
-
+19 Nov 2014
+* This version is eBrainPool developer use only*
+If you are lookin for the stable code, grab the code tagged with v0.3 'git
+show v0.3'
+This has the new thrift codebase, with the new thriftcomm liibrary as a
+starting point. This is the first stage towards replacing the entire
+communications in use with our apache thrift based library.
 

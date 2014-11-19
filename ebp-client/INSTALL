@@ -12,6 +12,16 @@ without warranty of any kind.
 Basic Installation
 ==================
 
+Note: for the new THRIFT codebase...
+------------------------------------------------------
+
+first make sure you have the thrift library available. If not grab it from http://thrift.apache.org
+
+then build the ebrainpool code with
+ ' make THRIFT_DIR=/path/to/thrift/'
+
+------------------------------------------------------
+
    Briefly, the shell commands `./configure; make; make install' should
 configure, build, and install this package.  The following
 more-detailed instructions are generic; see the `README' file for

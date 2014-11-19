@@ -1,0 +1,47 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements. See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership. The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License. You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+
+BOOST_DIR = /usr/include/boost/
+THRIFT_DIR = ../../
+LIB_DIR = $(THRIFT_DIR)lib/cpp/src/
+INCLUDES=-I/usr/include -I$(THRIFT_DIR)lib/cpp/src/
+    
+#OBJS := $(shell find $(THRIFT_DIR)lib/cpp -maxdepth 1 -name '*.o')
+OBJS := ${THRIFT_DIR}lib/cpp/Thrift.o \
+    ${THRIFT_DIR}lib/cpp/TServerSocket.o \
+    ${THRIFT_DIR}lib/cpp/TSocket.o \
+    ${THRIFT_DIR}lib/cpp/TSimpleServer.o \
+    ${THRIFT_DIR}lib/cpp/TBufferTransports.o \
+    ${THRIFT_DIR}lib/cpp/TApplicationException.o 
+    
+GEN_SRC = ./gen-cpp/ebp_proto_constants.cpp ./gen-cpp/ebp_proto_types.cpp ./gen-cpp/announcelist.cpp
+
+default: server client
+
+server: announcelist_server.cpp
+	g++ -DHAVE_INTTYPES_H -DHAVE_NETINET_IN_H $(OBJS) -o announcelist_server $(INCLUDES) -I${THRIFT_DIR} -I${BOOST_DIR} ${GEN_SRC} -I./gen-cpp announcelist_server.cpp -L${LIB_DIR}
+
+#client: CppClient.cpp
+#	g++ -o CppClient -I${THRIFT_DIR} -I${BOOST_DIR}  -I../gen-cpp -L${LIB_DIR} -lthrift CppClient.cpp ${GEN_SRC}
+
+client: CppClient.cpp
+	g++ -DHAVE_INTTYPES_H -DHAVE_NETINET_IN_H $(OBJS) -o CppClient $(INCLUDES) -I${THRIFT_DIR} -I${BOOST_DIR} ${GEN_SRC} -I./gen-cpp CppClient.cpp -L${LIB_DIR}
+
+clean:
+	$(RM) -r CppClient announcelist_server

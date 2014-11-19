@@ -44,6 +44,8 @@
 #include <gtk/gtk.h>
 #include <fcntl.h>
 
+#include "thriftcomm/ebpcomm.h"
+
 /** enums needed by the treeview and treestore model.
  * 
  *  These enums are used to create a UI tree with remote username,
@@ -58,7 +60,7 @@ enum
 
 #define WINDOW_WIDTH 460       //!< Client window width.
 #define WINDOW_HEIGHT 300      //!< Client widow height.
-#define CLIENT_COMM_PORT 2010  //!< Port no. on which this server listens on. TODO: should eventually be set in ebp.conf file.
+#define CLIENT_COMM_PORT 9090  //!< Port no. on which this server listens on. TODO: should eventually be set in ebp.conf file.
 #define PREF_DLG_APPLY_BUTTON 2 //!< The Response ID for the Apply button of the preferences dialog
 
 //-----------------

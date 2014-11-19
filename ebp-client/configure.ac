@@ -1,41 +1,58 @@
-dnl Process this file with autoconf to produce a configure script.
-dnl Created by Anjuta application wizard.
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
 
-AC_INIT(ebp, 0.3.0)
-m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
-
-AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
+AC_PREREQ([2.69])
+AC_INIT([ebp],[0.5], [contact@ebrain.in])
+AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
-AM_MAINTAINER_MODE
 
+# Checks for programs.
+AC_PROG_CXX
+AC_PROG_AWK
 AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+AC_PROG_RANLIB
+AC_PROG_MKDIR_P
+AM_PROG_AR
 
+# Checks for libraries.
+# FIXME: Replace `main' with a function in `-lcairo':
+#AC_CHECK_LIB([cairo], [main])
+# FIXME: Replace `main' with a function in `-lfontconfig':
+#AC_CHECK_LIB([fontconfig], [main])
+# FIXME: Replace `main' with a function in `-lfreetype':
+#AC_CHECK_LIB([freetype], [main])
+# FIXME: Replace `main' with a function in `-lm':
+#AC_CHECK_LIB([m], [main])
+# FIXME: Replace `main' with a function in `-lrt':
+#AC_CHECK_LIB([rt], [main])
 
+# Checks for header files.
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h netdb.h netinet/in.h stdlib.h string.h sys/socket.h sys/time.h unistd.h])
 
+# Checks for typedefs, structures, and compiler characteristics.
+AC_CHECK_HEADER_STDBOOL
+AC_TYPE_INT16_T
+AC_TYPE_INT32_T
+AC_TYPE_SIZE_T
+AC_TYPE_UINT16_T
+AC_TYPE_UINT32_T
+AC_TYPE_UINT8_T
 
-dnl ***************************************************************************
-dnl Internatinalization
-dnl ***************************************************************************
-GETTEXT_PACKAGE=ebp
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
-AM_GLIB_GNU_GETTEXT
-IT_PROG_INTLTOOL([0.35.0])
+# Checks for library functions.
+AC_FUNC_FORK
+AC_FUNC_MALLOC
+AC_FUNC_REALLOC
+AC_CHECK_FUNCS([bzero dup2 inet_ntoa memset socket strerror strstr])
 
+AC_SUBST([AM_CXXFLAGS])
+AC_SUBST([AM_LDFLAGS])
 
-
-AM_PROG_LIBTOOL
-
-
-
-PKG_CHECK_MODULES(EBP, avahi-client
-[gtk+-3.0] [gthread-2.0])
-
-
-
-
-AC_OUTPUT([
-Makefile
-src/Makefile
-po/Makefile.in
-])
+AC_CONFIG_FILES([Makefile
+                 src/Makefile
+                 src/thriftcomm/Makefile])
+AC_OUTPUT

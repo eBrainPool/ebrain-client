@@ -22,6 +22,7 @@
 
 #include "ebp.h"
 #include "avahi-discovery.h"
+#include "thriftcomm/ebpcomm.h"
 
 G_LOCK_DEFINE(treeview);
 G_LOCK_DEFINE(treestore);
@@ -48,7 +49,7 @@ int main(int argc, char *argv[])
     builder = gtk_builder_new();
 
     /* Load UI from file. If error occurs, report it and quit application.*/
-    if(!gtk_builder_add_from_file( builder, "./ui/ebrainpool_ui.glade", &error ) )
+    if(!gtk_builder_add_from_file( builder, "./src/ui/ebrainpool_ui.glade", &error ) )
       {
       g_warning( "%s", error->message );
       g_error_free(error);
@@ -76,7 +77,7 @@ int main(int argc, char *argv[])
     //! get the username running this process,this is sent to remote users for ssh connects back to this user.
     ssh_login_userdetails = getpwuid(getuid());
     printf("\nssh_login_userdetails->pw_name = %s\n",ssh_login_userdetails->pw_name);
-
+    
     //! Reads in values from the config file
     if(readconfigfile() == 0)
       return 0;
@@ -88,26 +89,28 @@ int main(int argc, char *argv[])
     getlocaladdrs(&ifaddr);
 
     avahi_setup();
-   
     //! spawns message thread that ultimately (thru listener_child) processes:
     //! - olsr plugin notification for a user coming online
     //! - GetApps request to send list of applications installed on current host
     //! - LaunchApp request by a remote host to launch a new app
     //! - LaunchAppReqAccepted message showing that remote host has accepted launch request
-    g_thread_create(connlistener_thread, NULL, FALSE, NULL);    
+    g_thread_create(connlistener_thread, NULL, FALSE, NULL);
 
     //! spawns thread to constantly check whether a user is still reachable i.e. online
     g_thread_create(check_client_status_thread, NULL, FALSE, NULL);
 
+    
+
     gdk_threads_enter();
     gtk_main();
     gdk_threads_leave();
+    
 
-    close(sockfd);
+    /*close(sockfd);
     free(appsdata.apps); 
     freeusermem();
     freeLaunchAppQueue();
-    freeLaunchDialogQueue();
+    freeLaunchDialogQueue();*/
     return 0;
 }
 
@@ -149,7 +152,11 @@ int init_treeview(GtkWidget *treeview,GtkTreeStore *treestore)
  */
 gpointer connlistener_thread(gpointer user_data)
 {
-    int newsockfd=0, portno=0;
+  // Via Thrift integration + libebpcomm
+  ebpserver(1, NULL);
+
+  
+  /*  int newsockfd=0, portno=0;
     socklen_t clilen;    
     struct sockaddr_in serv_addr, cli_addr;
     fd_set rfds;
@@ -167,10 +174,10 @@ gpointer connlistener_thread(gpointer user_data)
     portno = CLIENT_COMM_PORT;
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = INADDR_ANY;
-    serv_addr.sin_port = htons(portno);
+    serv_addr.sin_port = htons(portno); */
     
     /* Enable address reuse */
-    reuse = 1;
+    /* reuse = 1;
     setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
     
     if(bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) 
@@ -202,6 +209,7 @@ gpointer connlistener_thread(gpointer user_data)
          i++;
          }    	 
     return NULL;  	 
+    */
 }
 
 //TODO: Make sure that all of threads created are killed at program exit
@@ -252,11 +260,17 @@ gpointer newconnrequests_thread(gpointer user_data)
 	    //jeetu - for now sending the complete block of application name
 	    //without letting the other end know the actual datasize of data
 	    //to expect. 
-        n = send(data->newsockfd,appsdata.apps,appsdata.blocksize,MSG_NOSIGNAL);
+        /* n = send(data->newsockfd,appsdata.apps,appsdata.blocksize,MSG_NOSIGNAL);
+        n = ebp
         if(n < 0) 
           perror("newconnrequests_thread: ERROR writing to socket");
-        }
-      
+        */
+        //GetApps = ebpClient via thrift to send data
+        char *args[3];
+        args[1]="ls";
+        args[2]="-l";
+        ebpclient(1, &args);
+        } 
       //! LaunchApp request processed when a remote user wishes to launch an application from this host.   
       if(strcmp(token,"LaunchApp") == 0)
         {
@@ -409,6 +423,12 @@ int process_useronline_avahi_msg(const char *ip_str, const char *username, const
     
     inet_aton(ip_str,&in);
     printf("\nprocess_useronline_avahi_msg: in.s_addr = %d\n",in.s_addr);
+        // Temporary 
+        char *ar[3];
+        ar[1]="list";
+        ar[2]="ls";
+        ar[3]=ip_str;
+        ebpclient(1, &ar);
 
     //! checks to see if remote client is reachable and if so shows it as Online.
     ret = connect_to_client(ip,&comm_socket);
@@ -468,7 +488,7 @@ int show_user_online(User *UserNode)
          G_UNLOCK(treestore);
          }
       }
-
+    
     return 0;
 }
 

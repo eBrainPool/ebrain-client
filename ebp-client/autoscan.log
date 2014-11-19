@@ -1,0 +1,218 @@
+autoscan: warning: missing AC_CHECK_FUNCS([bzero]) wanted by: 
+	src/main.c:242
+	src/main.c:243
+autoscan: warning: missing AC_CHECK_FUNCS([dup2]) wanted by: 
+	src/utils.c:678
+	src/utils.c:679
+	src/utils.c:680
+autoscan: warning: missing AC_CHECK_FUNCS([inet_ntoa]) wanted by: 
+	src/utils.c:42
+	src/main.c:568
+	src/main.c:613
+	src/main.c:629
+	src/main.c:833
+autoscan: warning: missing AC_CHECK_FUNCS([memset]) wanted by: 
+	src/utils.c:514
+autoscan: warning: missing AC_CHECK_FUNCS([socket]) wanted by: 
+	src/utils.c:512
+	src/thriftcomm/CppClient.cpp:39
+autoscan: warning: missing AC_CHECK_FUNCS([strerror]) wanted by: 
+	src/utils.c:658
+	src/utils.c:660
+	src/utils.c:672
+	src/utils.c:682
+	src/utils.c:702
+autoscan: warning: missing AC_CHECK_FUNCS([strstr]) wanted by: 
+	src/utils.c:460
+autoscan: warning: missing AC_CHECK_HEADERS([arpa/inet.h]) wanted by: 
+	src/ebp.h:39
+autoscan: warning: missing AC_CHECK_HEADERS([fcntl.h]) wanted by: 
+	src/ebp.h:45
+autoscan: warning: missing AC_CHECK_HEADERS([netdb.h]) wanted by: 
+	src/ebp.h:42
+autoscan: warning: missing AC_CHECK_HEADERS([netinet/in.h]) wanted by: 
+	src/ebp.h:36
+autoscan: warning: missing AC_CHECK_HEADERS([sys/socket.h]) wanted by: 
+	src/ebp.h:33
+autoscan: warning: missing AC_CHECK_HEADERS([sys/time.h]) wanted by: 
+	src/thriftcomm/CppClient.cpp:22
+autoscan: warning: missing AC_CHECK_HEADER_STDBOOL wanted by: 
+	src/thriftcomm/announcelist_server.cpp:28
+	src/thriftcomm/gen-cpp/announcelist.h:18
+	src/thriftcomm/gen-cpp/announcelist.h:48
+	src/thriftcomm/gen-cpp/announcelist.h:49
+	src/thriftcomm/gen-cpp/announcelist.h:56
+	src/thriftcomm/gen-cpp/announcelist.h:75
+	src/thriftcomm/gen-cpp/announcelist.h:81
+	src/thriftcomm/gen-cpp/announcelist.h:85
+	src/thriftcomm/gen-cpp/announcelist.h:107
+	src/thriftcomm/gen-cpp/announcelist.h:108
+	src/thriftcomm/gen-cpp/announcelist.h:119
+	src/thriftcomm/gen-cpp/announcelist.h:124
+	src/thriftcomm/gen-cpp/announcelist.h:132
+	src/thriftcomm/gen-cpp/announcelist.h:140
+	src/thriftcomm/gen-cpp/announcelist.h:144
+	src/thriftcomm/gen-cpp/announcelist.h:153
+	src/thriftcomm/gen-cpp/announcelist.h:154
+	src/thriftcomm/gen-cpp/announcelist.h:163
+	src/thriftcomm/gen-cpp/announcelist.h:192
+	src/thriftcomm/gen-cpp/announcelist.h:194
+	src/thriftcomm/gen-cpp/announcelist.h:205
+	src/thriftcomm/gen-cpp/announcelist.h:243
+	src/thriftcomm/gen-cpp/announcelist.cpp:193
+	src/thriftcomm/gen-cpp/announcelist.cpp:213
+	src/thriftcomm/gen-cpp/announcelist.cpp:238
+	src/thriftcomm/gen-cpp/announcelist.cpp:254
+	src/thriftcomm/gen-cpp/announcelist_server.skeleton.cpp:25
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:21
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:54
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:66
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:70
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:81
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:103
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:109
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:113
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:27
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:28
+	src/thriftcomm/gen-cpp/announcelist.h:49
+	src/thriftcomm/gen-cpp/announcelist.h:55
+	src/thriftcomm/gen-cpp/announcelist.h:78
+	src/thriftcomm/gen-cpp/announcelist.h:106
+	src/thriftcomm/gen-cpp/announcelist.h:106
+	src/thriftcomm/gen-cpp/announcelist.h:135
+	src/thriftcomm/gen-cpp/announcelist.h:137
+	src/thriftcomm/gen-cpp/announcelist.h:152
+	src/thriftcomm/gen-cpp/announcelist.h:152
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:20
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:57
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:59
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:61
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:63
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:80
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:106
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:27
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:28
+	src/thriftcomm/gen-cpp/announcelist.h:79
+	src/thriftcomm/gen-cpp/announcelist.h:138
+	src/thriftcomm/gen-cpp/announcelist.cpp:23
+	src/thriftcomm/gen-cpp/announcelist.cpp:34
+	src/thriftcomm/gen-cpp/announcelist.cpp:89
+	src/thriftcomm/gen-cpp/announcelist.cpp:100
+	src/thriftcomm/gen-cpp/announcelist.cpp:108
+	src/thriftcomm/gen-cpp/announcelist.cpp:157
+	src/thriftcomm/gen-cpp/announcelist.cpp:168
+	src/thriftcomm/gen-cpp/announcelist.cpp:176
+	src/thriftcomm/gen-cpp/announcelist.cpp:267
+	src/thriftcomm/gen-cpp/announcelist.cpp:270
+	src/thriftcomm/gen-cpp/announcelist.cpp:297
+	src/thriftcomm/gen-cpp/announcelist.cpp:300
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:51
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:64
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:107
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:30
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:41
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:49
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:57
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:123
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:134
+autoscan: warning: missing AC_FUNC_FORK wanted by: 
+	src/utils.c:670
+autoscan: warning: missing AC_FUNC_MALLOC wanted by: 
+	src/utils.c:60
+	src/utils.c:71
+	src/utils.c:158
+	src/utils.c:169
+	src/utils.c:252
+	src/utils.c:263
+	src/utils.c:306
+	src/utils.c:317
+	src/utils.c:361
+	src/utils.c:362
+	src/main.c:473
+autoscan: warning: missing AC_FUNC_REALLOC wanted by: 
+	src/utils.c:374
+	src/utils.c:428
+	src/utils.c:441
+autoscan: warning: missing AC_PROG_RANLIB wanted by: 
+	ltmain.sh:2455
+	Debug/Makefile:218
+	Debug/src/Makefile:175
+	Debug/Makefile:218
+	Debug/src/Makefile:175
+autoscan: warning: missing AC_TYPE_INT16_T wanted by: 
+	src/thriftcomm/gen-cpp/announcelist.cpp:16
+	src/thriftcomm/gen-cpp/announcelist.cpp:82
+	src/thriftcomm/gen-cpp/announcelist.cpp:150
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:21
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:116
+autoscan: warning: missing AC_TYPE_INT32_T wanted by: 
+	src/thriftcomm/gen-cpp/announcelist.h:205
+	src/thriftcomm/gen-cpp/announcelist.h:207
+	src/thriftcomm/gen-cpp/announcelist.h:210
+	src/thriftcomm/gen-cpp/announcelist.cpp:201
+	src/thriftcomm/gen-cpp/announcelist.cpp:216
+	src/thriftcomm/gen-cpp/announcelist.cpp:254
+	src/thriftcomm/gen-cpp/announcelist.cpp:273
+autoscan: warning: missing AC_TYPE_SIZE_T wanted by: 
+	src/utils.c:349
+	src/utils.c:422
+	src/thriftcomm/gen-cpp/announcelist.h:244
+	src/thriftcomm/gen-cpp/announcelist.h:245
+autoscan: warning: missing AC_TYPE_UINT16_T wanted by: 
+	src/avahi-discovery.h:73
+	src/avahi-discovery.c:359
+autoscan: warning: missing AC_TYPE_UINT32_T wanted by: 
+	src/utils.c:34
+	src/utils.c:147
+	src/utils.c:240
+	src/utils.c:291
+	src/utils.c:507
+	src/ebp.h:75
+	src/ebp.h:101
+	src/ebp.h:117
+	src/ebp.h:138
+	src/ebp.h:194
+	src/ebp.h:195
+	src/ebp.h:197
+	src/ebp.h:198
+	src/ebp.h:203
+	src/ebp.h:212
+	src/main.c:351
+	src/main.c:426
+	src/main.c:700
+	src/thriftcomm/gen-cpp/announcelist.h:87
+	src/thriftcomm/gen-cpp/announcelist.h:88
+	src/thriftcomm/gen-cpp/announcelist.h:101
+	src/thriftcomm/gen-cpp/announcelist.h:146
+	src/thriftcomm/gen-cpp/announcelist.h:147
+	src/thriftcomm/gen-cpp/announcelist.h:168
+	src/thriftcomm/gen-cpp/announcelist.cpp:11
+	src/thriftcomm/gen-cpp/announcelist.cpp:13
+	src/thriftcomm/gen-cpp/announcelist.cpp:51
+	src/thriftcomm/gen-cpp/announcelist.cpp:52
+	src/thriftcomm/gen-cpp/announcelist.cpp:64
+	src/thriftcomm/gen-cpp/announcelist.cpp:65
+	src/thriftcomm/gen-cpp/announcelist.cpp:77
+	src/thriftcomm/gen-cpp/announcelist.cpp:79
+	src/thriftcomm/gen-cpp/announcelist.cpp:125
+	src/thriftcomm/gen-cpp/announcelist.cpp:127
+	src/thriftcomm/gen-cpp/announcelist.cpp:145
+	src/thriftcomm/gen-cpp/announcelist.cpp:147
+	src/thriftcomm/gen-cpp/announcelist.cpp:288
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:72
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:73
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:115
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:116
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:16
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:18
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:78
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:79
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:111
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:113
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:151
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:152
+autoscan: warning: missing AC_TYPE_UINT8_T wanted by: 
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:28
+	src/thriftcomm/gen-cpp/ebp_proto_types.h:88
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:14
+	src/thriftcomm/gen-cpp/ebp_proto_types.cpp:109
