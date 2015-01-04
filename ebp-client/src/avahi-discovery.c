@@ -148,9 +148,13 @@ void client_callback(AvahiClient *c, AvahiClientState state, AVAHI_GCC_UNUSED vo
 int create_services(AvahiClient *c) 
 {
 
-    char *n, ssh_login_username[270];
-    int ret;
+    char *n = NULL, *ssh_login_username = NULL;
+    int ret = 0;
+    int buflen = 0;
     assert(c);
+
+    buflen = strlen(ssh_login_userdetails->pw_name)+11;
+    ssh_login_username = malloc(buflen);
 
     //! If this is the first time we're called, let's create a new
     //! entry group if necessary. 
@@ -173,7 +177,7 @@ int create_services(AvahiClient *c)
       fprintf(stderr, "Adding service '%s'\n", avahi_name);
 
       //! Adds the ssh login name that is used by the ssh client to connect back to the remote host.
-      snprintf(ssh_login_username, sizeof(ssh_login_username)+11, "ssh_login=%s", ssh_login_userdetails->pw_name);
+      snprintf(ssh_login_username, buflen, "ssh_login=%s", ssh_login_userdetails->pw_name);
 
       /* We will now add two services and one subtype to the entry
        * group. The two services have the same name, but differ in
@@ -216,6 +220,7 @@ int create_services(AvahiClient *c)
         }
       }
 
+    free(ssh_login_username);
     return 1;
 }
 
