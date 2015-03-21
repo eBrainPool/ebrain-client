@@ -24,6 +24,9 @@
 /* Define if your <locale.h> file defines LC_MESSAGES. */
 #undef HAVE_LC_MESSAGES
 
+/* Define to 1 if you have the `gthread-2.0' library (-lgthread-2.0). */
+#undef HAVE_LIBGTHREAD_2_0
+
 /* Define to 1 if you have the <locale.h> header file. */
 #undef HAVE_LOCALE_H
 

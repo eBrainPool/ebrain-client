@@ -30,7 +30,7 @@ AM_PROG_LIBTOOL
 
 PKG_CHECK_MODULES(EBP, avahi-client
 [gtk+-3.0])
-
+AC_CHECK_LIB(gthread-2.0,g_thread_init)
 
 
 

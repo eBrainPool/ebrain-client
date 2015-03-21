@@ -891,7 +891,7 @@ int process_launchreq_accepted(NewConnData *data)
                    "-o", "RSAAuthentication no",
                    "-o", "PasswordAuthentication no",
                    "-o", "IdentityFile ~/.ebp/clientkeys",
-                   "-o", "Port 20101",
+                   "-o", "Port 20101",  // TODO - temporarily hardcoded,should be dynamically 											// determined based on port on which server is listening.
                    "-o", "Ciphers arcfour256,arcfour128",
                    "-o", "StrictHostKeyChecking no",
                    "-o", "UserKnownHostsFile ~/.ebp/known_hosts",
