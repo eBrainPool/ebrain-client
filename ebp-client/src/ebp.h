@@ -40,6 +40,7 @@
 #include <netdb.h>
 #include <pwd.h>
 #include <gtk/gtk.h>
+#include <lxc/lxccontainer.h>
 
 /** enums needed by the treeview and treestore model.
  * 
@@ -159,6 +160,7 @@ LaunchDialogQueue *gLastLaunchDialog;        //!< global pointer to last element
 LaunchDialogQueue *gCurrentLaunchDialog;     //!< global pointer to current element in the LaunchDialogQueue linked list.  
 int requestid;
 struct ifaddrs *ifaddr;                      //!< details of network interfaces on current system (localhost).
+struct lxc_container *container;             //!< structure of the lxc container used as the isolation sandbox.
 
 //config file values
 gchar *config_entry_username;                //!< username as defined in from ebp.conf
@@ -203,6 +205,8 @@ int process_useronline_avahi_msg(const char *ip, const char *username, const cha
 void pipe_to_program(char *path, char **args, int *in, int *out,int *err);
 void killchild(int signo);
 int readconfigfile(void);
+int launch_container(void);
+int stop_container(void);
 
 //----------
 //Threads

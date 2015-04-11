@@ -28,9 +28,13 @@ AM_PROG_LIBTOOL
 
 
 
-PKG_CHECK_MODULES(EBP, avahi-client
+PKG_CHECK_MODULES(EBP,avahi-client
 [gtk+-3.0])
+dnl PKG_CHECK_MODULES([avahi-client])
+dnl PKG_CHECK_MODULES([gtk+-3.0])
 AC_CHECK_LIB(gthread-2.0,g_thread_init)
+AC_CHECK_HEADERS([lxc/lxccontainer.h])
+AC_CHECK_LIB(lxc,lxc_container_new)
 
 
 

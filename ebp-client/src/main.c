@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
     GtkWidget *hbox = NULL;
     GtkWidget *scrolledwindow = NULL;
     char buf[302];
-    GdkRGBA rgba = {1.0,1.0,1.0,1.0};
+    GdkRGBA rgba = {1.0,1.0,1.0,1.0};    
 
     g_thread_init (NULL);
     gdk_threads_init();
@@ -86,6 +86,9 @@ int main(int argc, char *argv[])
     if(readconfigfile() == 0)
       return 0;
 
+    //! Launches the lxc isolation sandbox container.
+    launch_container();
+
     //! allocate a memory block and retrieve list of apps installed on the system 
     appsdata.apps = get_installed_apps(&appsdata.count,&appsdata.blocksize); //jeetu - can pass pointer to Appsdata instead
 
@@ -119,6 +122,7 @@ int main(int argc, char *argv[])
     gtk_main();
     gdk_threads_leave();
 
+    stop_container();   
     close(sockfd);
     free(appsdata.apps); 
     freeusermem();
@@ -988,4 +992,59 @@ int process_launchreq_accepted(NewConnData *data)
          }
 
     return 0;   
+}
+
+
+/** Launches the eBrainPool lxc container sandbox.
+ *
+ */
+int launch_container(void)
+{
+    // Setup container struct.
+    //!TODO: container name temporarily hardcoded should be read from config file.
+    container = lxc_container_new("ebp-ubuntu-container", NULL); 
+    if(!container) 
+      {
+      fprintf(stderr, "Failed to setup lxc_container struct\n");
+      lxc_container_put(container);
+      return 1;
+      }
+
+    if(!container->is_defined(container)) 
+      {
+      fprintf(stderr, "Container does not exist\n");
+      lxc_container_put(container);
+      return 1;
+      }
+
+    // Start the container 
+    if(!container->start(container, 0, NULL)) 
+      {
+      fprintf(stderr, "Failed to start the container\n");
+      lxc_container_put(container);
+      return 1;
+      }    
+
+    return 0;
+}
+
+
+/** Stops the eBrainPool lxc container sandbox.
+ *
+ */
+int stop_container(void)
+{
+    // Stop the container 
+    if(!container->shutdown(container, 30)) 
+      {
+      printf("Failed to cleanly shutdown the container, forcing.\n");
+      if(!container->stop(container)) 
+        {
+        fprintf(stderr, "Failed to kill the container.\n");
+        lxc_container_put(container);
+        return 1;
+        }
+      }
+
+    return 0;
 }
