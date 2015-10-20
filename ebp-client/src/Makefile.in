@@ -255,7 +255,11 @@ ACLOCAL_AMFLAGS = -I m4
 
 # libebpcomm is g++ need to force libtool to link with g++
 CXXLINK = $(LIBTOOL) --tag=CXX --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+<<<<<<< HEAD
 THRIFTLIB_DIR = /home/jeetu/utils/thrift/thrift-0.9.2/lib/cpp/.libs/
+=======
+THRIFTLIB_DIR = /home/jeetu/utils/thrift/thrift/lib/cpp/.libs/
+>>>>>>> 85e89cb78d24bfe3bfab649adef44ef28cef3f82
 EBPPACKAGE = `pkg-config --cflags --libs gtk+-3.0 glib-2.0 avahi-client gtk+-x11-3.0`
 AM_CPPFLAGS = \
 	-D_REENTRANT -pthread \
