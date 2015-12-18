@@ -589,9 +589,14 @@ int readconfigfile(void)
     config_container_ip = g_key_file_get_value (key_file, "Lxc Container", "container_ip", NULL);
     config_container_sshd_port = g_key_file_get_value (key_file, "Lxc Container", "container_sshd_port", NULL);
     config_host_forwarded_port = g_key_file_get_value (key_file, "Lxc Container", "host_forwarded_port", NULL);
+    config_connectivity_protocol = g_key_file_get_value (key_file, "Connectivity", "connect_protocol", NULL);
+    printf("\n%s\n",config_connectivity_protocol); 
 
-    if(config_entry_username == NULL || config_container_ip == NULL 
-       || config_container_sshd_port == NULL || config_host_forwarded_port == NULL)
+    if(   config_entry_username == NULL 
+       || config_container_ip == NULL 
+       || config_container_sshd_port == NULL 
+       || config_host_forwarded_port == NULL
+       || config_connectivity_protocol == NULL)
       {
       fprintf(stderr,"\nHmm. What are you trying to pull on me?\nError reading config file.\n");
       return 0;

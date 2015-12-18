@@ -167,7 +167,8 @@ gchar *config_entry_username;                //!< username as defined in from eb
 gchar *config_container_ip;                  //!< ipv4 address of lxc container on the host as read in from ebp.conf
 gchar *config_container_sshd_port;           //!< port sshd listens on in the lxc container as read in from ebp.conf
 gchar *config_host_forwarded_port;           //!< port on the host that is forwarded to the sshd on container as read in from ebp.conf
-gchar *config_container_ssh_user;           //!< username in container the remote hosts ssh needs to login to as read in from ebp.conf
+gchar *config_container_ssh_user;            //!< username in container the remote hosts ssh needs to login to as read in from ebp.conf
+gchar *config_connectivity_protocol;         //!< protocol to use to connect to remote host - ssh-x, x2go
 
 int childpid;                                //!< used by pipe_to_program() when it forks and launches piped OpenSSH server/client,etc.
 struct passwd *ssh_login_userdetails;        //!< details of user launching this client,remote ssh clients need to login back to this user.
