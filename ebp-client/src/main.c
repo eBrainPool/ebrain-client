@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 
     //! Reads in values from the config file
     if(readconfigfile() == 0)
-      return 0;
+      return 0;   
 
     //! Launches the lxc isolation sandbox container.
     launch_container();
@@ -803,7 +803,7 @@ gpointer create_port_to_container_thread(gpointer user_data)
     char *args1[] = {
                    "/usr/bin/ssh",
                    "-v",
-                   "-o", "Host *",
+                   //"-o", "Host *",
                    "-o", "RSAAuthentication no",
                    "-o", "PasswordAuthentication no",
                    "-o", "IdentityFile ~/.ebp/clientkeys",
@@ -869,12 +869,158 @@ gpointer create_port_to_container_thread(gpointer user_data)
 /** Processes the LaunchAppReqAccepted message.
  *
  *  The LaunchAppReqAccepted message signifies that the remote user is willing to launch
- *  the application we requested and has started an instance of the OpenSSH server.
+ *  the application we requested.
  *
- *  This function uses the OpenSSH client to connect to the server.
+ *  Calls the relevant function depending on whether the user has set SSH-X or X2go as their
+ *  preferred connectivity protocol.
  */
 int process_launchreq_accepted(NewConnData *data)
 {
+    if(strcmp(config_connectivity_protocol,"ssh-x") == 0)
+      launch_using_sshx(data);
+    if(strcmp(config_connectivity_protocol,"x2go") == 0)
+      launch_using_x2go(data);  
+
+    return 0;
+}
+
+
+
+
+/** Launches application using x2go.
+ *
+ *  Called by process_launchreq_accepted if user's preferred connectivity option is set to z2go
+ *
+ *  This function uses the x2go python client - pyhoca-cli.
+ */
+int launch_using_x2go(NewConnData *data)
+{
+    char ip[21];
+    int j = 0,i = 0;
+    char *saveptr1 = NULL;
+    struct in_addr in;
+    LaunchAppQueue *queue;
+    char buf[300];
+    int piped_in = 0, piped_out = 0, piped_err = 0;
+    char onechar;
+    User *userlist;
+    char ssh_login_user[257];
+
+    char *str1 = NULL,*token = NULL;
+
+	//! Arguments to the x2go pyhocal-cli client are currently hardcoded.Eventually will be 	taken in from main ebp.conf file.
+    char *args1[] = {
+				    "/usr/bin/pyhoca-cli",
+                    "-q","adsl",
+                    "-g","800x600",
+                    "-t","application",
+                    "-u","ebp",
+                    "--password","ebp",
+                    "-p","20101",
+                    "--server",
+                    "",
+                    "-c",
+                    "",
+                    NULL 
+                    };
+    char args2[2][300];
+		  
+    ip[0] = '\0';
+    args2[0][0] = '\0';
+
+    in.s_addr = data->ip;  
+    strncpy(ip,inet_ntoa(in),20);
+
+    //! Determines username and ip;formats the [username]@[ip] string to be used by ssh client. 
+    userlist = gFirstUserNode;
+    while(userlist != NULL)
+         {
+         if(userlist->ip == data->ip)
+           {          
+           printf("\nlaunch_using_x2go: userlist->name = %s userlist->ssh_login_user = %s\n",userlist->name,userlist->ssh_login_user);
+           // jeetu - user temporaily hardcoded;eventually the container user the remote ssh
+		   // needs to connect to could be passed along as part of the avahi service message TXT
+		   // field or in some other way.
+           sprintf(args2[0],"%s",ip); 
+           break;
+           }
+         userlist = userlist->next;
+         }    
+
+    if(args2[0][0] == '\0')
+      {
+      printf("\nlaunch_using_x2go: something went wrong args2[0][0] == '\0'\n");
+      return 0;
+      } 
+
+    strcpy(buf,data->buffer);
+    for(j = 1, str1 = buf; ; j++, str1 = NULL)  
+       {
+       token = strtok_r(str1, ":", &saveptr1);
+       if(token == NULL)
+         break;        
+       printf("%d: %s\n", j, token); 
+       if(j == 2) // second argument
+         strcpy(args2[1],token);
+       }	
+
+    // include arguments for user@host to connect to and the appname    
+    j = 0; 
+    while(args1[j] != NULL)
+         {
+         // substitute the empty placeholder strings ("") in args1 with the correct values
+         if(strcmp(args1[j],"") == 0)
+           {
+           args1[j] = args2[i];
+           i++;
+           }
+         printf("args1[j] = %s\n",args1[j]);
+         j++;
+         }
+
+    //! verfies within our LaunchAppQueue that the request had indeed been sent by this host.
+    //! TODO: This verification is currently commented out.
+
+    //! Finally calls the x2go pyhoca-cli client to connect to remote host and run desired application.
+    queue = gFirstLaunchAppQueue;
+    while(queue != NULL)
+         {
+//       if(queue->ip != data->cli_addr.sin_addr.s_addr)
+//         printf("\nprocess_launchreq_accepted: queue->ip != data->cli_addr.sin_addr.s_addr \n");
+//       if(strncmp(queue->appname,appname,20) == 0 && queue->ip == data->cli_addr.sin_addr.s_addr)
+//         {
+           sleep(3);
+           //! stdin,stdout and stderr are piped and /usr/bin/ssh (currently hardcoded) is launched.
+           pipe_to_program("/usr/bin/pyhoca-cli",args1,&piped_in,&piped_out,&piped_err);
+
+           //! TODO:
+           //! for now reading from the piped stderr of the child one char at a time
+           //! eventually need to put in mechanism to determine and deal with 
+           //! success/failure of the child program. 
+           while(read(piped_err,&onechar,1) > 0)
+                {
+                printf("%c",onechar);
+                }
+//         }
+         queue = queue->next;
+         }
+
+    return 0;   
+
+
+}
+
+
+
+/** Launches application using SSH with X Forwarding.
+ *
+ *  Called by process_launchreq_accepted if user's preferred connectivity option is set to ssh-x
+ *
+ *  This function uses the OpenSSH client to connect to the server.
+ */
+int launch_using_sshx(NewConnData *data)
+{
+
     char ip[21];
     int j = 0,i = 0;
     char *saveptr1 = NULL;
@@ -923,10 +1069,11 @@ int process_launchreq_accepted(NewConnData *data)
          {
          if(userlist->ip == data->ip)
            {          
-           printf("\nprocess_launchreq_accepted: userlist->name = %s userlist->ssh_login_user = %s\n",userlist->name,userlist->ssh_login_user);
-           // jeetu - user temporaily hardcoded;eventually the container user the remote ssh needs to connect to could
-           //         be passed along as part of the avahi service message TXT field or in some other way.
-           sprintf(args2[0],"ebp@%s",ip); 
+           printf("\nlaunch_using_sshx: userlist->name = %s userlist->ssh_login_user = %s\n",userlist->name,userlist->ssh_login_user);
+           // jeetu - user temporaily hardcoded;eventually the container user the remote ssh
+		   // needs to connect to could be passed along as part of the avahi service message TXT
+		   // field or in some other way.
+           sprintf(args2[0],"%s",ip); 
            break;
            }
          userlist = userlist->next;
@@ -934,7 +1081,7 @@ int process_launchreq_accepted(NewConnData *data)
     
     if(args2[0][0] == '\0')
       {
-      printf("\nprocess_launchreq_accepted: something went wrong args2[0][0] == '\0'\n");
+      printf("\nlaunch_using_sshx: something went wrong args2[0][0] == '\0'\n");
       return 0;
       } 
 
@@ -992,7 +1139,11 @@ int process_launchreq_accepted(NewConnData *data)
          }
 
     return 0;   
+
+
 }
+
+
 
 
 /** Launches the eBrainPool lxc container sandbox.

@@ -195,6 +195,8 @@ void set_launchappqueue_locked(LaunchAppQueue *dest,LaunchAppQueue *src);
 int process_launchapp_req(char *buf,NewConnData *data);
 gboolean launch_approve_dialog(gpointer data);
 int process_launchreq_accepted(NewConnData *data);
+int launch_using_sshx(NewConnData *data);
+int launch_using_x2go(NewConnData *data);
 void freeusermem(void);
 void freeLaunchAppQueue(void);
 void freeLaunchDialogQueue(void);
