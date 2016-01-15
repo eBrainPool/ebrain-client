@@ -31,6 +31,7 @@
  *  Called by process_useronline_msg() and process_useronline_avahi_msg() when a new user comes online.
  *
  */
+/*
 User* add_user(const char* version,const char* name,const char *ssh_login_user,uint32_t ip)
 {
     User* temp = NULL;
@@ -91,12 +92,16 @@ User* add_user(const char* version,const char* name,const char *ssh_login_user,u
     return current_node;
 }
 
+*/
 
 /** Delete a user from the User (struct _user) linked list.
  *
  *  Called by show_user_offline()
  *  returns a User* to the next item in the linked list or NULL if there are no other items.
  */
+
+/*
+
 User* del_user(User* deluser)
 {
     User* prevuser;
@@ -138,6 +143,62 @@ User* del_user(User* deluser)
 
     return(NULL);
 }
+
+*/
+
+
+
+/** Add a new user to the User (struct _user) linked list. 
+ *
+ *  Called by process_useronline_msg() and process_useronline_avahi_msg() when a new user comes online.
+ *
+ */
+User* add_user(User *head,const char* version,const char* name,const char *ssh_login_user,uint32_t ip)
+{
+    User *ptr = (User *) malloc (sizeof(User));
+    char *strip = NULL;
+    struct in_addr in;
+
+    in.s_addr = ip;  //jeetu - this is wrong. ip should actually be the ip of the client sending request
+    strip = inet_ntoa(in); 
+
+    //! Finally,inserts the following into the new linked list: 
+    //! - name (as stated in ebp.conf)
+    //! - ssh_login_user (the username that the OpenSSH client will need to connect back to this host)
+    //! - version (eBrainPool client version)
+    //! - ip (IPv4 address of the user)
+    strncpy(ptr->name,name,20); //jeetu - hardcoded size
+    strncpy(ptr->ssh_login_user,ssh_login_user,256);
+    strncpy(ptr->version,version,6);
+    ptr->ip = ip;
+    ptr->next = head;
+
+    return ptr;
+}
+
+
+/** Delete a user from the User (struct _user) linked list.
+ *
+ *  Called by show_user_offline()
+ *  returns a User* to the next item in the linked list or NULL if there are no other items.
+ */
+User* del_user(User **head,User* deluser)
+{
+    User **cur;
+    for(cur = head;*cur; )
+       {
+       User *entry = *cur;
+       if(entry == deluser)
+         {
+         *cur = entry->next;
+         free(entry);
+         }
+       else
+         cur = &entry->next;
+       }
+}
+
+
 
 
 /** Adds a new connection to the client into the NewConnData (struct _newconndata) linked list.
@@ -481,6 +542,7 @@ int connect_to_client(uint32_t ip,int *comm_socket)
  *
  *  called by main() 
  */ 
+/*
 void freeusermem(void)
 {
     User *temp = gLastUserNode;
@@ -494,7 +556,7 @@ void freeusermem(void)
          temp = prev;
          }		 		 		 
 }
-
+*/
 
 /** Frees memory allocated for the LaunchAppQueue (struct _LaunchAppQueue) linked list.
  *

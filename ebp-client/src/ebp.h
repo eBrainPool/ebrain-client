@@ -146,9 +146,12 @@ GtkWidget *treeview;
 GtkTreeStore *treestore;
 int sockfd;                                  //!< Global socket file descriptor,set in connlistener_thread() and closed on exit in main().
 AppsData appsdata;
-User *gFirstUserNode;                        //!< global pointer to first element in the UserNode linked list.
-User *gLastUserNode;                         //!< global pointer to last element in the UserNode linked list.
-User *gCurrentUserNode;                      //!< global pointer to current element in the UserNode linked list.
+//User *gFirstUserNode;                        //!< global pointer to first element in the UserNode linked list.
+//User *gLastUserNode;                         //!< global pointer to last element in the UserNode linked list.
+//User *gCurrentUserNode;                      //!< global pointer to current element in the UserNode linked list.
+
+User *gUserListHead;
+
 LaunchAppQueue *gFirstLaunchAppQueue;        //!< global pointer to first element in the LaunchAppQueue linked list.  
 LaunchAppQueue *gLastLaunchAppQueue;         //!< global pointer to last element in the LaunchAppQueue linked list.  
 LaunchAppQueue *gCurrentLaunchAppQueue;      //!< global pointer to current element in the LaunchAppQueue linked list.  
@@ -182,8 +185,10 @@ char* get_installed_apps(int* count,int* blocksize);
 int filter(const struct dirent *dir);
 int process_useronline_msg(char *buf);
 int connect_to_client(uint32_t ip,int *comm_socket);
-User* add_user(const char* version,const char* name,const char *ssh_login_user,uint32_t ip);
-User* del_user(User* deluser);
+//User* add_user(const char* version,const char* name,const char *ssh_login_user,uint32_t ip);
+//User* del_user(User* deluser);
+User* add_user(User *head,const char* version,const char* name,const char *ssh_login_user,uint32_t ip);
+User* del_user(User **head,User* deluser);
 NewConnData *add_newconn(int newsockfd,uint32_t ip);
 LaunchDialogQueue *add_launchdialog_queue(char *username,char *appname,uint32_t ip);
 int show_user_online(User *UserNode);

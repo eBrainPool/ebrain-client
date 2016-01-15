@@ -42,7 +42,8 @@ int main(int argc, char *argv[])
     GtkWidget *hbox = NULL;
     GtkWidget *scrolledwindow = NULL;
     char buf[302];
-    GdkRGBA rgba = {1.0,1.0,1.0,1.0};    
+    GdkRGBA rgba = {1.0,1.0,1.0,1.0};
+    gUserListHead = NULL;    
 
     g_thread_init (NULL);
     gdk_threads_init();
@@ -125,7 +126,7 @@ int main(int argc, char *argv[])
     stop_container();   
     close(sockfd);
     free(appsdata.apps); 
-    freeusermem();
+//    freeusermem();
     freeLaunchAppQueue();
     freeLaunchDialogQueue();
     return 0;
@@ -311,9 +312,9 @@ gpointer check_client_status_thread(gpointer user_data)
     while(1)
          {
          g_usleep(10000);
-         if(gFirstUserNode != NULL)
+         if(gUserListHead != NULL)
            {
-           temp = gFirstUserNode;
+           temp = gUserListHead;
            while(temp != NULL)
                 {
                 //! tries to connect to the remote user
@@ -342,6 +343,7 @@ gpointer check_client_status_thread(gpointer user_data)
  *  Called via newconnrequests_thread() to process the eBrainOnline plugin notification,
  *  and show a user online.
  */
+/*
 int process_useronline_msg(char *buf)
 {
     int j=0;
@@ -414,7 +416,7 @@ int process_useronline_msg(char *buf)
 
     return 0;
 }
-
+*/
 
 /** Shows a new client discovered by Avahi as online.
  *
@@ -435,12 +437,10 @@ int process_useronline_avahi_msg(const char *ip_str, const char *username, const
     if(ret != -1)
       {
       G_LOCK(user);
-      gCurrentUserNode = add_user(version,username,ssh_login_user,in.s_addr);
+      gUserListHead = add_user(gUserListHead,version,username,ssh_login_user,in.s_addr);
       G_UNLOCK(user);
-      if(gCurrentUserNode != NULL)
-        {
-        show_user_online(gCurrentUserNode);
-        }
+      if(gUserListHead != NULL)
+        show_user_online(gUserListHead);
       }
 
     return 0;
@@ -517,7 +517,7 @@ gboolean show_user_offline(gpointer user_data)
            gtk_tree_store_remove(treestore,&iter);
            G_UNLOCK(treestore);
            G_LOCK(user);
-           temp = del_user(UserNode); /* temp == new current node */
+           temp = del_user(&gUserListHead,UserNode); /* temp == new current node */
            G_UNLOCK(user);
            break;
            }
@@ -623,7 +623,7 @@ int process_launchapp_req(char *buf,NewConnData *data)
        }	
 
     //! Search the UserNode user's list and find username from the IP
-    temp = gFirstUserNode;	
+    temp = gUserListHead;	
     while(temp != NULL)
          {
          in2.s_addr = temp->ip;
@@ -932,7 +932,7 @@ int launch_using_x2go(NewConnData *data)
     strncpy(ip,inet_ntoa(in),20);
 
     //! Determines username and ip;formats the [username]@[ip] string to be used by ssh client. 
-    userlist = gFirstUserNode;
+    userlist = gUserListHead;
     while(userlist != NULL)
          {
          if(userlist->ip == data->ip)
@@ -1064,7 +1064,7 @@ int launch_using_sshx(NewConnData *data)
     strncpy(ip,inet_ntoa(in),20);		
 
     //! Determines username and ip;formats the [username]@[ip] string to be used by ssh client. 
-    userlist = gFirstUserNode;
+    userlist = gUserListHead;
     while(userlist != NULL)
          {
          if(userlist->ip == data->ip)
