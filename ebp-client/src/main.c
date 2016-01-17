@@ -89,7 +89,8 @@ int main(int argc, char *argv[])
 
     //! Launches the lxc isolation sandbox container.
     launch_container();
-    sleep(5);
+    sleep(5);  //! TODO: temporary fix to wait for sandbox container to come up before proceeding to establish a SSH connection to this container.
+
     //! allocate a memory block and retrieve list of apps installed on the system 
     appsdata.apps = get_installed_apps(&appsdata.count,&appsdata.blocksize); //jeetu - can pass pointer to Appsdata instead
 
