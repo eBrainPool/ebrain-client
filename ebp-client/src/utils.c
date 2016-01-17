@@ -155,18 +155,30 @@ User* del_user(User* deluser)
  */
 User* add_user(User *head,const char* version,const char* name,const char *ssh_login_user,uint32_t ip)
 {
-    User *ptr = (User *) malloc (sizeof(User));
+    User *ptr = NULL;
     char *strip = NULL;
     struct in_addr in;
+    User* temp = NULL;
 
     in.s_addr = ip;  //jeetu - this is wrong. ip should actually be the ip of the client sending request
     strip = inet_ntoa(in); 
+
+    //! First searches an existing User linked list (if gUserListHead != NULL) for a matching ip.
+    //! If found the function returns with a NULL. 
+    temp = head;
+    while(temp != NULL)
+         {
+         if(temp->ip == ip)
+           return NULL;
+         temp = temp->next;
+         }
 
     //! Finally,inserts the following into the new linked list: 
     //! - name (as stated in ebp.conf)
     //! - ssh_login_user (the username that the OpenSSH client will need to connect back to this host)
     //! - version (eBrainPool client version)
     //! - ip (IPv4 address of the user)
+    ptr = (User *) malloc (sizeof(User));
     strncpy(ptr->name,name,20); //jeetu - hardcoded size
     strncpy(ptr->ssh_login_user,ssh_login_user,256);
     strncpy(ptr->version,version,6);
