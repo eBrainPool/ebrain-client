@@ -26,127 +26,6 @@
 
 #include "ebp.h"
 
-/** Add a new user to the User (struct _user) linked list. 
- *
- *  Called by process_useronline_msg() and process_useronline_avahi_msg() when a new user comes online.
- *
- */
-/*
-User* add_user(const char* version,const char* name,const char *ssh_login_user,uint32_t ip)
-{
-    User* temp = NULL;
-    User* current_node = NULL;
-
-    char *strip = NULL;
-    struct in_addr in;
-    in.s_addr = ip;  //jeetu - this is wrong. ip should actually be the ip of the client sending request
-    strip = inet_ntoa(in);	
- 
-    //! First searches an existing User linked list (if gFirstUserNpde != NULL) for a matching ip.
-    //! If found the function returns with a NULL. 
-    temp = gFirstUserNode;
-    while(temp != NULL)
-         {
-         if(temp->ip == ip)
-           return NULL;
-         temp = temp->next;
-         }
-
-    //! If we have to start a new linked list (gFirstUserNode == NULL) or add this linked list
-    //! to the end of the existing linked list,then allocate memory and setup pointers accordingly. 
-    // first entry		
-    if(gFirstUserNode == NULL)
-      {
-      // memory freed either during del_user or at the end in freeusermem
-      current_node = (User *) malloc(sizeof(User));
-      current_node->prev = NULL;
-      current_node->next = NULL;
-      gFirstUserNode = current_node;
-      gLastUserNode = current_node;
-      }
-    else
-      {	
-      // memory freed either during del_user or at the end in freeusermem
-      current_node = gLastUserNode;
-      temp = current_node;
-      current_node->next = (User *) malloc(sizeof(User));
-      current_node = current_node->next;
-      current_node->prev = temp;
-      current_node->next = NULL;
-      gLastUserNode = current_node;
-      }
-
-    //! Finally,inserts the following into the new linked list: 
-    //! - name (as stated in ebp.conf)
-    //! - ssh_login_user (the username that the OpenSSH client will need to connect back to this host)
-    //! - version (eBrainPool client version)
-    //! - ip (IPv4 address of the user)
-    strncpy(current_node->name,name,20); //jeetu - hardcoded size
-    strncpy(current_node->ssh_login_user,ssh_login_user,256);
-    strncpy(current_node->version,version,6);
-    current_node->ip = ip;
-
-    printf("\nadd_user: current_node->name = %s current_node->ip = %d strip = %s\n",current_node->name, current_node->ip,strip);
-
-    //! returns a pointer to the newly created linked list item (User *).	
-    return current_node;
-}
-
-*/
-
-/** Delete a user from the User (struct _user) linked list.
- *
- *  Called by show_user_offline()
- *  returns a User* to the next item in the linked list or NULL if there are no other items.
- */
-
-/*
-
-User* del_user(User* deluser)
-{
-    User* prevuser;
-    User* nextuser;
-    prevuser = deluser->prev;
-    nextuser = deluser->next;
-
-    // If this is the only entry in the User linked list,initialize global pointers to NULL.
-    // else adjust the global pointers and the previous/next linked list pointers accordingly.
-    if(prevuser == NULL && nextuser == NULL)
-      {
-      gFirstUserNode = NULL;
-      gLastUserNode = NULL;
-      gCurrentUserNode = NULL;
-      free(deluser);
-      return(NULL);
-      }
-    if(prevuser == NULL)
-      {
-      nextuser->prev = NULL;
-      gFirstUserNode = nextuser;
-      free(deluser);
-      return(nextuser);
-      }
-    if(nextuser == NULL)
-      {
-      prevuser->next = NULL;
-      gLastUserNode = prevuser;
-      free(deluser);
-      return(prevuser);
-      }  
-    if(prevuser != NULL && nextuser != NULL)
-      {
-      prevuser->next = nextuser;	
-      nextuser->prev = prevuser;
-      free(deluser);	
-      return(nextuser);  
-      }  
-
-    return(NULL);
-}
-
-*/
-
-
 
 /** Add a new user to the User (struct _user) linked list. 
  *
@@ -219,42 +98,12 @@ User* del_user(User **head,User* deluser)
  */
 NewConnData *add_newconn(int newsockfd,uint32_t ip)
 {
-    NewConnData* temp = NULL;
-    NewConnData* current_node = NULL;
 
-    // If we have to start a new linked list (gFirstConn == NULL) or add this linked list
-    // to the end of the existing linked list,then allocate memory and setup pointers accordingly.
-    // first entry		
-    if(gFirstConn == NULL)
-      {
-      // memory freed in newconnrequests_thread with call to del_newconn
-      current_node = (NewConnData *) malloc(sizeof(NewConnData));
-      current_node->prev = NULL;
-      current_node->next = NULL;
-      gFirstConn = current_node;
-      gLastConn = current_node;
-      }
-    else
-      {	
-      // memory freed in newconnrequests_thread with call to del_newconn
-      current_node = gLastConn;
-      temp = current_node;
-      current_node->next = (NewConnData *) malloc(sizeof(NewConnData));
-      current_node = current_node->next;
-      current_node->prev = temp;
-      current_node->next = NULL;
-      gLastConn = current_node;
-      }
+    NewConnData *ptr = (NewConnData *) malloc(sizeof(NewConnData));
+    ptr->newsockfd = newsockfd;
+    ptr->ip = ip;
 
-    //! Inserts the following into the linked list:
-    //! - newsockfd (socket file descriptor returned after call to accept())
-    //! - ip (IPv4 address of the client connecting in) 
-    current_node->newsockfd = newsockfd;
-    current_node->ip = ip;
-	
-    //! returns pointer to the newly created linked list item (NewConnData *).
-    return current_node;
-
+    return ptr;
 }
 
 
@@ -265,46 +114,11 @@ NewConnData *add_newconn(int newsockfd,uint32_t ip)
  */
 NewConnData *del_newconn(NewConnData *conndata)
 {
-    NewConnData* prevconn;
-    NewConnData* nextconn;
-    prevconn = conndata->prev;
-    nextconn = conndata->next;
-
-    // If this is the only entry in the NewConnData linked list,initialize global pointers to NULL.
-    // else adjust the global pointers and the previous/next linked list pointers accordingly.
-    if(prevconn == NULL && nextconn == NULL)
-      {
-      gFirstConn = NULL;
-      gLastConn = NULL;
-      gCurrentConn = NULL;
-      free(conndata);
-      return(NULL);
-      }
-    if(prevconn == NULL)
-      {
-      nextconn->prev = NULL;
-      gFirstConn = nextconn;
-      free(conndata);
-      return(nextconn);
-      }
-    if(nextconn == NULL)
-      {
-      prevconn->next = NULL;
-      gLastConn = prevconn;
-      free(conndata);
-      return(prevconn);
-      }  
-    if(prevconn != NULL && nextconn != NULL)
-      {
-      prevconn->next = nextconn;	
-      nextconn->prev = prevconn;
-      free(conndata);	
-      return(nextconn);  
-      }  
-
-    return(NULL);
-
+    free(conndata);
+    return NULL;
 }
+
+
 
 /** Adds details of LaunchApp request to the LaunchDialogQueue (struct _launchdialogqueue) linked list.
  *
@@ -353,6 +167,8 @@ LaunchDialogQueue *add_launchdialog_queue(char *username,char *appname,uint32_t 
 
 }
 
+
+
 /** Adds sent launch application (LaunchApp) requests to LaunchAppQueue (struct _launchappqueue)
  * 
  *  Called by send_launchapp_req()
@@ -361,49 +177,21 @@ LaunchDialogQueue *add_launchdialog_queue(char *username,char *appname,uint32_t 
  *  NOTE : As on 18/5/2012 the LaunchAppQueue (product of this function) is not being looked into to verify the response.
  *         This may (or may not) be implemented in the future.
  */
-LaunchAppQueue* add_to_launch_queue(char *appname,uint32_t ip,int reqid)
+LaunchAppQueue* add_to_launch_queue(LaunchAppQueue *head,char *appname,uint32_t ip,int reqid)
 {
-    LaunchAppQueue* temp;
-    LaunchAppQueue* current_node;
-
-    printf("\nadd_to_launch_queue: ip = %d",ip);
-
-    // on_treeview_row_activated and thus this function should be called
-    // only by the main thread as I understand it, therefore not protecting
-    // with a mutex.
-
-    // first entry		
-    if(gFirstLaunchAppQueue == NULL)
-      {
-      // memory allocation freed in freeLaunchAppQueue ()
-      current_node = (LaunchAppQueue *) malloc(sizeof(LaunchAppQueue));
-      current_node->prev = NULL;
-      current_node->next = NULL;
-      gFirstLaunchAppQueue = current_node;
-      gLastLaunchAppQueue = current_node;
-      }
-    else
-      {		  
-      // memory allocation freed in freeLaunchAppQueue ()
-      current_node = gLastLaunchAppQueue;
-      temp = current_node;
-      current_node->next = (LaunchAppQueue *) malloc(sizeof(LaunchAppQueue));
-      current_node = current_node->next;
-      current_node->prev = temp;
-      current_node->next = NULL;
-      gLastLaunchAppQueue = current_node;
-      }
+    LaunchAppQueue *ptr = (LaunchAppQueue *) malloc(sizeof(LaunchAppQueue));
 
     //! Inserts the following into the linked list:
     //! - appname (Name of application to be launched)
     //! - ip (IPv4 address 	
-    strncpy(current_node->appname,appname,20); //jeetu - hardcoded size  
-    current_node->ip = ip;
-    current_node->reqid = reqid;
+    strncpy(ptr->appname,appname,20); //jeetu - hardcoded size  
+    ptr->ip = ip;
+    ptr->reqid = reqid;
+    ptr->next = head;
 
-    return current_node;
+    return ptr;
+
 }
-
 
 /** Gets a list of applications installed on the host system that can be shared. 
  *
@@ -577,6 +365,7 @@ void freeusermem(void)
  *
  *  called by main()
  */
+/*
 void freeLaunchAppQueue(void)
 {
     LaunchAppQueue* temp;
@@ -590,7 +379,7 @@ void freeLaunchAppQueue(void)
          temp = prev;
          }
 }
-
+*/
 
 /** Frees memory allocated for the LaunchDialogQueue (struct _LaunchDialogQueue) linked list.
  *

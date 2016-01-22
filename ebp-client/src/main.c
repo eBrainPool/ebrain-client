@@ -43,7 +43,8 @@ int main(int argc, char *argv[])
     GtkWidget *scrolledwindow = NULL;
     char buf[302];
     GdkRGBA rgba = {1.0,1.0,1.0,1.0};
-    gUserListHead = NULL;    
+    gUserListHead = NULL;
+    gLaunchAppQueueListHead = NULL;    
 
     g_thread_init (NULL);
     gdk_threads_init();
@@ -127,8 +128,9 @@ int main(int argc, char *argv[])
     stop_container();   
     close(sockfd);
     free(appsdata.apps); 
+    //!TODO: Temporarily commented out to aid in cleaning up linked list code.
 //    freeusermem();
-    freeLaunchAppQueue();
+//    freeLaunchAppQueue();
     freeLaunchDialogQueue();
     return 0;
 }
@@ -573,7 +575,7 @@ void send_launchapp_req(User *UserNode,char *appname)
 
     //! Adds the request sent to a launch queue. To be used on receipt of response to verify authenticity of the request.
     G_LOCK(launchappqueue);	
-    gCurrentLaunchAppQueue = add_to_launch_queue(appname,UserNode->ip,requestid);
+    gLaunchAppQueueListHead = add_to_launch_queue(gLaunchAppQueueListHead,appname,UserNode->ip,requestid);
     G_UNLOCK(launchappqueue);
 
     requestid++;    
@@ -983,7 +985,7 @@ int launch_using_x2go(NewConnData *data)
     //! TODO: This verification is currently commented out.
 
     //! Finally calls the x2go pyhoca-cli client to connect to remote host and run desired application.
-    queue = gFirstLaunchAppQueue;
+    queue = gLaunchAppQueueListHead;
     while(queue != NULL)
          {
 //       if(queue->ip != data->cli_addr.sin_addr.s_addr)
@@ -1116,7 +1118,7 @@ int launch_using_sshx(NewConnData *data)
     //! TODO: This verification is currently commented out.
 
     //! Finally calls the SSH client to connect to remote host and X forward desired application.
-    queue = gFirstLaunchAppQueue;
+    queue = gLaunchAppQueueListHead;
     while(queue != NULL)
          {
 //       if(queue->ip != data->cli_addr.sin_addr.s_addr)

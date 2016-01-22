@@ -62,7 +62,7 @@ enum
 // Structures
 //-----------------
 
-/** Linked list structure to hold details of the new connection to this host.
+/** Structure to hold details of the new connection to this host.
  *
  */
 typedef struct _newconndata
@@ -70,8 +70,6 @@ typedef struct _newconndata
     int newsockfd;               //!< socket file descriptor for the new connection returned by accept(). 
     char buffer[310];            //!< buffer (currently unused) TODO: take this off.
     uint32_t ip;                 //!< IPv4 address of the peer connecting in.
-    struct _newconndata *prev;   //!< linked list pointer pointing to previous item in list.
-    struct _newconndata *next;   //!< linked list pointer pointing to next item in list.
     } NewConnData;
 
 
@@ -98,7 +96,6 @@ typedef struct _user
     uint32_t ip;                 //!< IPv4 address of this user.
     char *apps_buffer;           //!< buffer to hold list of applications on this remote host.
     unsigned int noofapps;       //!< No. of applications on this remote host.
-    struct _user *prev;          //!< linked list pointer pointing to previous item in list.
     struct _user *next;	         //!< linked list pointer pointing to next item in list.
     } User;
 
@@ -113,7 +110,6 @@ typedef struct _LaunchAppQueue
     gchar appname[300];             //!< application name requested to be launched.
     uint32_t ip;                    //!< ip address of the remote host request has been sent to.
     int reqid;                      //!< request id.
-    struct _LaunchAppQueue *prev;   //!< linked list pointer pointing to previous item in list.
     struct _LaunchAppQueue *next;   //!< linked list pointer pointing to next item in list.
     } LaunchAppQueue;
 
@@ -146,18 +142,8 @@ GtkWidget *treeview;
 GtkTreeStore *treestore;
 int sockfd;                                  //!< Global socket file descriptor,set in connlistener_thread() and closed on exit in main().
 AppsData appsdata;
-//User *gFirstUserNode;                        //!< global pointer to first element in the UserNode linked list.
-//User *gLastUserNode;                         //!< global pointer to last element in the UserNode linked list.
-//User *gCurrentUserNode;                      //!< global pointer to current element in the UserNode linked list.
-
-User *gUserListHead;
-
-LaunchAppQueue *gFirstLaunchAppQueue;        //!< global pointer to first element in the LaunchAppQueue linked list.  
-LaunchAppQueue *gLastLaunchAppQueue;         //!< global pointer to last element in the LaunchAppQueue linked list.  
-LaunchAppQueue *gCurrentLaunchAppQueue;      //!< global pointer to current element in the LaunchAppQueue linked list.  
-NewConnData *gFirstConn;                     //!< global pointer to first element in the NewConnData linked list.  
-NewConnData *gLastConn;                      //!< global pointer to last element in the NewConnData linked list.  
-NewConnData *gCurrentConn;                   //!< global pointer to current element in the NewConnData linked list.  
+User *gUserListHead;			       //!< global pointer to the User linked list head.
+LaunchAppQueue *gLaunchAppQueueListHead;       //!< global pointer to the LaunchAppQueue linked list head.
 LaunchDialogQueue *gFirstLaunchDialog;       //!< global pointer to first element in the LaunchDialogQueue linked list.  
 LaunchDialogQueue *gLastLaunchDialog;        //!< global pointer to last element in the LaunchDialogQueue linked list.  
 LaunchDialogQueue *gCurrentLaunchDialog;     //!< global pointer to current element in the LaunchDialogQueue linked list.  
@@ -185,8 +171,6 @@ char* get_installed_apps(int* count,int* blocksize);
 int filter(const struct dirent *dir);
 int process_useronline_msg(char *buf);
 int connect_to_client(uint32_t ip,int *comm_socket);
-//User* add_user(const char* version,const char* name,const char *ssh_login_user,uint32_t ip);
-//User* del_user(User* deluser);
 User* add_user(User *head,const char* version,const char* name,const char *ssh_login_user,uint32_t ip);
 User* del_user(User **head,User* deluser);
 NewConnData *add_newconn(int newsockfd,uint32_t ip);
@@ -195,7 +179,7 @@ int show_user_online(User *UserNode);
 gboolean show_user_offline(gpointer user_data);
 int get_remoteuser_apps(User *UserNode);
 void send_launchapp_req(User *UserNode,char *appname);
-LaunchAppQueue* add_to_launch_queue(char *appname,uint32_t ip,int reqid);
+LaunchAppQueue* add_to_launch_queue(LaunchAppQueue *head,char *appname,uint32_t ip,int reqid);
 void set_launchappqueue_locked(LaunchAppQueue *dest,LaunchAppQueue *src);
 int process_launchapp_req(char *buf,NewConnData *data);
 gboolean launch_approve_dialog(gpointer data);
