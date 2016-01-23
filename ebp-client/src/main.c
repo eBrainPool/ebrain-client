@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
     //!TODO: Temporarily commented out to aid in cleaning up linked list code.
 //    freeusermem();
 //    freeLaunchAppQueue();
-    freeLaunchDialogQueue();
+//    freeLaunchDialogQueue();
     return 0;
 }
 

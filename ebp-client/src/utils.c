@@ -92,7 +92,7 @@ User* del_user(User **head,User* deluser)
 
 
 
-/** Adds a new connection to the client into the NewConnData (struct _newconndata) linked list.
+/** Adds a new connection to the client into the NewConnData (struct _newconndata) structure.
  *
  *  Called by connlistener_thread()
  */
@@ -120,51 +120,19 @@ NewConnData *del_newconn(NewConnData *conndata)
 
 
 
-/** Adds details of LaunchApp request to the LaunchDialogQueue (struct _launchdialogqueue) linked list.
+/** Adds details of LaunchApp request into the LaunchDialogQueue (struct _launchdialogqueue) structure.
  *
  *  Called by process_launchapp_req()
  */
 LaunchDialogQueue *add_launchdialog_queue(char *username,char *appname,uint32_t ip)
 {
-   LaunchDialogQueue* temp = NULL;
-   LaunchDialogQueue* current_node = NULL;
+    
+     LaunchDialogQueue *ptr = (LaunchDialogQueue *) malloc(sizeof(LaunchDialogQueue));
+     strncpy(ptr->username,username,90);
+     strncpy(ptr->appname,appname,90);
+     ptr->ip = ip;
 
-   // If we have to start a new linked list (gFirstLaunchDialog == NULL) or add this linked list
-   // to the end of the existing linked list,then allocate memory and setup pointers accordingly.
-
-   // first entry		
-   if(gFirstLaunchDialog == NULL)
-     {
-     // memory freed in main() by call to freeLaunchDialogQueue
-     current_node = (LaunchDialogQueue *) malloc(sizeof(LaunchDialogQueue));
-     current_node->prev = NULL;
-     current_node->next = NULL;
-     gFirstLaunchDialog = current_node;
-     gLastLaunchDialog = current_node;
-     }
-   else
-     {	
-     // memory freed in main() by call to freeLaunchDialogQueue
-     current_node = gLastLaunchDialog;
-     temp = current_node;
-     current_node->next = (LaunchDialogQueue *) malloc(sizeof(LaunchDialogQueue));
-     current_node = current_node->next;
-     current_node->prev = temp;
-     current_node->next = NULL;
-     gLastLaunchDialog = current_node;
-     }
-
-   //! Inserts the following into the linked list:
-   //! - username 
-   //! - appname (Application name the user wishes to launch)
-   //! - ip (IPv4 address of the client connecting in)
-   strncpy(current_node->username,username,90);
-   strncpy(current_node->appname,appname,90);
-   current_node->ip = ip;
-
-   //! returns pointer to the newly created linked list item (LaunchDialogQueue *).
-   return current_node;
-
+     return ptr;
 }
 
 
@@ -388,6 +356,7 @@ void freeLaunchAppQueue(void)
  * 
  *  called by main()
  */
+/*
 void freeLaunchDialogQueue(void)
 {
     LaunchDialogQueue* temp;
@@ -401,6 +370,8 @@ void freeLaunchDialogQueue(void)
          temp = prev;
          }
 }
+*/
+
 
 /** Retrieves details of the network interfaces on the local system.
  *

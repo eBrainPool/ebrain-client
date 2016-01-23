@@ -114,7 +114,7 @@ typedef struct _LaunchAppQueue
     } LaunchAppQueue;
 
 
-/** Linked list to hold details of requests requests from other hosts to launch apps from this host.
+/** Structure to hold details of requests requests from other hosts to launch apps from this host.
  *
  *  From what I understand (can't remember exactly why I did this ;) ), however apparently GTK+
  *  elements such as dialogs should be handled in the same thread as the initializing thread,
@@ -129,8 +129,6 @@ typedef struct _LaunchDialogQueue
     char username[100];                    //!< username of remote client (as set in their ebp.conf) sending the request.
     char appname[100];                     //!< application name on this host which the remote user wishes to run.
     uint32_t ip;                           //!< IPv4 address of remote host connecting in.
-    struct _LaunchDialogQueue *prev;       //!< linked list pointer pointing to previous item in list.
-    struct _LaunchDialogQueue *next;       //!< linked list pointer pointing to next item in list.
     } LaunchDialogQueue;
 
 //--------------------
@@ -142,11 +140,8 @@ GtkWidget *treeview;
 GtkTreeStore *treestore;
 int sockfd;                                  //!< Global socket file descriptor,set in connlistener_thread() and closed on exit in main().
 AppsData appsdata;
-User *gUserListHead;			       //!< global pointer to the User linked list head.
-LaunchAppQueue *gLaunchAppQueueListHead;       //!< global pointer to the LaunchAppQueue linked list head.
-LaunchDialogQueue *gFirstLaunchDialog;       //!< global pointer to first element in the LaunchDialogQueue linked list.  
-LaunchDialogQueue *gLastLaunchDialog;        //!< global pointer to last element in the LaunchDialogQueue linked list.  
-LaunchDialogQueue *gCurrentLaunchDialog;     //!< global pointer to current element in the LaunchDialogQueue linked list.  
+User *gUserListHead;			     //!< global pointer to the User linked list head.
+LaunchAppQueue *gLaunchAppQueueListHead;     //!< global pointer to the LaunchAppQueue linked list head.
 int requestid;
 struct ifaddrs *ifaddr;                      //!< details of network interfaces on current system (localhost).
 struct lxc_container *container;             //!< structure of the lxc container used as the isolation sandbox.
